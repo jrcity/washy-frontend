@@ -1,18 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { Button, Card } from '@/components/ui';
 import { PageWrapper } from '@/components/layout';
-import { useCreateOrder } from '@/hooks';
+import { useCreateOrder, useProfile } from '@/hooks';
 import { StepServices, StepAddress, StepReview } from './components';
 import type { CreateOrderItemInput } from '@/types';
 import toast from 'react-hot-toast';
 
+import { branchesService } from '@/services/branches.service';
+
 export const NewOrderPage = () => {
   const navigate = useNavigate();
+  const { data: user, isLoading: isLoadingUser } = useProfile();
   const [currentStep, setCurrentStep] = useState(0);
   const [cart, setCart] = useState<CreateOrderItemInput[]>([]);
+  const [activeBranchId, setActiveBranchId] = useState<string>('');
   const [orderMeta, setOrderMeta] = useState({
     pickupDate: '',
     pickupTimeSlot: '',
@@ -22,6 +26,40 @@ export const NewOrderPage = () => {
   });
 
   const { mutate: createOrder, isPending } = useCreateOrder();
+
+  // Redirect if no address found on profile
+  useEffect(() => {
+    if (!isLoadingUser && user && !user.address) {
+      toast.error('Please add an address to your profile first');
+      navigate('/profile');
+    }
+    // Pre-fill address ID if user has one
+    if (user?.address && !orderMeta.pickupAddressId) {
+      setOrderMeta(prev => ({
+        ...prev,
+        pickupAddressId: user._id, 
+        deliveryAddressId: user._id
+      }));
+    }
+  }, [user, isLoadingUser, navigate]);
+
+  // Fetch active branch
+  useEffect(() => {
+    const fetchBranch = async () => {
+       try {
+         const branches = await branchesService.getAll({ isActive: true });
+         if (branches.length > 0) {
+           setActiveBranchId(branches[0]._id);
+         } else {
+           toast.error('No active branches found.');
+         }
+       } catch (error) {
+         console.error('Failed to fetch branches', error);
+         toast.error('Could not load service availability');
+       }
+    };
+    fetchBranch();
+  }, []);
 
   const steps = ['Select Services', 'Pickup & Delivery', 'Review'];
 
@@ -47,13 +85,23 @@ export const NewOrderPage = () => {
       return;
     }
 
+    if (!user?.address) {
+       toast.error('User address not found');
+       return;
+    }
+
+    if (!activeBranchId) {
+       toast.error('Service unavailable (No Branch)');
+       return;
+    }
+
     createOrder({
-      branchId: 'default-branch-id', // TODO: Logic to select branch
+      branch: activeBranchId,
       items: cart,
-      pickupDate: orderMeta.pickupDate,
+      pickupDate: new Date(orderMeta.pickupDate).toISOString(), // Ensure ISO string
       pickupTimeSlot: orderMeta.pickupTimeSlot,
-      pickupAddress: { _id: orderMeta.pickupAddressId } as any, // ID reference
-      deliveryAddress: { _id: orderMeta.deliveryAddressId } as any,
+      pickupAddress: user.address, // Pass full address object
+      deliveryAddress: user.address,
       customerNotes: orderMeta.notes,
     }, {
       onSuccess: () => {

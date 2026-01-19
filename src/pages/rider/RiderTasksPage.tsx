@@ -10,15 +10,22 @@ export const RiderTasksPage = () => {
   const [activeTab, setActiveTab] = useState<'pickups' | 'deliveries'>('pickups');
   // In real app, this would fetch 'unassigned' tasks in rider's zone
   // For now using all orders for demo purposes, filtering client-side
-  const { data: ordersData, isLoading, refetch } = useOrders({ limit: 50, status: 'confirmed' }); // confirmed = ready for pickup
+  const { data: ordersData, isLoading, refetch } = useOrders({ 
+    limit: 50, 
+    status: activeTab === 'pickups' ? 'confirmed' : 'ready' 
+  });
 
   const orders = ordersData?.orders || [];
   
-  // Mock logic for available tasks
-  const availablePickups = orders.filter(o => o.status === 'confirmed' && !o.driver);
-  const availableDeliveries = orders.filter(o => o.status === 'ready' && !o.driver);
+  // Logic for available tasks
+  // Pickups: Status is 'confirmed' (Paid & ready for pickup)
+  // Deliveries: Status is 'ready' (Processed & ready for delivery)
+  const tasks = orders.filter(o => !o.pickupRider && !o.deliveryRider); 
 
-  const tasks = activeTab === 'pickups' ? availablePickups : availableDeliveries;
+  // Count availability (separate queries would be better but for now distinct counts are harder without extra calls)
+  // We'll just show the count of current list
+  const availablePickupsCount = activeTab === 'pickups' ? tasks.length : '?'; 
+  const availableDeliveriesCount = activeTab === 'deliveries' ? tasks.length : '?';
 
   const handleAcceptTask = (id: string) => {
     // TODO: Implement accept task mutation
@@ -47,7 +54,7 @@ export const RiderTasksPage = () => {
         >
           <Truck className="w-4 h-4" />
           Pickups
-          <Badge size="sm" variant="secondary" className="ml-2">{availablePickups.length}</Badge>
+          {activeTab === 'pickups' && <Badge size="sm" variant="secondary" className="ml-2">{tasks.length}</Badge>}
         </button>
         <button
           onClick={() => setActiveTab('deliveries')}
@@ -59,7 +66,7 @@ export const RiderTasksPage = () => {
         >
           <Package className="w-4 h-4" />
           Deliveries
-          <Badge size="sm" variant="secondary" className="ml-2">{availableDeliveries.length}</Badge>
+          {activeTab === 'deliveries' && <Badge size="sm" variant="secondary" className="ml-2">{tasks.length}</Badge>}
         </button>
       </div>
 

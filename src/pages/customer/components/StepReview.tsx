@@ -17,8 +17,8 @@ export const StepReview = ({ cart, meta }: StepReviewProps) => {
 
   const calculateTotal = () => {
     return cart.reduce((acc, item) => {
-      const service = getServiceDetails(item.serviceId);
-      const price = service?.pricing[0]?.standardPrice || 0;
+      const service = getServiceDetails(item.service);
+      const price = service?.pricing[0]?.basePrice || 0;
       return acc + (price * item.quantity);
     }, 0);
   };
@@ -29,10 +29,10 @@ export const StepReview = ({ cart, meta }: StepReviewProps) => {
         <h3 className="font-semibold text-neutral-900 mb-4">Order Summary</h3>
         <div className="space-y-3">
           {cart.map((item) => {
-            const service = getServiceDetails(item.serviceId);
-            const price = service?.pricing[0]?.standardPrice || 0;
+            const service = getServiceDetails(item.service);
+            const price = service?.pricing[0]?.basePrice || 0;
             return (
-              <div key={item.serviceId} className="flex justify-between items-center text-sm">
+              <div key={item.service} className="flex justify-between items-center text-sm">
                  <div className="flex items-center gap-2">
                    <span className="font-medium w-6 text-center bg-white border rounded">
                      {item.quantity}x

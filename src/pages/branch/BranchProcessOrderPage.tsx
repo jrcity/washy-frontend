@@ -233,7 +233,7 @@ export const BranchProcessOrderPage = () => {
         isOpen={isRiderModalOpen}
         onClose={() => setIsRiderModalOpen(false)}
         orderId={order._id}
-        type="delivery" // Defaulting to delivery for now
+        type={['pending', 'confirmed'].includes(order.status) ? 'pickup' : 'delivery'}
       />
     </PageWrapper>
   );

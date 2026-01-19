@@ -17,16 +17,18 @@ const SERVICES_DATA: Service[] = [
         updatedAt: new Date().toISOString(),
         name: "Wash & Fold",
         serviceType: "wash_and_fold",
+        category: "laundry",
         estimatedDuration: { standard: 48, express: 24 },
         isExpressAvailable: true,
+        sortOrder: 1,
         pricing: [
-            { garmentType: "shirt", standardPrice: 200, expressPrice: 300 },
-            { garmentType: "trouser", standardPrice: 250, expressPrice: 375 },
-            { garmentType: "dress", standardPrice: 400, expressPrice: 600 },
-            { garmentType: "skirt", standardPrice: 300, expressPrice: 450 },
-            { garmentType: "towel", standardPrice: 150, expressPrice: 225 },
-            { garmentType: "bedsheet", standardPrice: 400, expressPrice: 600 },
-            { garmentType: "underwear", standardPrice: 100, expressPrice: 150 }
+            { garmentType: "shirt", basePrice: 200, expressMultiplier: 1.5 },
+            { garmentType: "trouser", basePrice: 250, expressMultiplier: 1.5 },
+            { garmentType: "dress", basePrice: 400, expressMultiplier: 1.5 },
+            { garmentType: "skirt", basePrice: 300, expressMultiplier: 1.5 },
+            { garmentType: "towel", basePrice: 150, expressMultiplier: 1.5 },
+            { garmentType: "bedsheet", basePrice: 400, expressMultiplier: 1.5 },
+            { garmentType: "underwear", basePrice: 100, expressMultiplier: 1.5 }
         ]
     },
     {
@@ -38,15 +40,17 @@ const SERVICES_DATA: Service[] = [
         updatedAt: new Date().toISOString(),
         name: "Wash & Iron",
         serviceType: "wash_and_iron",
+        category: "laundry",
         estimatedDuration: { standard: 48, express: 24 },
         isExpressAvailable: true,
+        sortOrder: 2,
         pricing: [
-            { garmentType: "shirt", standardPrice: 300, expressPrice: 450 },
-            { garmentType: "trouser", standardPrice: 350, expressPrice: 525 },
-            { garmentType: "dress", standardPrice: 500, expressPrice: 750 },
-            { garmentType: "skirt", standardPrice: 400, expressPrice: 600 },
-            { garmentType: "native_attire", standardPrice: 600, expressPrice: 900 },
-            { garmentType: "jacket", standardPrice: 500, expressPrice: 750 }
+            { garmentType: "shirt", basePrice: 300, expressMultiplier: 1.5 },
+            { garmentType: "trouser", basePrice: 350, expressMultiplier: 1.5 },
+            { garmentType: "dress", basePrice: 500, expressMultiplier: 1.5 },
+            { garmentType: "skirt", basePrice: 400, expressMultiplier: 1.5 },
+            { garmentType: "native_attire", basePrice: 600, expressMultiplier: 1.5 },
+            { garmentType: "jacket", basePrice: 500, expressMultiplier: 1.5 }
         ]
     },
     {
@@ -58,16 +62,18 @@ const SERVICES_DATA: Service[] = [
         updatedAt: new Date().toISOString(),
         name: "Dry Cleaning",
         serviceType: "dry_clean",
+        category: "dry_cleaning",
         estimatedDuration: { standard: 72, express: 48 },
         isExpressAvailable: true,
+        sortOrder: 3,
         pricing: [
-            { garmentType: "suit", standardPrice: 2500, expressPrice: 3750 },
-            { garmentType: "dress", standardPrice: 1500, expressPrice: 2250 },
-            { garmentType: "jacket", standardPrice: 1800, expressPrice: 2700 },
-            { garmentType: "native_attire", standardPrice: 2000, expressPrice: 3000 },
-            { garmentType: "duvet", standardPrice: 3500, expressPrice: 5250 },
-            { garmentType: "curtain", standardPrice: 2000, expressPrice: 3000 },
-            { garmentType: "blanket", standardPrice: 2500, expressPrice: 3750 }
+            { garmentType: "suit", basePrice: 2500, expressMultiplier: 1.5 },
+            { garmentType: "dress", basePrice: 1500, expressMultiplier: 1.5 },
+            { garmentType: "jacket", basePrice: 1800, expressMultiplier: 1.5 },
+            { garmentType: "native_attire", basePrice: 2000, expressMultiplier: 1.5 },
+            { garmentType: "duvet", basePrice: 3500, expressMultiplier: 1.5 },
+            { garmentType: "curtain", basePrice: 2000, expressMultiplier: 1.5 },
+            { garmentType: "blanket", basePrice: 2500, expressMultiplier: 1.5 }
         ]
     },
     {
@@ -79,15 +85,17 @@ const SERVICES_DATA: Service[] = [
         updatedAt: new Date().toISOString(),
         name: "Iron Only",
         serviceType: "iron_only",
+        category: "laundry",
         estimatedDuration: { standard: 24, express: 6 },
         isExpressAvailable: true,
+        sortOrder: 4,
         pricing: [
-            { garmentType: "shirt", standardPrice: 150, expressPrice: 225 },
-            { garmentType: "trouser", standardPrice: 150, expressPrice: 225 },
-            { garmentType: "dress", standardPrice: 200, expressPrice: 300 },
-            { garmentType: "skirt", standardPrice: 150, expressPrice: 225 },
-            { garmentType: "native_attire", standardPrice: 300, expressPrice: 450 },
-            { garmentType: "suit", standardPrice: 400, expressPrice: 600 }
+            { garmentType: "shirt", basePrice: 150, expressMultiplier: 1.5 },
+            { garmentType: "trouser", basePrice: 150, expressMultiplier: 1.5 },
+            { garmentType: "dress", basePrice: 200, expressMultiplier: 1.5 },
+            { garmentType: "skirt", basePrice: 150, expressMultiplier: 1.5 },
+            { garmentType: "native_attire", basePrice: 300, expressMultiplier: 1.5 },
+            { garmentType: "suit", basePrice: 400, expressMultiplier: 1.5 }
         ]
     },
     {
@@ -99,12 +107,14 @@ const SERVICES_DATA: Service[] = [
         updatedAt: new Date().toISOString(),
         name: "Starch & Iron",
         serviceType: "starch",
+        category: "laundry",
         estimatedDuration: { standard: 48, express: 24 },
         isExpressAvailable: true,
+        sortOrder: 5,
         pricing: [
-            { garmentType: "native_attire", standardPrice: 800, expressPrice: 1200 },
-            { garmentType: "shirt", standardPrice: 400, expressPrice: 600 },
-            { garmentType: "trouser", standardPrice: 400, expressPrice: 600 }
+            { garmentType: "native_attire", basePrice: 800, expressMultiplier: 1.5 },
+            { garmentType: "shirt", basePrice: 400, expressMultiplier: 1.5 },
+            { garmentType: "trouser", basePrice: 400, expressMultiplier: 1.5 }
         ]
     },
     {
@@ -116,14 +126,16 @@ const SERVICES_DATA: Service[] = [
         updatedAt: new Date().toISOString(),
         name: "Express Service",
         serviceType: "express",
+        category: "laundry",
         estimatedDuration: { standard: 12, express: 6 },
         isExpressAvailable: false,
+        sortOrder: 6,
         pricing: [
-            { garmentType: "shirt", standardPrice: 450, expressPrice: 1000 },
-            { garmentType: "trouser", standardPrice: 500, expressPrice: 1200 },
-            { garmentType: "dress", standardPrice: 700, expressPrice: 1400 },
-            { garmentType: "native_attire", standardPrice: 900, expressPrice: 1500 },
-            { garmentType: "suit", standardPrice: 3500, expressPrice: 5000 }
+            { garmentType: "shirt", basePrice: 450, expressMultiplier: 1 },
+            { garmentType: "trouser", basePrice: 500, expressMultiplier: 1 },
+            { garmentType: "dress", basePrice: 700, expressMultiplier: 1 },
+            { garmentType: "native_attire", basePrice: 900, expressMultiplier: 1 },
+            { garmentType: "suit", basePrice: 3500, expressMultiplier: 1 }
         ]
     }
 ];
@@ -197,11 +209,11 @@ export const ServicesPage = () => {
                             {price.garmentType.replace('_', ' ')}
                           </td>
                           <td className="py-2.5 text-right text-neutral-600">
-                            {formatCurrency(price.standardPrice)}
+                            {formatCurrency(price.basePrice)}
                           </td>
                           {service.isExpressAvailable && (
                             <td className="py-2.5 text-right font-medium text-warning-600">
-                              {price.expressPrice ? formatCurrency(price.expressPrice) : '-'}
+                              {formatCurrency(price.basePrice * price.expressMultiplier)}
                             </td>
                           )}
                         </tr>
