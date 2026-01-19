@@ -48,6 +48,7 @@ import {
 import { ProfilePage } from '@/pages/profile/ProfilePage';
 
 import { 
+  AdminCategoriesPage,
   AdminDashboard,
   AdminOrdersPage,
   AdminServicesPage,
@@ -192,6 +193,7 @@ const AppRoutes = () => {
             <Route path="services" element={<AdminServicesPage />} />
             <Route path="branches" element={<AdminBranchesPage />} />
             <Route path="users" element={<AdminUsersPage />} />
+            <Route path="categories" element={<AdminCategoriesPage />} />
             <Route path="profile" element={<ProfilePage />} />
           </Route>
         </Route>
