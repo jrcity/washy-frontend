@@ -165,6 +165,14 @@ export interface ProfileUpdateInput {
   name?: string;
   phone?: string;
   address?: Address;
+  // Rider specific
+  vehicleType?: 'motorcycle' | 'bicycle' | 'car' | 'van';
+  vehiclePlateNumber?: string;
+  bankDetails?: {
+    bankName: string;
+    accountNumber: string;
+    accountName: string;
+  };
 }
 
 export interface PasswordChangeInput {

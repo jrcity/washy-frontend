@@ -1,4 +1,4 @@
-export type UploadCategory = 'service_image' | 'category_image' | 'pickup_screenshot' | 'delivery_screenshot' | 'proof_photo' | 'other';
+export type UploadCategory = 'service_image' | 'category_image' | 'pickup_screenshot' | 'delivery_screenshot' | 'proof_photo' | 'pickup_proof' | 'delivery_proof' | 'other';
 export type RelatedModel = 'Service' | 'Category' | 'Order';
 
 export interface Upload {
