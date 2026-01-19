@@ -16,7 +16,8 @@ import {
   Bell,
   Menu,
   X,
-  ChevronLeft
+  ChevronLeft,
+  LogOut
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthContext } from '@/context/AuthContext';
@@ -71,7 +72,7 @@ export const Sidebar = ({ variant }: SidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
-  const { user } = useAuthContext();
+  const { user, logout } = useAuthContext();
 
   const links = {
     customer: customerLinks,
@@ -134,9 +135,18 @@ export const Sidebar = ({ variant }: SidebarProps) => {
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-medium text-neutral-900 truncate text-sm">{user.name}</p>
-              <div className="flex items-center mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-success-500 mr-2"></span>
-                <p className="text-xs text-neutral-500 capitalize">{user.role?.replace('_', ' ')}</p>
+              <div className="flex items-center justify-between mt-0.5">
+                <div className="flex items-center">
+                  <span className="w-1.5 h-1.5 rounded-full bg-success-500 mr-2"></span>
+                  <p className="text-xs text-neutral-500 capitalize">{user.role?.replace('_', ' ')}</p>
+                </div>
+                <button 
+                  onClick={logout}
+                  className="p-1 text-neutral-400 hover:text-error-500 hover:bg-error-50 rounded transition-colors"
+                  title="Logout"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
               </div>
             </div>
           </div>

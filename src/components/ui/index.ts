@@ -4,5 +4,6 @@ export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 export { Badge } from './Badge';
 export { Avatar } from './Avatar';
 export { Spinner, LoadingScreen, LoadingOverlay } from './Spinner';
+export * from './Select';
 export { Skeleton, SkeletonText, SkeletonCard, SkeletonTable } from './Skeleton';
 export { EmptyState, Alert } from './EmptyState';
