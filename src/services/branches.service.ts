@@ -19,5 +19,12 @@ export const branchesService = {
         params: { lat, lng } 
     });
     return response.data.data!;
+  },
+
+  findByZone: async (zone: string, state?: string) => {
+    const params: Record<string, string> = { zone };
+    if (state) params.state = state;
+    const response = await api.get<ApiResponse<Branch[]>>('/branches', { params });
+    return response.data.data!;
   }
 };

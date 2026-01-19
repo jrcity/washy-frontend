@@ -23,7 +23,7 @@ export const AdminDashboard = () => {
   const { data: branchesData } = useBranches({ limit: 100 });
 
   const orders = ordersData?.orders || [];
-  const branches = branchesData?.branches || [];
+  const branches = branchesData || [];
 
   return (
     <PageWrapper

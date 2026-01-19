@@ -24,7 +24,7 @@ export const AdminUsersPage = () => {
         const term = search.toLowerCase();
         return (
             user.name.toLowerCase().includes(term) ||
-            user.email.toLowerCase().includes(term) ||
+            (user.email?.toLowerCase() || '').includes(term) ||
             user.phone.toLowerCase().includes(term)
         );
     });

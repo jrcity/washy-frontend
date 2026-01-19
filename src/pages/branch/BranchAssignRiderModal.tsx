@@ -27,7 +27,7 @@ export const AssignRiderModal = ({ isOpen, onClose, orderId, type = 'delivery' }
   
   const filteredUsers = users.filter(user => 
     user.name.toLowerCase().includes(search.toLowerCase()) ||
-    user.email.toLowerCase().includes(search.toLowerCase())
+    (user.email?.toLowerCase() || '').includes(search.toLowerCase())
   );
 
   const handleAssign = () => {
