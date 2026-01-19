@@ -20,12 +20,21 @@ export interface PaginatedResponse<T> {
   };
 }
 
+export interface PaginatedMetaResponse<T> {
+  success: boolean;
+  message?: string;
+  data: T[];
+  meta: Pagination;
+}
+
 export interface Pagination {
   page: number;
   limit: number;
   total: number;
   totalPages: number;
 }
+
+export type PaginationType = Pagination;
 
 // Address Type
 export interface Address {

@@ -1,19 +1,6 @@
-// Payment Methods
-export type PaymentMethod = 
-  | 'card'
-  | 'bank_transfer'
-  | 'ussd'
-  | 'cash';
+export type PaymentMethod = 'card' | 'bank_transfer' | 'ussd' | 'cash';
+export type PaymentStatus = 'pending' | 'processing' | 'completed' | 'failed' | 'refunded';
 
-// Payment Status
-export type PaymentStatus = 
-  | 'pending'
-  | 'processing'
-  | 'completed'
-  | 'failed'
-  | 'refunded';
-
-// Payment
 export interface Payment {
   _id: string;
   order: string;
@@ -24,34 +11,30 @@ export interface Payment {
   status: PaymentStatus;
   paystackReference?: string;
   paystackAuthorizationUrl?: string;
-  paidAt?: string;
   createdAt: string;
-  updatedAt?: string;
+  updatedAt: string;
 }
 
-// Initialize Payment Input
 export interface InitializePaymentInput {
   orderId: string;
-  method?: PaymentMethod;
+  method: Exclude<PaymentMethod, 'cash'>;
   callbackUrl?: string;
 }
 
-// Initialize Payment Response
-export interface InitializePaymentResponse {
-  payment: Payment;
-  authorizationUrl: string;
-}
-
-// Record Cash Payment Input
 export interface RecordCashPaymentInput {
   orderId: string;
   amount: number;
 }
 
-// Payment Filters
 export interface PaymentFilters {
-  page?: number;
-  limit?: number;
   status?: PaymentStatus;
   method?: PaymentMethod;
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface InitializePaymentResponse {
+  authorizationUrl: string;
+  reference: string;
+  accessCode?: string;
 }

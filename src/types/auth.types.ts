@@ -1,4 +1,5 @@
 import type { Address } from './api.types';
+export type { Address };
 
 // User Roles
 export type UserRole = 
@@ -16,10 +17,19 @@ export interface User {
   email: string;
   phone: string;
   role: UserRole;
-  isActive: boolean;
+  isActive?: boolean;
   address?: Address;
   profileImage?: string;
   branch?: string;
+  preferences?: {
+    notificationEnabled: boolean;
+  };
+  orders?: any[]; // Keep as any[] for now to avoid circular deps or complex linking
+  payments?: any[];
+  notifications?: any[];
+  tokens?: any[];
+  __t?: string;
+  __v?: number;
   createdAt: string;
   updatedAt?: string;
 }
