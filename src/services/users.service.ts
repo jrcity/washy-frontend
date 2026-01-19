@@ -1,5 +1,5 @@
 import { api } from '@/lib/axios';
-import type { ApiResponse, User, Pagination } from '@/types';
+import type { ApiResponse, User, Pagination, PaginatedMetaResponse } from '@/types';
 
 export const usersService = {
   getAll: async (params?: { 
@@ -9,8 +9,12 @@ export const usersService = {
     branchId?: string;
     search?: string;
   }): Promise<{ users: User[]; pagination: Pagination }> => {
-    const response = await api.get<ApiResponse<{ users: User[]; pagination: Pagination }>>('/users', { params });
-    return response.data.data!;
+    // Correctly handle the { data: [], meta: {} } response structure
+    const response = await api.get<PaginatedMetaResponse<User>>('/users', { params });
+    return {
+      users: response.data.data,
+      pagination: response.data.meta
+    };
   },
 
   getById: async (id: string): Promise<User> => {

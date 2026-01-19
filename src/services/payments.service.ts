@@ -17,8 +17,8 @@ interface PaymentsResponse {
 /**
  * Initialize payment for an order
  */
-export const initializePayment = async (data: InitializePaymentInput): Promise<ApiResponse<InitializePaymentResponse>> => {
-  const response = await api.post<ApiResponse<InitializePaymentResponse>>('/payments/initialize', data);
+export const initializePayment = async (data: InitializePaymentInput): Promise<ApiResponse<Payment>> => {
+  const response = await api.post<ApiResponse<Payment>>('/payments/initialize', data);
   return response.data;
 };
 

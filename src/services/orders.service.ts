@@ -26,8 +26,12 @@ export const ordersService = {
     startDate?: string;
     endDate?: string;
   }): Promise<{ orders: Order[]; pagination: PaginationType }> => {
-    const response = await api.get<ApiResponse<{ orders: Order[]; pagination: PaginationType }>>('/orders', { params });
-    return response.data.data!;
+    // Correctly handle the { data: [], meta: {} } response structure
+    const response = await api.get<PaginatedMetaResponse<Order>>('/orders', { params });
+    return {
+      orders: response.data.data,
+      pagination: response.data.meta
+    };
   },
 
   // Get my orders (Customer)
