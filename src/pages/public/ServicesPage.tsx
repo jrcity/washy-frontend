@@ -9,6 +9,12 @@ import type { Service } from '@/types';
 // Hardcoded data as requested by the user
 const SERVICES_DATA: Service[] = [
     {
+        _id: '1',
+        slug: 'wash-and-fold',
+        description: 'Everyday laundry washed, dried, and folded.',
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         name: "Wash & Fold",
         serviceType: "wash_and_fold",
         estimatedDuration: { standard: 48, express: 24 },
@@ -24,6 +30,12 @@ const SERVICES_DATA: Service[] = [
         ]
     },
     {
+        _id: '2',
+        slug: 'wash-and-iron',
+        description: 'Washed, dried, and professionally ironed.',
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         name: "Wash & Iron",
         serviceType: "wash_and_iron",
         estimatedDuration: { standard: 48, express: 24 },
@@ -38,6 +50,12 @@ const SERVICES_DATA: Service[] = [
         ]
     },
     {
+        _id: '3',
+        slug: 'dry-cleaning',
+        description: 'Professional care for delicate fabrics.',
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         name: "Dry Cleaning",
         serviceType: "dry_clean",
         estimatedDuration: { standard: 72, express: 48 },
@@ -53,6 +71,12 @@ const SERVICES_DATA: Service[] = [
         ]
     },
     {
+        _id: '4',
+        slug: 'iron-only',
+        description: 'Professional pressing for clean clothes.',
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         name: "Iron Only",
         serviceType: "iron_only",
         estimatedDuration: { standard: 24, express: 6 },
@@ -67,6 +91,12 @@ const SERVICES_DATA: Service[] = [
         ]
     },
     {
+        _id: '5',
+        slug: 'starch-and-iron',
+        description: 'Crisp finish for your formal wear.',
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         name: "Starch & Iron",
         serviceType: "starch",
         estimatedDuration: { standard: 48, express: 24 },
@@ -78,16 +108,22 @@ const SERVICES_DATA: Service[] = [
         ]
     },
     {
+        _id: '6',
+        slug: 'express-service',
+        description: 'Quick turnaround for urgent needs.',
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         name: "Express Service",
         serviceType: "express",
         estimatedDuration: { standard: 12, express: 6 },
         isExpressAvailable: false,
         pricing: [
-            { garmentType: "shirt", standardPrice: 450, expressPrice: null },
-            { garmentType: "trouser", standardPrice: 500, expressPrice: null },
-            { garmentType: "dress", standardPrice: 700, expressPrice: null },
-            { garmentType: "native_attire", standardPrice: 900, expressPrice: null },
-            { garmentType: "suit", standardPrice: 3500, expressPrice: null }
+            { garmentType: "shirt", standardPrice: 450, expressPrice: 1000 },
+            { garmentType: "trouser", standardPrice: 500, expressPrice: 1200 },
+            { garmentType: "dress", standardPrice: 700, expressPrice: 1400 },
+            { garmentType: "native_attire", standardPrice: 900, expressPrice: 1500 },
+            { garmentType: "suit", standardPrice: 3500, expressPrice: 5000 }
         ]
     }
 ];

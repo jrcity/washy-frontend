@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Truck, Package, CheckCircle, Clock, MapPin } from 'lucide-react';
 import { Card, Badge, EmptyState, SkeletonCard } from '@/components/ui';
 import { PageWrapper } from '@/components/layout';
@@ -28,29 +29,33 @@ export const RiderDashboard = () => {
     >
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card variant="bordered">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-info-50 text-info-600 rounded-xl">
-              <Truck className="w-6 h-6" />
+        <Link to="/rider/tasks">
+          <Card variant="bordered" hover>
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-info-50 text-info-600 rounded-xl">
+                <Truck className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-sm text-neutral-500">Pickups</p>
+                <p className="text-2xl font-bold text-neutral-900">{pickups.length}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-neutral-500">Pickups</p>
-              <p className="text-2xl font-bold text-neutral-900">{pickups.length}</p>
-            </div>
-          </div>
-        </Card>
+          </Card>
+        </Link>
         
-        <Card variant="bordered">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-warning-50 text-warning-600 rounded-xl">
-              <Package className="w-6 h-6" />
+        <Link to="/rider/tasks">
+          <Card variant="bordered" hover>
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-warning-50 text-warning-600 rounded-xl">
+                <Package className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-sm text-neutral-500">Deliveries</p>
+                <p className="text-2xl font-bold text-neutral-900">{deliveries.length}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-neutral-500">Deliveries</p>
-              <p className="text-2xl font-bold text-neutral-900">{deliveries.length}</p>
-            </div>
-          </div>
-        </Card>
+          </Card>
+        </Link>
         
         <Card variant="bordered">
           <div className="flex items-center gap-3">
@@ -98,7 +103,8 @@ export const RiderDashboard = () => {
         ) : (
           <div className="space-y-4">
             {pickups.map((order) => (
-              <Card key={order._id} variant="bordered" className="cursor-pointer hover:shadow-md transition-shadow">
+              <Link key={order._id} to={`/rider/active/${order._id}`}>
+                <Card variant="bordered" hover className="cursor-pointer hover:shadow-md transition-shadow">
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
@@ -124,7 +130,8 @@ export const RiderDashboard = () => {
                     </p>
                   </div>
                 </div>
-              </Card>
+                </Card>
+              </Link>
             ))}
           </div>
         )}
@@ -151,7 +158,8 @@ export const RiderDashboard = () => {
         ) : (
           <div className="space-y-4">
             {deliveries.map((order) => (
-              <Card key={order._id} variant="bordered" className="cursor-pointer hover:shadow-md transition-shadow">
+              <Link key={order._id} to={`/rider/active/${order._id}`}>
+                <Card variant="bordered" hover className="cursor-pointer hover:shadow-md transition-shadow">
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
@@ -177,7 +185,8 @@ export const RiderDashboard = () => {
                     </p>
                   </div>
                 </div>
-              </Card>
+                </Card>
+              </Link>
             ))}
           </div>
         )}

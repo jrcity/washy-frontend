@@ -1,1 +1,4 @@
-export { CustomerDashboard } from './CustomerDashboard';
+export * from './CustomerDashboard';
+export * from './NewOrderPage';
+export * from './OrderHistoryPage';
+export * from './OrderDetailsPage';
