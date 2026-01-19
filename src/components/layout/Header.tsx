@@ -36,6 +36,22 @@ export const Header = () => {
     }
   };
 
+  const getProfileLink = () => {
+    if (!user) return '/login';
+    switch (user.role) {
+      case 'admin':
+      case 'super_admin':
+        return '/admin/profile';
+      case 'rider':
+        return '/rider/profile';
+      case 'staff':
+      case 'branch_manager':
+        return '/branch/profile';
+      default:
+        return '/dashboard/profile';
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-neutral-200/60 shadow-sm transition-all duration-300">
       <div className="container max-w-7xl mx-auto">
@@ -119,12 +135,12 @@ export const Header = () => {
                           <span>Dashboard</span>
                         </Link>
                         <Link
-                          to="/settings"
+                          to={getProfileLink()}
                           className="flex items-center space-x-2 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
                           onClick={() => setIsProfileMenuOpen(false)}
                         >
                           <Settings className="w-4 h-4" />
-                          <span>Settings</span>
+                          <span>Profile & Settings</span>
                         </Link>
                         <button
                           onClick={() => {

@@ -47,6 +47,7 @@ const branchLinks: SidebarLink[] = [
   { href: '/branch', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/branch/orders', label: 'Orders', icon: ShoppingBag },
   { href: '/branch/stats', label: 'Analytics', icon: BarChart3 },
+  { href: '/branch/profile', label: 'Profile', icon: Users },
 ];
 
 const adminLinks: SidebarLink[] = [
@@ -59,7 +60,7 @@ const adminLinks: SidebarLink[] = [
   { href: '/admin/payments', label: 'Payments', icon: CreditCard },
   { href: '/admin/uploads', label: 'Uploads', icon: Upload },
   { href: '/admin/reports', label: 'Reports', icon: BarChart3 },
-  { href: '/admin/settings', label: 'Settings', icon: Settings },
+  { href: '/admin/profile', label: 'Profile', icon: Users },
 ];
 
 interface SidebarProps {
