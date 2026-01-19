@@ -22,7 +22,12 @@ export const OrderHistoryPage = () => {
   const statuses = [
     { value: '', label: 'All Orders' },
     { value: 'pending', label: 'Pending' },
-    { value: 'active', label: 'Active' }, // active isn't exact status, but maybe 'in_process'? Using exact match for now
+    { value: 'confirmed', label: 'Confirmed' },
+    { value: 'picked_up', label: 'Picked Up' },
+    { value: 'in_process', label: 'In Process' },
+    { value: 'ready', label: 'Ready' },
+    { value: 'out_for_delivery', label: 'Out for Delivery' },
+    { value: 'delivered', label: 'Delivered' },
     { value: 'completed', label: 'Completed' },
     { value: 'cancelled', label: 'Cancelled' },
   ];
@@ -72,7 +77,7 @@ export const OrderHistoryPage = () => {
           />
         </Card>
       ) : (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           {orders.map((order) => (
             <Link key={order._id} to={`/dashboard/orders/${order._id}`}>
               <Card variant="bordered" hover className="flex flex-col md:flex-row md:items-center gap-4 p-4">

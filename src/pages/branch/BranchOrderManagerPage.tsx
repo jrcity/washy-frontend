@@ -33,9 +33,13 @@ export const BranchOrderManagerPage = () => {
     { label: 'All', value: 'all' },
     { label: 'Pending', value: 'pending' },
     { label: 'Confirmed', value: 'confirmed' },
+    { label: 'Picked Up', value: 'picked_up' },
     { label: 'In Process', value: 'in_process' },
     { label: 'Ready', value: 'ready' },
     { label: 'Out for Delivery', value: 'out_for_delivery' },
+    { label: 'Delivered', value: 'delivered' },
+    { label: 'Completed', value: 'completed' },
+    { label: 'Cancelled', value: 'cancelled' },
   ];
 
   if (isLoading) return <LoadingScreen />;
@@ -55,18 +59,17 @@ export const BranchOrderManagerPage = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
-          {tabs.map((tab) => (
-            <Button
-              key={tab.value}
-              variant={statusFilter === tab.value ? 'primary' : 'outline'}
-              size="sm"
-              onClick={() => setStatusFilter(tab.value)}
-              className="whitespace-nowrap"
+        <div className="flex gap-2 items-center">
+             <Filter className="w-4 h-4 text-neutral-500" />
+             <select
+                className="h-10 px-3 py-2 rounded-lg border border-neutral-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
             >
-              {tab.label}
-            </Button>
-          ))}
+                {tabs.map(tab => (
+                    <option key={tab.value} value={tab.value}>{tab.label}</option>
+                ))}
+            </select>
         </div>
       </div>
 

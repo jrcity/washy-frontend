@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, User as UserIcon, Shield, Mail, Phone, MoreHorizontal } from 'lucide-react';
+import { Search, Filter, User as UserIcon, Shield, Mail, Phone, MoreHorizontal } from 'lucide-react';
 import { PageWrapper } from '@/components/layout';
 import { Card, Input, Button, Badge, LoadingScreen, EmptyState } from '@/components/ui';
 import { useUsers } from '@/hooks'; // Assuming useUsers hook exists or will need to check
@@ -41,20 +41,20 @@ export const AdminUsersPage = () => {
                     leftIcon={<Search className="w-4 h-4" />}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
+                    className="md:max-w-sm"
                 />
                 </div>
-                <div className="flex gap-2">
-                    {['all', 'customer', 'staff', 'rider', 'branch_manager'].map((role) => (
-                         <Button
-                            key={role}
-                            variant={roleFilter === role ? 'primary' : 'outline'}
-                            size="sm"
-                            onClick={() => setRoleFilter(role)}
-                            className="capitalize"
-                         >
-                            {role.replace('_', ' ')}
-                         </Button>
-                    ))}
+                <div className="flex gap-2 items-center">
+                    <Filter className="w-4 h-4 text-neutral-500" />
+                     <select
+                        className="h-10 px-3 py-2 rounded-lg border border-neutral-200 text-sm capitalize focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        value={roleFilter}
+                        onChange={(e) => setRoleFilter(e.target.value)}
+                     >
+                        {['all', 'customer', 'staff', 'rider', 'branch_manager'].map((role) => (
+                            <option key={role} value={role}>{role.replace('_', ' ')}</option>
+                        ))}
+                     </select>
                 </div>
             </div>
 

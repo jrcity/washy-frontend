@@ -1,20 +1,65 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useOrder, useRateOrder } from '@/hooks';
 import { PageWrapper } from '@/components/layout';
-import { Card, Badge, Button, Spinner } from '@/components/ui';
+import { Card, Badge, Button, Spinner, Alert } from '@/components/ui';
 import { formatCurrency, formatDate, getStatusColor, getStatusText } from '@/lib/utils';
-import { ChevronLeft, MapPin, Clock, CreditCard, Star, Truck } from 'lucide-react';
-import { useState } from 'react';
+import { ChevronLeft, MapPin, Clock, CreditCard, Star, Truck, CheckCircle2 } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { verifyPayment } from '@/services/payments.service';
+import toast from 'react-hot-toast';
+
+import { PaymentModal } from '@/components/payment/PaymentModal';
 
 export const OrderDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
-  const { data: order, isLoading } = useOrder(id!);
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data: order, isLoading, refetch } = useOrder(id!);
   const { mutate: rateOrder, isPending: isRating } = useRateOrder();
   
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
+  const verifyAttempted = useRef(false);
 
-  if (isLoading) return <div className="h-96 flex items-center justify-center"><Spinner /></div>;
+  // Payment Verification Effect
+  useEffect(() => {
+    const checkPayment = async () => {
+        const shouldVerify = searchParams.get('payment_verify');
+        const reference = searchParams.get('reference') || searchParams.get('trxref');
+
+        if (shouldVerify && reference && !isVerifyingPayment && !verifyAttempted.current) {
+            verifyAttempted.current = true;
+            setIsVerifyingPayment(true);
+            try {
+                await verifyPayment(reference);
+                toast.success('Payment verified successfully!');
+                refetch(); // Reload order to show paid status
+            } catch (error) {
+                console.error(error);
+                // Only show error if it's not a duplicate check error (optional refinement)
+                toast.error('Could not verify payment. It may take a moment to reflect.');
+            } finally {
+                setIsVerifyingPayment(false);
+                // Clear params
+                setSearchParams({});
+            }
+        }
+    };
+
+    checkPayment();
+  }, [searchParams, refetch, setSearchParams]);
+
+  if (isLoading || isVerifyingPayment) {
+      return (
+        <div className="h-96 flex flex-col items-center justify-center gap-4">
+             <Spinner />
+             {isVerifyingPayment && <p className="text-neutral-500 font-medium animate-pulse">Verifying payment status...</p>}
+        </div>
+      );
+  }
+  
   if (!order) return <div className="text-center py-12">Order not found</div>;
 
   const handleRate = () => {
@@ -27,7 +72,9 @@ export const OrderDetailsPage = () => {
       description={`Placed on ${formatDate(order.createdAt, 'PPP')}`}
       action={
         order.status === 'pending' && !order.isPaid ? (
-          <Button>Pay Now {formatCurrency(order.total)}</Button>
+          <Button onClick={() => setIsPaymentModalOpen(true)}>
+            Pay Now {formatCurrency(order.total)}
+          </Button>
         ) : null
       }
     >
@@ -42,6 +89,14 @@ export const OrderDetailsPage = () => {
                 {getStatusText(order.status)}
               </Badge>
             </div>
+            
+            {order.isPaid && (
+                <div className="mb-4 bg-success-50 border border-success-100 p-3 rounded-lg flex items-center gap-2 text-success-700">
+                    <CheckCircle2 className="w-5 h-5" />
+                    <span className="font-medium">Payment Successful</span>
+                </div>
+            )}
+
             {/* Simple Timeline logic could go here */}
             {['pending', 'confirmed', 'picked_up', 'in_process', 'ready', 'out_for_delivery', 'delivered', 'completed'].includes(order.status) && (
               <div className="bg-neutral-50 p-4 rounded-xl border border-neutral-100 flex items-center gap-3">
@@ -157,6 +212,12 @@ export const OrderDetailsPage = () => {
           )}
         </div>
       </div>
+
+      <PaymentModal 
+        isOpen={isPaymentModalOpen} 
+        onClose={() => setIsPaymentModalOpen(false)} 
+        order={order}
+      />
     </PageWrapper>
   );
 };

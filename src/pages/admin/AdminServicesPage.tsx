@@ -63,12 +63,25 @@ export const AdminServicesPage = () => {
                         {!service.isActive && <Badge variant="error" size="sm">Inactive</Badge>}
                     </div>
                     <p className="text-sm text-neutral-500 line-clamp-1">{service.description}</p>
-                    <div className="flex items-center gap-2 mt-1">
+                    {/* Pricing Tiers */}
+                    <div className="mt-4 border-t border-neutral-100 pt-4">
+                        <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Pricing Structure</p>
+                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+                            {service.pricing.map((price, idx) => (
+                                <div key={idx} className="bg-neutral-50 rounded px-2 py-1.5 flex items-center justify-between text-sm">
+                                    <span className="capitalize text-neutral-600">{price.garmentType.replace('_', ' ')}</span>
+                                    <span className="font-semibold text-neutral-900">{formatCurrency(price.basePrice)}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 mt-4">
                         <Badge size="sm" variant="secondary" className="capitalize">
                             {service.category.replace('_', ' ')}
                         </Badge>
                         <span className="text-xs text-neutral-400">
-                             • {service.pricing.length} Pricing Tiers
+                             • Est. {service.estimatedDuration.standard}h (Std) / {service.estimatedDuration.express}h (Exp)
                         </span>
                     </div>
                     </div>

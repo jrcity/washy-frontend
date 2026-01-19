@@ -109,7 +109,7 @@ export const CustomerDashboard = () => {
             />
           </Card>
         ) : (
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             {orders.map((order) => (
               <Link key={order._id} to={`/dashboard/orders/${order._id}`}>
                 <Card variant="bordered" hover className="flex flex-col sm:flex-row sm:items-center gap-4">

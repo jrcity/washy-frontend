@@ -6,6 +6,7 @@ import { PageWrapper } from '@/components/layout';
 import { useAuthContext } from '@/context/AuthContext';
 import { updateProfile } from '@/services/auth.service';
 import toast from 'react-hot-toast';
+import { RiderProfileForm } from '@/components/profile/RiderProfileForm';
 
 export const ProfilePage = () => {
   const { user } = useAuthContext();
@@ -18,7 +19,10 @@ export const ProfilePage = () => {
     name: '',
     phone: '',
     email: '',
-    street: '' // Added for address display if needed
+    street: '',
+    city: '',
+    state: '',
+    area: ''
   });
 
   // Initialize form data when user loads
@@ -28,7 +32,10 @@ export const ProfilePage = () => {
         name: user.name || '',
         phone: user.phone || '',
         email: user.email || '',
-        street: user.address?.street || ''
+        street: user.address?.street || '',
+        city: user.address?.city || '',
+        state: user.address?.state || '',
+        area: user.address?.area || ''
       });
     }
   }, [user]);
@@ -45,7 +52,12 @@ export const ProfilePage = () => {
       await updateProfile({
         name: formData.name,
         phone: formData.phone,
-        // address: { ...user?.address, street: formData.street } 
+        address: {
+          street: formData.street,
+          city: formData.city,
+          state: formData.state,
+          area: formData.area
+        }
       });
       await queryClient.invalidateQueries({ queryKey: ['profile'] });
       toast.success('Profile updated successfully');
@@ -86,7 +98,7 @@ export const ProfilePage = () => {
         </div>
 
         {/* Content */}
-        <div className="flex-1">
+        <div className="flex-1 space-y-6">
           <Card className="p-6">
             {activeTab === 'general' && (
               <form onSubmit={onUpdateProfile} className="space-y-6">
@@ -119,6 +131,42 @@ export const ProfilePage = () => {
                 </div>
 
                 <div className="pt-6 border-t border-neutral-100">
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">Address Details</h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="md:col-span-2">
+                      <Input 
+                        label="Street Address" 
+                        name="street"
+                        value={formData.street}
+                        onChange={handleInputChange}
+                        placeholder="123 Main St"
+                      />
+                    </div>
+                    <Input 
+                      label="Area" 
+                      name="area"
+                      value={formData.area}
+                      onChange={handleInputChange}
+                      placeholder="Downtown"
+                    />
+                    <Input 
+                      label="City" 
+                      name="city"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      placeholder="Lagos"
+                    />
+                    <Input 
+                      label="State" 
+                      name="state"
+                      value={formData.state}
+                      onChange={handleInputChange}
+                      placeholder="Lagos State"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-6 border-t border-neutral-100">
                   <div className="flex justify-end">
                     <Button type="submit" isLoading={isLoading}>
                       Save Changes
@@ -128,6 +176,15 @@ export const ProfilePage = () => {
               </form>
             )}
           </Card>
+
+          {/* Role Specific Details */}
+          {activeTab === 'general' && user?.role === 'rider' && (
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold text-neutral-900 mb-1">Rider Details</h3>
+              <p className="text-sm text-neutral-500 mb-6">Manage your vehicle and bank information.</p>
+              <RiderProfileForm />
+            </Card>
+          )}
         </div>
       </div>
     </PageWrapper>

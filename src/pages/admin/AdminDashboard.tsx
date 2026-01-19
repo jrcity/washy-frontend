@@ -97,7 +97,7 @@ export const AdminDashboard = () => {
               {[1, 2, 3].map((i) => <SkeletonCard key={i} />)}
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="flex flex-col gap-4">
               {orders.map((order) => (
                 <Link key={order._id} to={`/admin/orders/${order._id}`}>
                   <Card variant="bordered" hover>
@@ -131,7 +131,7 @@ export const AdminDashboard = () => {
             </Link>
           </div>
 
-          <div className="space-y-3">
+          <div className="flex flex-col gap-4">
             {branches.slice(0, 5).map((branch) => (
               <Link key={branch._id} to={`/admin/branches/${branch._id}`}>
                 <Card variant="bordered" hover>
