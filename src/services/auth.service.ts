@@ -27,6 +27,12 @@ export const login = async (data: LoginInput): Promise<AuthResponse> => {
 /**
  * Get current user profile
  */
+
+
+
+/**
+ * Get current user profile
+ */
 export const getProfile = async (): Promise<ApiResponse<User>> => {
   const response = await api.get<ApiResponse<User>>('/auth/profile');
   return response.data;

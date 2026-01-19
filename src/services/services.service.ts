@@ -2,98 +2,91 @@ import { api } from '@/lib/axios';
 import type { 
   ApiResponse, 
   Service, 
-  ServiceFilters, 
-  CreateServiceInput,
-  UpdateServiceInput,
-  UpdatePricingInput,
-  CalculatePriceInput,
-  CalculatePriceResponse
+  Category, 
+  CreateServiceInput, 
+  ServicePricing, 
+  CreateCategoryInput,
+  UpdateCategoryInput
 } from '@/types';
 
-/**
- * Get all services
- */
-export const getServices = async (filters?: ServiceFilters): Promise<ApiResponse<Service[]>> => {
-  const response = await api.get<ApiResponse<Service[]>>('/services', { params: filters });
-  return response.data;
-};
+export const servicesService = {
+  // Get all services
+  getAll: async (params?: { category?: string; isActive?: boolean }): Promise<Service[]> => {
+    // Remove category if empty string to avoid backend validation error
+    const cleanParams = { ...params };
+    if (!cleanParams.category || cleanParams.category === '') {
+      delete cleanParams.category;
+    }
+    const response = await api.get<ApiResponse<Service[]>>('/services', { params: cleanParams });
+    return response.data.data!;
+  },
 
-/**
- * Get active services
- */
-export const getActiveServices = async (): Promise<ApiResponse<Service[]>> => {
-  const response = await api.get<ApiResponse<Service[]>>('/services/active');
-  return response.data;
-};
+  // Get active services
+  getActive: async (): Promise<Service[]> => {
+    const response = await api.get<ApiResponse<Service[]>>('/services/active');
+    return response.data.data!; // This endpoint returns array directly in data if strictly following API doc, or object with data property. Assuming standard ApiResponse structure.
+  },
 
-/**
- * Get service catalog with pricing
- */
-export const getServiceCatalog = async (): Promise<ApiResponse<Service[]>> => {
-  const response = await api.get<ApiResponse<Service[]>>('/services/catalog');
-  return response.data;
-};
+  // Get service by slug
+  getBySlug: async (slug: string): Promise<Service> => {
+    const response = await api.get<ApiResponse<Service>>(`/services/slug/${slug}`);
+    return response.data.data!; // API might return just data object, type adjustment might be needed
+  },
 
-/**
- * Get service by ID
- */
-export const getServiceById = async (id: string): Promise<ApiResponse<Service>> => {
-  const response = await api.get<ApiResponse<Service>>(`/services/${id}`);
-  return response.data;
-};
+  // Get catalog
+  getCatalog: async (): Promise<Service[]> => {
+    const response = await api.get<ApiResponse<Service[]>>('/services/catalog');
+    return response.data.data!;
+  },
 
-/**
- * Get service by slug
- */
-export const getServiceBySlug = async (slug: string): Promise<ApiResponse<Service>> => {
-  const response = await api.get<ApiResponse<Service>>(`/services/slug/${slug}`);
-  return response.data;
-};
+  // Calculate price
+  calculatePrice: async (data: { serviceId: string; items: any[] }): Promise<any> => {
+    const response = await api.post<ApiResponse<any>>('/services/calculate-price', data);
+    return response.data.data!;
+  },
 
-/**
- * Calculate price for order items
- */
-export const calculatePrice = async (data: CalculatePriceInput): Promise<ApiResponse<CalculatePriceResponse>> => {
-  const response = await api.post<ApiResponse<CalculatePriceResponse>>('/services/calculate-price', data);
-  return response.data;
-};
+  // Create service (Admin)
+  create: async (data: CreateServiceInput): Promise<void> => {
+    await api.post('/services', data);
+  },
 
-/**
- * Create a new service
- */
-export const createService = async (data: CreateServiceInput): Promise<ApiResponse<Service>> => {
-  const response = await api.post<ApiResponse<Service>>('/services', data);
-  return response.data;
-};
+  // Update pricing (Admin)
+  updatePricing: async (id: string, pricing: ServicePricing[]): Promise<void> => {
+    await api.patch(`/services/${id}/pricing`, { pricing });
+  },
 
-/**
- * Update service
- */
-export const updateService = async (id: string, data: UpdateServiceInput): Promise<ApiResponse<Service>> => {
-  const response = await api.patch<ApiResponse<Service>>(`/services/${id}`, data);
-  return response.data;
-};
+  // Categories
+  getAllCategories: async (params?: { page?: number; limit?: number; isActive?: boolean }): Promise<Category[]> => {
+     // Handling pagination response structure vs array
+    const response = await api.get<ApiResponse<any>>('/categories', { params });
+    return response.data.data?.categories || response.data.data!; 
+  },
 
-/**
- * Update service pricing
- */
-export const updateServicePricing = async (id: string, data: UpdatePricingInput): Promise<ApiResponse<Service>> => {
-  const response = await api.patch<ApiResponse<Service>>(`/services/${id}/pricing`, data);
-  return response.data;
-};
+  getActiveCategories: async (): Promise<Category[]> => {
+    const response = await api.get<ApiResponse<Category[]>>('/categories/active');
+    return response.data.data!;
+  },
 
-/**
- * Delete service
- */
-export const deleteService = async (id: string): Promise<ApiResponse<void>> => {
-  const response = await api.delete<ApiResponse<void>>(`/services/${id}`);
-  return response.data;
-};
+  createCategory: async (data: CreateCategoryInput): Promise<Category> => {
+    const response = await api.post<ApiResponse<Category>>('/categories', data);
+    return response.data.data!;
+  },
 
-/**
- * Seed default services (super admin only)
- */
-export const seedServices = async (): Promise<ApiResponse<void>> => {
-  const response = await api.post<ApiResponse<void>>('/services/seed');
-  return response.data;
+  updateCategory: async (id: string, data: UpdateCategoryInput): Promise<Category> => {
+    const response = await api.patch<ApiResponse<Category>>(`/categories/${id}`, data);
+    return response.data.data!;
+  },
+
+  deleteCategory: async (id: string): Promise<void> => {
+    await api.delete(`/categories/${id}`);
+  },
+
+  uploadCategoryImage: async (id: string, file: File): Promise<Category> => {
+    const formData = new FormData();
+    formData.append('image', file);
+    const response = await api.patch<ApiResponse<Category>>(`/categories/${id}/image`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return response.data.data!;
+  }
 };
