@@ -41,11 +41,20 @@ import {
 import { 
   BranchDashboard,
   BranchOrderManagerPage,
-  BranchProcessOrderPage
+  BranchProcessOrderPage,
+  BranchStaffPage,
+  BranchStatsPage
 } from '@/pages/branch';
 import { ProfilePage } from '@/pages/profile/ProfilePage';
 
-import { AdminDashboard } from '@/pages/admin';
+import { 
+  AdminDashboard,
+  AdminOrdersPage,
+  AdminServicesPage,
+  AdminBranchesPage,
+  AdminUsersPage
+} from '@/pages/admin';
+
 
 
 // Protected Route Wrapper
@@ -169,6 +178,8 @@ const AppRoutes = () => {
             <Route index element={<BranchDashboard />} />
             <Route path="orders" element={<BranchOrderManagerPage />} />
             <Route path="orders/:id/process" element={<BranchProcessOrderPage />} />
+            <Route path="staff" element={<BranchStaffPage />} />
+            <Route path="stats" element={<BranchStatsPage />} />
             <Route path="profile" element={<ProfilePage />} />
           </Route>
         </Route>
@@ -177,6 +188,11 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute allowedRoles={['admin', 'super_admin']} />}>
           <Route path="/admin" element={<DashboardLayout variant="admin" />}>
             <Route index element={<AdminDashboard />} />
+            <Route path="orders" element={<AdminOrdersPage />} />
+            <Route path="services" element={<AdminServicesPage />} />
+            <Route path="branches" element={<AdminBranchesPage />} />
+            <Route path="users" element={<AdminUsersPage />} />
+            <Route path="profile" element={<ProfilePage />} />
           </Route>
         </Route>
 
