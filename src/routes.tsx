@@ -16,9 +16,9 @@ import {
 import { LoginPage, RegisterPage } from '@/pages/auth';
 
 // Dashboard Pages
-import { CustomerDashboard } from '@/pages/customer';
-import { RiderDashboard } from '@/pages/rider';
-import { BranchDashboard } from '@/pages/branch';
+import { CustomerDashboard, NewOrderPage, OrderHistoryPage, OrderDetailsPage } from '@/pages/customer';
+import { RiderDashboard, RiderTasksPage, ActiveDeliveryPage, VerifyDeliveryPage } from '@/pages/rider';
+import { BranchDashboard, BranchOrderManagerPage, BranchProcessOrderPage } from '@/pages/branch';
 import { AdminDashboard } from '@/pages/admin';
 
 // Protected Route Wrapper
@@ -118,7 +118,9 @@ export const routes: RouteObject[] = [
     ),
     children: [
       { index: true, element: <CustomerDashboard /> },
-      // Add more customer routes as needed
+      { path: 'new-order', element: <NewOrderPage /> },
+      { path: 'orders', element: <OrderHistoryPage /> },
+      { path: 'orders/:id', element: <OrderDetailsPage /> },
     ],
   },
 
@@ -132,6 +134,9 @@ export const routes: RouteObject[] = [
     ),
     children: [
       { index: true, element: <RiderDashboard /> },
+      { path: 'tasks', element: <RiderTasksPage /> },
+      { path: 'active/:id', element: <ActiveDeliveryPage /> },
+      { path: 'verify/:id', element: <VerifyDeliveryPage /> },
     ],
   },
 
@@ -145,6 +150,8 @@ export const routes: RouteObject[] = [
     ),
     children: [
       { index: true, element: <BranchDashboard /> },
+      { path: 'orders', element: <BranchOrderManagerPage /> },
+      { path: 'orders/:id', element: <BranchProcessOrderPage /> },
     ],
   },
 

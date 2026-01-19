@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { ChevronLeft } from 'lucide-react';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { Sidebar } from './Sidebar';
@@ -67,14 +68,26 @@ interface PageWrapperProps {
   action?: ReactNode;
   children: ReactNode;
   className?: string;
+  showBack?: boolean;
 }
 
-export const PageWrapper = ({ title, description, action, children, className }: PageWrapperProps) => {
+export const PageWrapper = ({ title, description, action, children, className, showBack }: PageWrapperProps) => {
+  const navigate = useNavigate();
+
   return (
     <div className={cn('space-y-6', className)}>
-      {(title || action) && (
+      {(title || action || showBack) && (
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
+          <div className="flex-1">
+            {showBack && (
+              <button 
+                onClick={() => navigate(-1)}
+                className="flex items-center text-sm text-neutral-500 hover:text-neutral-800 mb-2 transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4 mr-1" />
+                Back
+              </button>
+            )}
             {title && <h1 className="text-2xl font-bold text-neutral-900">{title}</h1>}
             {description && <p className="mt-1 text-neutral-500">{description}</p>}
           </div>

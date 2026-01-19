@@ -21,9 +21,30 @@ import {
 import { LoginPage, RegisterPage } from '@/pages/auth';
 
 // Dashboard Pages
-import { CustomerDashboard } from '@/pages/customer';
-import { RiderDashboard } from '@/pages/rider';
-import { BranchDashboard } from '@/pages/branch';
+// Customer Pages
+import { 
+  CustomerDashboard,
+  NewOrderPage,
+  OrderHistoryPage,
+  OrderDetailsPage
+} from '@/pages/customer';
+
+// Rider Pages
+import { 
+  RiderDashboard,
+  RiderTasksPage,
+  ActiveDeliveryPage,
+  VerifyDeliveryPage
+} from '@/pages/rider';
+
+// Branch Pages
+import { 
+  BranchDashboard,
+  BranchOrderManagerPage,
+  BranchProcessOrderPage
+} from '@/pages/branch';
+import { ProfilePage } from '@/pages/profile/ProfilePage';
+
 import { AdminDashboard } from '@/pages/admin';
 
 
@@ -124,6 +145,10 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute allowedRoles={['customer']} />}>
           <Route path="/dashboard" element={<DashboardLayout variant="customer" />}>
             <Route index element={<CustomerDashboard />} />
+            <Route path="new-order" element={<NewOrderPage />} />
+            <Route path="orders" element={<OrderHistoryPage />} />
+            <Route path="orders/:id" element={<OrderDetailsPage />} />
+            <Route path="profile" element={<ProfilePage />} />
           </Route>
         </Route>
 
@@ -131,6 +156,10 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute allowedRoles={['rider']} />}>
           <Route path="/rider" element={<DashboardLayout variant="rider" />}>
             <Route index element={<RiderDashboard />} />
+            <Route path="tasks" element={<RiderTasksPage />} />
+            <Route path="delivery/:id" element={<ActiveDeliveryPage />} />
+            <Route path="verify/:id" element={<VerifyDeliveryPage />} />
+            <Route path="profile" element={<ProfilePage />} />
           </Route>
         </Route>
 
@@ -138,6 +167,9 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute allowedRoles={['staff', 'branch_manager']} />}>
           <Route path="/branch" element={<DashboardLayout variant="branch" />}>
             <Route index element={<BranchDashboard />} />
+            <Route path="orders" element={<BranchOrderManagerPage />} />
+            <Route path="orders/:id/process" element={<BranchProcessOrderPage />} />
+            <Route path="profile" element={<ProfilePage />} />
           </Route>
         </Route>
 
