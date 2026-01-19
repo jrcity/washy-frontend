@@ -1,10 +1,11 @@
 export type ServiceCategory = 'laundry' | 'graphics_design' | 'dry_cleaning' | 'alteration' | 'shoe_care' | 'household';
 export type ServiceType = 'wash_and_fold' | 'wash_and_iron' | 'dry_clean' | 'express' | 'starch' | 'iron_only';
+export type GarmentType = 'shirt' | 'trouser' | 'suit' | 'dress' | 'duvet' | 'curtain' | 'bedsheet' | 'towel' | 'skirt' | 'underwear' | 'blanket' | 'jacket' | 'native_attire' | 'other';
 
 export interface ServicePricing {
-  garmentType: string;
-  standardPrice: number;
-  expressPrice: number;
+  garmentType: GarmentType;
+  basePrice: number;
+  expressMultiplier: number;
 }
 
 export interface Service {
@@ -12,6 +13,7 @@ export interface Service {
   name: string;
   slug: string;
   description: string;
+  category: ServiceCategory;
   serviceType: ServiceType;
   pricing: ServicePricing[];
   estimatedDuration: {
@@ -19,9 +21,12 @@ export interface Service {
     express: number;
   };
   isExpressAvailable: boolean;
+  branch?: string; // ObjectId
   isActive: boolean;
+  icon?: string;
   imageUrl?: string;
   imagePublicId?: string;
+  sortOrder: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -33,6 +38,9 @@ export interface CreateServiceInput {
   serviceType: ServiceType;
   pricing: ServicePricing[];
   isExpressAvailable?: boolean;
+  icon?: string;
+  imageUrl?: string;
+  sortOrder?: number;
 }
 
 export interface Category {
@@ -41,9 +49,11 @@ export interface Category {
   slug: string;
   description: string;
   imageUrl?: string;
+  imagePublicId?: string;
   isActive: boolean;
   sortOrder: number;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface CreateCategoryInput {
@@ -52,6 +62,7 @@ export interface CreateCategoryInput {
   slug: string;
   isActive?: boolean;
   sortOrder?: number;
+  imageUrl?: string;
 }
 
 export interface UpdateCategoryInput extends Partial<CreateCategoryInput> {}

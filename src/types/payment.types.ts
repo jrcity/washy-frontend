@@ -3,14 +3,40 @@ export type PaymentStatus = 'pending' | 'processing' | 'completed' | 'failed' | 
 
 export interface Payment {
   _id: string;
-  order: string;
-  customer: string;
+  order: string; // ObjectId
+  customer: string; // ObjectId
   amount: number;
+  amountPaid: number;
   currency: string;
   method: PaymentMethod;
   status: PaymentStatus;
+  
+  // Paystack
   paystackReference?: string;
+  paystackAccessCode?: string;
   paystackAuthorizationUrl?: string;
+  paystackTransactionId?: string;
+
+  // Bank Transfer
+  bankTransferDetails?: {
+    bankName: string;
+    accountNumber: string;
+    accountName: string;
+    transferReference?: string;
+  };
+
+  // Refund
+  refund?: {
+    amount: number;
+    reason: string;
+    refundedAt: string;
+    refundReference?: string;
+  };
+
+  metadata?: Record<string, any>;
+  paidAt?: string;
+  failedAt?: string;
+  failureReason?: string;
   createdAt: string;
   updatedAt: string;
 }

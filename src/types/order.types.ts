@@ -1,5 +1,5 @@
 import type { User, Address } from './auth.types';
-import type { Service, ServiceType } from './service.types';
+import type { Service, ServiceType, GarmentType } from './service.types';
 import type { Branch } from './branch.types';
 
 export type OrderStatus = 
@@ -13,8 +13,6 @@ export type OrderStatus =
   | 'completed'
   | 'cancelled';
 
-export type GarmentType = 'shirt' | 'trouser' | 'suit' | 'dress' | 'duvet' | 'curtain' | 'bedsheet' | 'towel' | 'skirt' | 'underwear' | 'blanket' | 'jacket' | 'native_attire' | 'other';
-
 export interface OrderItem {
   service: string | Service;
   serviceType: ServiceType;
@@ -26,35 +24,62 @@ export interface OrderItem {
   notes?: string;
 }
 
+export interface StatusHistory {
+  status: OrderStatus;
+  timestamp: string;
+  updatedBy?: string; // ObjectId
+  notes?: string;
+}
+
+export interface DeliveryProof {
+  type: 'photo' | 'otp' | 'signature';
+  photoUrl?: string;
+  otpCode?: string;
+  signature?: string;
+  verifiedAt?: string;
+}
+
 export interface Order {
   _id: string;
   orderNumber: string;
   customer: User;
   branch: Branch;
+  serviceCategory: string; // Enum
   items: OrderItem[];
   pickupDate: string;
   pickupTimeSlot: string;
   expectedDeliveryDate: string;
+  deliveryTimeSlot?: string;
   pickupAddress: Address;
   deliveryAddress: Address;
+  pickupRider?: User;
+  deliveryRider?: User;
   subtotal: number;
   discount: number;
+  discountCode?: string;
   deliveryFee: number;
   total: number;
   status: OrderStatus;
+  statusHistory: StatusHistory[];
   isPaid: boolean;
-  driver?: User; 
-  pickupRider?: User;
-  deliveryRider?: User;
-  notes?: string;
+  payment?: { method: string }; // or IPayment ref
+  deliveryProof?: DeliveryProof;
+  customerNotes?: string;
+  internalNotes?: string;
   rating?: number;
-  payment?: { method: string };
+  feedback?: string;
+  attachments?: string[];
+  pickupScreenshots?: string[];
+  deliveryScreenshots?: string[];
+  cancelledAt?: string;
+  cancellationReason?: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface CreateOrderItemInput {
-  serviceId: string;
+  service: string;
+  serviceType: ServiceType;
   garmentType: GarmentType;
   quantity: number;
   isExpress?: boolean;
@@ -62,7 +87,7 @@ export interface CreateOrderItemInput {
 }
 
 export interface CreateOrderInput {
-  branchId: string;
+  branch: string;
   items: CreateOrderItemInput[];
   pickupDate: string;
   pickupTimeSlot: string;
