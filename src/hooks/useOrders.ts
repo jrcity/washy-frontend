@@ -1,197 +1,113 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { queryKeys } from '@/lib/queryClient';
-import * as ordersService from '@/services/orders.service';
+import { 
+  useQuery, 
+  useMutation, 
+  useQueryClient, 
+  keepPreviousData 
+} from '@tanstack/react-query';
+import { ordersService } from '@/services/orders.service';
 import type { 
-  OrderFilters, 
   CreateOrderInput, 
-  UpdateOrderStatusInput,
+  UpdateOrderStatusInput, 
   AssignRiderInput,
-  RateOrderInput,
-  CancelOrderInput,
-  VerifyDeliveryInput
+  RateOrderInput 
 } from '@/types';
 import toast from 'react-hot-toast';
 
-/**
- * Hook for fetching customer's own orders
- */
-export const useMyOrders = (filters?: OrderFilters) => {
+export const useOrders = (params?: { 
+  page?: number; 
+  limit?: number; 
+  status?: string;
+  branchId?: string;
+}) => {
   return useQuery({
-    queryKey: queryKeys.orders.myOrders(filters),
-    queryFn: async () => {
-      const response = await ordersService.getMyOrders(filters);
-      return response.data;
-    },
+    queryKey: ['orders', params],
+    queryFn: () => ordersService.getAll(params),
+    placeholderData: keepPreviousData,
   });
 };
 
-/**
- * Hook for fetching all orders (admin/staff)
- */
-export const useOrders = (filters?: OrderFilters) => {
+export const useMyOrders = (params?: { 
+  page?: number; 
+  limit?: number; 
+  status?: string; 
+}) => {
   return useQuery({
-    queryKey: queryKeys.orders.list(filters),
-    queryFn: async () => {
-      const response = await ordersService.getOrders(filters);
-      return response.data;
-    },
+    queryKey: ['my-orders', params],
+    queryFn: () => ordersService.getMyOrders(params),
+    placeholderData: keepPreviousData,
   });
 };
 
-/**
- * Hook for fetching a single order
- */
 export const useOrder = (id: string) => {
   return useQuery({
-    queryKey: queryKeys.orders.detail(id),
-    queryFn: async () => {
-      const response = await ordersService.getOrderById(id);
-      return response.data;
-    },
+    queryKey: ['order', id],
+    queryFn: () => ordersService.getById(id),
     enabled: !!id,
   });
 };
 
-/**
- * Hook for fetching order statistics
- */
-export const useOrderStats = (filters?: { branchId?: string; startDate?: string; endDate?: string }) => {
-  return useQuery({
-    queryKey: queryKeys.orders.stats(filters),
-    queryFn: async () => {
-      const response = await ordersService.getOrderStats(filters);
-      return response.data;
-    },
-  });
-};
-
-/**
- * Hook for creating a new order
- */
 export const useCreateOrder = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: (data: CreateOrderInput) => ordersService.createOrder(data),
+    mutationFn: (data: CreateOrderInput) => ordersService.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
-      toast.success('Order created successfully!');
+      toast.success('Order placed successfully!');
+      queryClient.invalidateQueries({ queryKey: ['my-orders'] });
     },
-    onError: (error: { message: string }) => {
-      toast.error(error.message || 'Failed to create order');
-    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to place order');
+    }
   });
 };
 
-/**
- * Hook for updating order status
- */
 export const useUpdateOrderStatus = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateOrderStatusInput }) => 
-      ordersService.updateOrderStatus(id, data),
+      ordersService.updateStatus(id, data),
     onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.detail(id) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
-      toast.success('Order status updated!');
+      toast.success('Order status updated');
+      queryClient.invalidateQueries({ queryKey: ['order', id] });
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
     },
-    onError: (error: { message: string }) => {
-      toast.error(error.message || 'Failed to update status');
-    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to update status');
+    }
   });
 };
 
-/**
- * Hook for assigning rider
- */
 export const useAssignRider = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: AssignRiderInput }) => 
       ordersService.assignRider(id, data),
     onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.detail(id) });
-      toast.success('Rider assigned successfully!');
+      toast.success('Rider assigned successfully');
+      queryClient.invalidateQueries({ queryKey: ['order', id] });
     },
-    onError: (error: { message: string }) => {
-      toast.error(error.message || 'Failed to assign rider');
-    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to assign rider');
+    }
   });
 };
 
-/**
- * Hook for generating delivery OTP
- */
-export const useGenerateOTP = () => {
-  return useMutation({
-    mutationFn: (id: string) => ordersService.generateDeliveryOTP(id),
-    onSuccess: () => {
-      toast.success('OTP sent to customer!');
-    },
-    onError: (error: { message: string }) => {
-      toast.error(error.message || 'Failed to generate OTP');
-    },
-  });
-};
-
-/**
- * Hook for verifying delivery
- */
-export const useVerifyDelivery = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: VerifyDeliveryInput }) => 
-      ordersService.verifyDelivery(id, data),
-    onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.detail(id) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
-      toast.success('Delivery verified successfully!');
-    },
-    onError: (error: { message: string }) => {
-      toast.error(error.message || 'Failed to verify delivery');
-    },
-  });
-};
-
-/**
- * Hook for rating an order
- */
 export const useRateOrder = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: RateOrderInput }) => 
       ordersService.rateOrder(id, data),
-    onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.detail(id) });
+    onSuccess: () => {
       toast.success('Thank you for your feedback!');
     },
-    onError: (error: { message: string }) => {
-      toast.error(error.message || 'Failed to submit rating');
-    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to submit rating');
+    }
   });
 };
 
-/**
- * Hook for canceling an order
- */
-export const useCancelOrder = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: CancelOrderInput }) => 
-      ordersService.cancelOrder(id, data),
-    onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.detail(id) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
-      toast.success('Order cancelled successfully');
-    },
-    onError: (error: { message: string }) => {
-      toast.error(error.message || 'Failed to cancel order');
-    },
+export const useOrderStats = (params?: { branchId?: string; startDate?: string; endDate?: string }) => {
+  return useQuery({
+    queryKey: ['order-stats', params],
+    queryFn: () => ordersService.getStats(params),
+    placeholderData: keepPreviousData,
   });
 };
