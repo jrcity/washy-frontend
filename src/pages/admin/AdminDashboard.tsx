@@ -150,7 +150,7 @@ export const AdminDashboard = () => {
                         </div>
                         <div className="text-right">
                           <p className="font-black text-neutral-900 tracking-tight">{formatCurrency(order.total)}</p>
-                          <p className="text-[10px] font-bold text-neutral-300 uppercase">Paid via {order.paymentMethod || 'Wallet'}</p>
+                          <p className="text-[10px] font-bold text-neutral-300 uppercase">Paid via {order.payment?.method || 'Wallet'}</p>
                         </div>
                       </div>
                     </Card>

@@ -4,30 +4,55 @@ import { LoadingScreen } from '@/components/ui';
 import { useAuthContext } from '@/context/AuthContext';
 
 // Public Pages
-import { 
-  LandingPage, 
-  AboutPage, 
-  ServicesPage, 
-  MaintenancePage, 
-  NotFoundPage 
+import {
+  LandingPage,
+  AboutPage,
+  ServicesPage,
+  MaintenancePage,
+  NotFoundPage
 } from '@/pages/public';
 
 // Auth Pages
 import { LoginPage, RegisterPage } from '@/pages/auth';
 
 // Dashboard Pages
-import { CustomerDashboard, NewOrderPage, OrderHistoryPage, OrderDetailsPage } from '@/pages/customer';
-import { RiderDashboard, RiderTasksPage, ActiveDeliveryPage, VerifyDeliveryPage } from '@/pages/rider';
-import { BranchDashboard, BranchOrderManagerPage, BranchProcessOrderPage } from '@/pages/branch';
-import { AdminDashboard } from '@/pages/admin';
+import {
+  AdminDashboard,
+  AdminReportsPage,
+  AdminChatPage,
+  AdminRBACPage,
+  AdminTasksPage
+} from '@/pages/admin';
+
+import {
+  RiderDashboard,
+  RiderTasksPage,
+  ActiveDeliveryPage,
+  VerifyDeliveryPage
+} from '@/pages/rider';
+
+import {
+  BranchDashboard,
+  BranchOrderManagerPage,
+  BranchProcessOrderPage,
+  BranchTasksPage,
+  BranchAnalyticsPage
+} from '@/pages/branch';
+import {
+  CustomerDashboard,
+  NewOrderPage,
+  OrderHistoryPage,
+  OrderDetailsPage,
+  CustomerSupportChatPage
+} from '@/pages/customer';
 
 // Protected Route Wrapper
-const ProtectedRoute = ({ 
-  children, 
-  allowedRoles 
-}: { 
-  children: React.ReactNode; 
-  allowedRoles?: string[] 
+const ProtectedRoute = ({
+  children,
+  allowedRoles
+}: {
+  children: React.ReactNode;
+  allowedRoles?: string[]
 }) => {
   const { isAuthenticated, isLoading, user } = useAuthContext();
 
@@ -49,7 +74,7 @@ const ProtectedRoute = ({
       admin: '/admin',
       super_admin: '/admin',
     }[user.role] || '/dashboard';
-    
+
     return <Navigate to={redirectPath} replace />;
   }
 
@@ -73,7 +98,7 @@ const GuestRoute = ({ children }: { children: React.ReactNode }) => {
       admin: '/admin',
       super_admin: '/admin',
     }[user.role] || '/dashboard';
-    
+
     return <Navigate to={redirectPath} replace />;
   }
 
@@ -97,13 +122,13 @@ export const routes: RouteObject[] = [
   {
     element: <AuthLayout />,
     children: [
-      { 
-        path: '/login', 
-        element: <GuestRoute><LoginPage /></GuestRoute> 
+      {
+        path: '/login',
+        element: <GuestRoute><LoginPage /></GuestRoute>
       },
-      { 
-        path: '/register', 
-        element: <GuestRoute><RegisterPage /></GuestRoute> 
+      {
+        path: '/register',
+        element: <GuestRoute><RegisterPage /></GuestRoute>
       },
     ],
   },
@@ -121,6 +146,7 @@ export const routes: RouteObject[] = [
       { path: 'new-order', element: <NewOrderPage /> },
       { path: 'orders', element: <OrderHistoryPage /> },
       { path: 'orders/:id', element: <OrderDetailsPage /> },
+      { path: 'support', element: <CustomerSupportChatPage /> },
     ],
   },
 
@@ -152,6 +178,8 @@ export const routes: RouteObject[] = [
       { index: true, element: <BranchDashboard /> },
       { path: 'orders', element: <BranchOrderManagerPage /> },
       { path: 'orders/:id', element: <BranchProcessOrderPage /> },
+      { path: 'tasks', element: <BranchTasksPage /> },
+      { path: 'analytics', element: <BranchAnalyticsPage /> },
     ],
   },
 
@@ -165,6 +193,10 @@ export const routes: RouteObject[] = [
     ),
     children: [
       { index: true, element: <AdminDashboard /> },
+      { path: 'reports', element: <AdminReportsPage /> },
+      { path: 'chat', element: <AdminChatPage /> },
+      { path: 'rbac', element: <AdminRBACPage /> },
+      { path: 'tasks', element: <AdminTasksPage /> },
     ],
   },
 
