@@ -53,22 +53,22 @@ const alertIcons = {
 };
 
 const alertClasses = {
-  info: 'bg-info-50 text-info-700 border-info-200',
-  success: 'bg-success-50 text-success-700 border-success-200',
-  warning: 'bg-warning-50 text-warning-700 border-warning-200',
-  error: 'bg-error-50 text-error-700 border-error-200',
+  info: 'bg-info-50/80 backdrop-blur-sm text-info-700 border-info-200/50 shadow-sm',
+  success: 'bg-success-50/80 backdrop-blur-sm text-success-700 border-success-200/50 shadow-sm',
+  warning: 'bg-warning-50/80 backdrop-blur-sm text-warning-700 border-warning-200/50 shadow-sm',
+  error: 'bg-error-50/80 backdrop-blur-sm text-error-700 border-error-200/50 shadow-sm',
 };
 
 export const Alert = ({ variant = 'info', title, children, className }: AlertProps) => {
   const Icon = alertIcons[variant];
 
   return (
-    <div className={cn('p-4 rounded-lg border', alertClasses[variant], className)}>
+    <div className={cn('p-4 rounded-2xl border transition-all duration-300', alertClasses[variant], className)}>
       <div className="flex gap-3">
         <Icon className="w-5 h-5 flex-shrink-0 mt-0.5" />
-        <div>
-          {title && <h4 className="font-semibold mb-1">{title}</h4>}
-          <div className="text-sm">{children}</div>
+        <div className="flex-1 min-w-0">
+          {title && <h4 className="font-bold text-sm mb-0.5">{title}</h4>}
+          <div className="text-sm font-medium leading-relaxed">{children}</div>
         </div>
       </div>
     </div>
