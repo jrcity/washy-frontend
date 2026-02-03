@@ -1,4 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 
 // Default stale time - 5 minutes
 const DEFAULT_STALE_TIME = 5 * 60 * 1000;
@@ -29,6 +30,12 @@ export const queryClient = new QueryClient({
   },
 });
 
+// Create a persister for offline support
+export const persister = createSyncStoragePersister({
+  storage: window.localStorage,
+  key: 'WASHY_QUERY_CACHE',
+});
+
 // Query key factory for consistent key management
 export const queryKeys = {
   // Auth
@@ -36,7 +43,7 @@ export const queryKeys = {
     all: ['auth'] as const,
     profile: () => [...queryKeys.auth.all, 'profile'] as const,
   },
-  
+
   // Orders
   orders: {
     all: ['orders'] as const,
@@ -45,7 +52,7 @@ export const queryKeys = {
     detail: (id: string) => [...queryKeys.orders.all, 'detail', id] as const,
     stats: (filters?: object) => [...queryKeys.orders.all, 'stats', filters] as const,
   },
-  
+
   // Branches
   branches: {
     all: ['branches'] as const,
@@ -54,7 +61,7 @@ export const queryKeys = {
     byZone: (zone: string, state?: string) => [...queryKeys.branches.all, 'zone', zone, state] as const,
     stats: (id: string) => [...queryKeys.branches.all, 'stats', id] as const,
   },
-  
+
   // Services
   services: {
     all: ['services'] as const,
@@ -64,7 +71,7 @@ export const queryKeys = {
     detail: (id: string) => [...queryKeys.services.all, 'detail', id] as const,
     bySlug: (slug: string) => [...queryKeys.services.all, 'slug', slug] as const,
   },
-  
+
   // Categories
   categories: {
     all: ['categories'] as const,
@@ -72,28 +79,35 @@ export const queryKeys = {
     active: () => [...queryKeys.categories.all, 'active'] as const,
     detail: (id: string) => [...queryKeys.categories.all, 'detail', id] as const,
   },
-  
+
   // Payments
   payments: {
     all: ['payments'] as const,
     list: (filters?: object) => [...queryKeys.payments.all, 'list', filters] as const,
     detail: (id: string) => [...queryKeys.payments.all, 'detail', id] as const,
   },
-  
+
   // Notifications
   notifications: {
     all: ['notifications'] as const,
     list: (filters?: object) => [...queryKeys.notifications.all, 'list', filters] as const,
     unreadCount: () => [...queryKeys.notifications.all, 'unread-count'] as const,
   },
-  
+
   // Uploads
   uploads: {
     all: ['uploads'] as const,
     list: (filters?: object) => [...queryKeys.uploads.all, 'list', filters] as const,
     detail: (id: string) => [...queryKeys.uploads.all, 'detail', id] as const,
   },
-  
+
+  // Tasks
+  tasks: {
+    all: ['tasks'] as const,
+    list: (filters?: object) => [...queryKeys.tasks.all, 'list', filters] as const,
+    detail: (id: string) => [...queryKeys.tasks.all, 'detail', id] as const,
+  },
+
   // Health
   health: ['health'] as const,
 } as const;

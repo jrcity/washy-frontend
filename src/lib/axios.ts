@@ -21,6 +21,12 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    // Verbose logging in development
+    if (import.meta.env.DEV) {
+      console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`, config.data || '');
+    }
+
     return config;
   },
   (error) => {
@@ -30,8 +36,18 @@ api.interceptors.request.use(
 
 // Response interceptor - handle errors
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Verbose logging in development
+    if (import.meta.env.DEV) {
+      console.log(`[API Response] ${response.status} ${response.config.url}`, response.data);
+    }
+    return response;
+  },
   (error: AxiosError<ApiResponse>) => {
+    // Verbose logging in development
+    if (import.meta.env.DEV) {
+      console.error(`[API Error] ${error.response?.status} ${error.config?.url}`, error.response?.data || error.message);
+    }
     // Handle 401 Unauthorized - token expired or invalid
     if (error.response?.status === 401) {
       clearAuthData();
@@ -60,7 +76,7 @@ api.interceptors.response.use(
 // Helper to create FormData for file uploads
 export const createFormData = (data: Record<string, unknown>): FormData => {
   const formData = new FormData();
-  
+
   Object.entries(data).forEach(([key, value]) => {
     if (value instanceof File) {
       formData.append(key, value);
@@ -76,7 +92,7 @@ export const createFormData = (data: Record<string, unknown>): FormData => {
       formData.append(key, String(value));
     }
   });
-  
+
   return formData;
 };
 
