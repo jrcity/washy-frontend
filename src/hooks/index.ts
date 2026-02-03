@@ -9,3 +9,5 @@ export * from './useNotifications';
 export * from './useOffline';
 export * from './usePayments';
 export * from './useUpload';
+export * from './useBranchStats';
+export * from './useComponentLogger';
