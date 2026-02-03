@@ -1,8 +1,8 @@
 import { api } from '@/lib/axios';
-import type { 
-  ApiResponse, 
-  Payment, 
-  PaymentFilters, 
+import type {
+  ApiResponse,
+  Payment,
+  PaymentFilters,
   InitializePaymentInput,
   InitializePaymentResponse,
   RecordCashPaymentInput,
@@ -10,8 +10,8 @@ import type {
 } from '@/types';
 
 interface PaymentsResponse {
-  payments: Payment[];
-  pagination: Pagination;
+  data: Payment[];
+  meta: Pagination;
 }
 
 /**
@@ -41,8 +41,8 @@ export const getPaymentById = async (id: string): Promise<ApiResponse<Payment>> 
 /**
  * Get all payments (admin)
  */
-export const getPayments = async (filters?: PaymentFilters): Promise<ApiResponse<PaymentsResponse>> => {
-  const response = await api.get<ApiResponse<PaymentsResponse>>('/payments', { params: filters });
+export const getPayments = async (filters?: PaymentFilters): Promise<ApiResponse<Payment[]>> => {
+  const response = await api.get<ApiResponse<Payment[]>>('/payments', { params: filters });
   return response.data;
 };
 

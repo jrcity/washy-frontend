@@ -1,10 +1,10 @@
 import { api } from '@/lib/axios';
-import type { 
-  ApiResponse, 
-  Service, 
-  Category, 
-  CreateServiceInput, 
-  ServicePricing, 
+import type {
+  ApiResponse,
+  Service,
+  Category,
+  CreateServiceInput,
+  ServicePricing,
   CreateCategoryInput,
   UpdateCategoryInput
 } from '@/types';
@@ -46,8 +46,26 @@ export const servicesService = {
   },
 
   // Create service (Admin)
-  create: async (data: CreateServiceInput): Promise<void> => {
-    await api.post('/services', data);
+  create: async (data: CreateServiceInput): Promise<Service> => {
+    const response = await api.post<ApiResponse<Service>>('/services', data);
+    return response.data.data!;
+  },
+
+  // Get service by ID
+  getById: async (id: string): Promise<Service> => {
+    const response = await api.get<ApiResponse<Service>>(`/services/${id}`);
+    return response.data.data!;
+  },
+
+  // Update service (Admin)
+  update: async (id: string, data: Partial<CreateServiceInput>): Promise<Service> => {
+    const response = await api.patch<ApiResponse<Service>>(`/services/${id}`, data);
+    return response.data.data!;
+  },
+
+  // Delete service (Admin)
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/services/${id}`);
   },
 
   // Update pricing (Admin)
@@ -57,9 +75,9 @@ export const servicesService = {
 
   // Categories
   getAllCategories: async (params?: { page?: number; limit?: number; isActive?: boolean }): Promise<Category[]> => {
-     // Handling pagination response structure vs array
+    // Handling pagination response structure vs array
     const response = await api.get<ApiResponse<any>>('/categories', { params });
-    return response.data.data?.categories || response.data.data!; 
+    return response.data.data?.categories || response.data.data!;
   },
 
   getActiveCategories: async (): Promise<Category[]> => {

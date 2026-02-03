@@ -1,8 +1,8 @@
 import { api } from '@/lib/axios';
-import type { 
-  ApiResponse, 
-  Upload, 
-  UploadInput 
+import type {
+  ApiResponse,
+  Upload,
+  UploadInput
 } from '@/types';
 
 export const uploadsService = {
@@ -21,8 +21,8 @@ export const uploadsService = {
   },
 
   // Upload multiple files
-  uploadMultiple: async (data: { 
-    files: File[]; 
+  uploadMultiple: async (data: {
+    files: File[];
     category: UploadInput['category'];
     relatedModel?: UploadInput['relatedModel'];
     relatedId?: string;
@@ -39,8 +39,14 @@ export const uploadsService = {
     return response.data.data!;
   },
 
-  // Delete upload
   delete: async (id: string): Promise<void> => {
     await api.delete(`/uploads/${id}`);
+  },
+
+  // Get all uploads with optional filtering
+  getAll: async (params?: { category?: string; page?: number; limit?: number }): Promise<{ data: { uploads: Upload[] }; }> => {
+    const response = await api.get<ApiResponse<{ uploads: Upload[] }>>('/uploads', { params });
+    // Handle both wrapped and unwrapped responses just in case, though ApiResponse<T> implies wrapped
+    return { data: response.data.data! };
   }
 };

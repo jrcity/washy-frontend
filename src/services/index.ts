@@ -8,3 +8,7 @@ export * from './payments.service';
 export * from './notifications.service';
 export * from './uploads.service';
 export * from './health.service';
+export * from './tasks.service';
+export * from './rbac.service';
+export * from './analytics.service';
+export * from './chat.service';
