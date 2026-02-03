@@ -1,6 +1,17 @@
 export * from './AdminDashboard';
 export * from './AdminOrdersPage';
+export * from './AdminOrderDetailsPage';
 export * from './AdminServicesPage';
 export * from './AdminBranchesPage';
+export * from './AdminBranchDetailsPage';
+export * from './AdminEditBranchPage';
 export * from './AdminUsersPage';
 export * from './AdminCategoriesPage';
+export * from './AdminPaymentsPage';
+export * from './AdminPaymentDetailsPage';
+export * from './AdminUploadsPage';
+export * from './AdminReportsPage';
+export * from './AdminNotificationsPage';
+export { default as AdminChatPage } from './AdminChatPage';
+export { default as AdminRBACPage } from './AdminRBACPage';
+export { default as AdminTasksPage } from './AdminTasksPage';

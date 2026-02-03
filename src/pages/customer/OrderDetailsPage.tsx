@@ -6,6 +6,7 @@ import { formatCurrency, formatDate, getStatusColor, getStatusText } from '@/lib
 import { ChevronLeft, MapPin, Clock, CreditCard, Star, Truck, CheckCircle2 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { verifyPayment } from '@/services/payments.service';
+import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
 
 import { PaymentModal } from '@/components/payment/PaymentModal';
@@ -16,7 +17,7 @@ export const OrderDetailsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: order, isLoading, refetch } = useOrder(id!);
   const { mutate: rateOrder, isPending: isRating } = useRateOrder();
-  
+
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -26,40 +27,40 @@ export const OrderDetailsPage = () => {
   // Payment Verification Effect
   useEffect(() => {
     const checkPayment = async () => {
-        const shouldVerify = searchParams.get('payment_verify');
-        const reference = searchParams.get('reference') || searchParams.get('trxref');
+      const shouldVerify = searchParams.get('payment_verify');
+      const reference = searchParams.get('reference') || searchParams.get('trxref');
 
-        if (shouldVerify && reference && !isVerifyingPayment && !verifyAttempted.current) {
-            verifyAttempted.current = true;
-            setIsVerifyingPayment(true);
-            try {
-                await verifyPayment(reference);
-                toast.success('Payment verified successfully!');
-                refetch(); // Reload order to show paid status
-            } catch (error) {
-                console.error(error);
-                // Only show error if it's not a duplicate check error (optional refinement)
-                toast.error('Could not verify payment. It may take a moment to reflect.');
-            } finally {
-                setIsVerifyingPayment(false);
-                // Clear params
-                setSearchParams({});
-            }
+      if (shouldVerify && reference && !isVerifyingPayment && !verifyAttempted.current) {
+        verifyAttempted.current = true;
+        setIsVerifyingPayment(true);
+        try {
+          await verifyPayment(reference);
+          toast.success('Payment verified successfully!');
+          refetch(); // Reload order to show paid status
+        } catch (error) {
+          console.error(error);
+          // Only show error if it's not a duplicate check error (optional refinement)
+          toast.error('Could not verify payment. It may take a moment to reflect.');
+        } finally {
+          setIsVerifyingPayment(false);
+          // Clear params
+          setSearchParams({});
         }
+      }
     };
 
     checkPayment();
   }, [searchParams, refetch, setSearchParams]);
 
   if (isLoading || isVerifyingPayment) {
-      return (
-        <div className="h-96 flex flex-col items-center justify-center gap-4">
-             <Spinner />
-             {isVerifyingPayment && <p className="text-neutral-500 font-medium animate-pulse">Verifying payment status...</p>}
-        </div>
-      );
+    return (
+      <div className="h-96 flex flex-col items-center justify-center gap-4">
+        <Spinner />
+        {isVerifyingPayment && <p className="text-neutral-500 font-medium animate-pulse">Verifying payment status...</p>}
+      </div>
+    );
   }
-  
+
   if (!order) return <div className="text-center py-12">Order not found</div>;
 
   const handleRate = () => {
@@ -89,23 +90,23 @@ export const OrderDetailsPage = () => {
                 {getStatusText(order.status)}
               </Badge>
             </div>
-            
+
             {order.isPaid && (
-                <div className="mb-4 bg-success-50 border border-success-100 p-3 rounded-lg flex items-center gap-2 text-success-700">
-                    <CheckCircle2 className="w-5 h-5" />
-                    <span className="font-medium">Payment Successful</span>
-                </div>
+              <div className="mb-4 bg-success-50 border border-success-100 p-3 rounded-lg flex items-center gap-2 text-success-700">
+                <CheckCircle2 className="w-5 h-5" />
+                <span className="font-medium">Payment Successful</span>
+              </div>
             )}
 
             {/* Simple Timeline logic could go here */}
             {['pending', 'confirmed', 'picked_up', 'in_process', 'ready', 'out_for_delivery', 'delivered', 'completed'].includes(order.status) && (
               <div className="bg-neutral-50 p-4 rounded-xl border border-neutral-100 flex items-center gap-3">
-                 <Truck className="w-5 h-5 text-primary-600" />
-                 <p className="text-sm text-neutral-600">
-                   {order.status === 'out_for_delivery' 
-                     ? 'Your order is on its way to you!' 
-                     : 'We are processing your order with care.'}
-                 </p>
+                <Truck className="w-5 h-5 text-primary-600" />
+                <p className="text-sm text-neutral-600">
+                  {order.status === 'out_for_delivery'
+                    ? 'Your order is on its way to you!'
+                    : 'We are processing your order with care.'}
+                </p>
               </div>
             )}
           </Card>
@@ -178,14 +179,14 @@ export const OrderDetailsPage = () => {
                 <p className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-1">Pickup Address</p>
                 <p className="text-sm text-neutral-600 whitespace-pre-line">{order.pickupAddress.street}</p>
               </div>
-               <div>
+              <div>
                 <p className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-1">Delivery Address</p>
                 <p className="text-sm text-neutral-600 whitespace-pre-line">{order.deliveryAddress.street}</p>
               </div>
             </div>
           </Card>
 
-           {order.status === 'completed' && !order.rating && (
+          {order.status === 'completed' && !order.rating && (
             <Card className="p-6">
               <h3 className="font-semibold mb-4 flex items-center gap-2">
                 <Star className="w-4 h-4 text-warning-500" />
@@ -199,7 +200,11 @@ export const OrderDetailsPage = () => {
                 ))}
               </div>
               <textarea
-                className="w-full text-sm border-neutral-300 rounded-lg mb-3"
+                className={cn(
+                  "w-full px-4 py-3 bg-white border border-neutral-200 rounded-2xl text-base transition-all duration-300 resize-none mb-3",
+                  "focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:outline-none",
+                  "hover:border-neutral-300 hover:shadow-sm"
+                )}
                 rows={2}
                 placeholder="How was your experience?"
                 value={feedback}
@@ -213,9 +218,9 @@ export const OrderDetailsPage = () => {
         </div>
       </div>
 
-      <PaymentModal 
-        isOpen={isPaymentModalOpen} 
-        onClose={() => setIsPaymentModalOpen(false)} 
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
         order={order}
       />
     </PageWrapper>

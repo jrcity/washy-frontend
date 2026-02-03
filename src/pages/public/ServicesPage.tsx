@@ -4,143 +4,145 @@ import { ArrowRight, Clock, CheckCircle } from 'lucide-react';
 import { Button, Card, Badge } from '@/components/ui';
 import { Container } from '@/components/layout';
 import { formatCurrency } from '@/lib/utils';
+import { useComponentLogger } from '@/hooks';
 import type { Service } from '@/types';
 
 // Hardcoded data as requested by the user
 const SERVICES_DATA: Service[] = [
-    {
-        _id: '1',
-        slug: 'wash-and-fold',
-        description: 'Everyday laundry washed, dried, and folded.',
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        name: "Wash & Fold",
-        serviceType: "wash_and_fold",
-        category: "laundry",
-        estimatedDuration: { standard: 48, express: 24 },
-        isExpressAvailable: true,
-        sortOrder: 1,
-        pricing: [
-            { garmentType: "shirt", basePrice: 200, expressMultiplier: 1.5 },
-            { garmentType: "trouser", basePrice: 250, expressMultiplier: 1.5 },
-            { garmentType: "dress", basePrice: 400, expressMultiplier: 1.5 },
-            { garmentType: "skirt", basePrice: 300, expressMultiplier: 1.5 },
-            { garmentType: "towel", basePrice: 150, expressMultiplier: 1.5 },
-            { garmentType: "bedsheet", basePrice: 400, expressMultiplier: 1.5 },
-            { garmentType: "underwear", basePrice: 100, expressMultiplier: 1.5 }
-        ]
-    },
-    {
-        _id: '2',
-        slug: 'wash-and-iron',
-        description: 'Washed, dried, and professionally ironed.',
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        name: "Wash & Iron",
-        serviceType: "wash_and_iron",
-        category: "laundry",
-        estimatedDuration: { standard: 48, express: 24 },
-        isExpressAvailable: true,
-        sortOrder: 2,
-        pricing: [
-            { garmentType: "shirt", basePrice: 300, expressMultiplier: 1.5 },
-            { garmentType: "trouser", basePrice: 350, expressMultiplier: 1.5 },
-            { garmentType: "dress", basePrice: 500, expressMultiplier: 1.5 },
-            { garmentType: "skirt", basePrice: 400, expressMultiplier: 1.5 },
-            { garmentType: "native_attire", basePrice: 600, expressMultiplier: 1.5 },
-            { garmentType: "jacket", basePrice: 500, expressMultiplier: 1.5 }
-        ]
-    },
-    {
-        _id: '3',
-        slug: 'dry-cleaning',
-        description: 'Professional care for delicate fabrics.',
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        name: "Dry Cleaning",
-        serviceType: "dry_clean",
-        category: "dry_cleaning",
-        estimatedDuration: { standard: 72, express: 48 },
-        isExpressAvailable: true,
-        sortOrder: 3,
-        pricing: [
-            { garmentType: "suit", basePrice: 2500, expressMultiplier: 1.5 },
-            { garmentType: "dress", basePrice: 1500, expressMultiplier: 1.5 },
-            { garmentType: "jacket", basePrice: 1800, expressMultiplier: 1.5 },
-            { garmentType: "native_attire", basePrice: 2000, expressMultiplier: 1.5 },
-            { garmentType: "duvet", basePrice: 3500, expressMultiplier: 1.5 },
-            { garmentType: "curtain", basePrice: 2000, expressMultiplier: 1.5 },
-            { garmentType: "blanket", basePrice: 2500, expressMultiplier: 1.5 }
-        ]
-    },
-    {
-        _id: '4',
-        slug: 'iron-only',
-        description: 'Professional pressing for clean clothes.',
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        name: "Iron Only",
-        serviceType: "iron_only",
-        category: "laundry",
-        estimatedDuration: { standard: 24, express: 6 },
-        isExpressAvailable: true,
-        sortOrder: 4,
-        pricing: [
-            { garmentType: "shirt", basePrice: 150, expressMultiplier: 1.5 },
-            { garmentType: "trouser", basePrice: 150, expressMultiplier: 1.5 },
-            { garmentType: "dress", basePrice: 200, expressMultiplier: 1.5 },
-            { garmentType: "skirt", basePrice: 150, expressMultiplier: 1.5 },
-            { garmentType: "native_attire", basePrice: 300, expressMultiplier: 1.5 },
-            { garmentType: "suit", basePrice: 400, expressMultiplier: 1.5 }
-        ]
-    },
-    {
-        _id: '5',
-        slug: 'starch-and-iron',
-        description: 'Crisp finish for your formal wear.',
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        name: "Starch & Iron",
-        serviceType: "starch",
-        category: "laundry",
-        estimatedDuration: { standard: 48, express: 24 },
-        isExpressAvailable: true,
-        sortOrder: 5,
-        pricing: [
-            { garmentType: "native_attire", basePrice: 800, expressMultiplier: 1.5 },
-            { garmentType: "shirt", basePrice: 400, expressMultiplier: 1.5 },
-            { garmentType: "trouser", basePrice: 400, expressMultiplier: 1.5 }
-        ]
-    },
-    {
-        _id: '6',
-        slug: 'express-service',
-        description: 'Quick turnaround for urgent needs.',
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        name: "Express Service",
-        serviceType: "express",
-        category: "laundry",
-        estimatedDuration: { standard: 12, express: 6 },
-        isExpressAvailable: false,
-        sortOrder: 6,
-        pricing: [
-            { garmentType: "shirt", basePrice: 450, expressMultiplier: 1 },
-            { garmentType: "trouser", basePrice: 500, expressMultiplier: 1 },
-            { garmentType: "dress", basePrice: 700, expressMultiplier: 1 },
-            { garmentType: "native_attire", basePrice: 900, expressMultiplier: 1 },
-            { garmentType: "suit", basePrice: 3500, expressMultiplier: 1 }
-        ]
-    }
+  {
+    _id: '1',
+    slug: 'wash-and-fold',
+    description: 'Everyday laundry washed, dried, and folded.',
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    name: "Wash & Fold",
+    serviceType: "wash_and_fold",
+    category: "laundry",
+    estimatedDuration: { standard: 48, express: 24 },
+    isExpressAvailable: true,
+    sortOrder: 1,
+    pricing: [
+      { garmentType: "shirt", basePrice: 200, expressMultiplier: 1.5 },
+      { garmentType: "trouser", basePrice: 250, expressMultiplier: 1.5 },
+      { garmentType: "dress", basePrice: 400, expressMultiplier: 1.5 },
+      { garmentType: "skirt", basePrice: 300, expressMultiplier: 1.5 },
+      { garmentType: "towel", basePrice: 150, expressMultiplier: 1.5 },
+      { garmentType: "bedsheet", basePrice: 400, expressMultiplier: 1.5 },
+      { garmentType: "underwear", basePrice: 100, expressMultiplier: 1.5 }
+    ]
+  },
+  {
+    _id: '2',
+    slug: 'wash-and-iron',
+    description: 'Washed, dried, and professionally ironed.',
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    name: "Wash & Iron",
+    serviceType: "wash_and_iron",
+    category: "laundry",
+    estimatedDuration: { standard: 48, express: 24 },
+    isExpressAvailable: true,
+    sortOrder: 2,
+    pricing: [
+      { garmentType: "shirt", basePrice: 300, expressMultiplier: 1.5 },
+      { garmentType: "trouser", basePrice: 350, expressMultiplier: 1.5 },
+      { garmentType: "dress", basePrice: 500, expressMultiplier: 1.5 },
+      { garmentType: "skirt", basePrice: 400, expressMultiplier: 1.5 },
+      { garmentType: "native_attire", basePrice: 600, expressMultiplier: 1.5 },
+      { garmentType: "jacket", basePrice: 500, expressMultiplier: 1.5 }
+    ]
+  },
+  {
+    _id: '3',
+    slug: 'dry-cleaning',
+    description: 'Professional care for delicate fabrics.',
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    name: "Dry Cleaning",
+    serviceType: "dry_clean",
+    category: "dry_cleaning",
+    estimatedDuration: { standard: 72, express: 48 },
+    isExpressAvailable: true,
+    sortOrder: 3,
+    pricing: [
+      { garmentType: "suit", basePrice: 2500, expressMultiplier: 1.5 },
+      { garmentType: "dress", basePrice: 1500, expressMultiplier: 1.5 },
+      { garmentType: "jacket", basePrice: 1800, expressMultiplier: 1.5 },
+      { garmentType: "native_attire", basePrice: 2000, expressMultiplier: 1.5 },
+      { garmentType: "duvet", basePrice: 3500, expressMultiplier: 1.5 },
+      { garmentType: "curtain", basePrice: 2000, expressMultiplier: 1.5 },
+      { garmentType: "blanket", basePrice: 2500, expressMultiplier: 1.5 }
+    ]
+  },
+  {
+    _id: '4',
+    slug: 'iron-only',
+    description: 'Professional pressing for clean clothes.',
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    name: "Iron Only",
+    serviceType: "iron_only",
+    category: "laundry",
+    estimatedDuration: { standard: 24, express: 6 },
+    isExpressAvailable: true,
+    sortOrder: 4,
+    pricing: [
+      { garmentType: "shirt", basePrice: 150, expressMultiplier: 1.5 },
+      { garmentType: "trouser", basePrice: 150, expressMultiplier: 1.5 },
+      { garmentType: "dress", basePrice: 200, expressMultiplier: 1.5 },
+      { garmentType: "skirt", basePrice: 150, expressMultiplier: 1.5 },
+      { garmentType: "native_attire", basePrice: 300, expressMultiplier: 1.5 },
+      { garmentType: "suit", basePrice: 400, expressMultiplier: 1.5 }
+    ]
+  },
+  {
+    _id: '5',
+    slug: 'starch-and-iron',
+    description: 'Crisp finish for your formal wear.',
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    name: "Starch & Iron",
+    serviceType: "starch",
+    category: "laundry",
+    estimatedDuration: { standard: 48, express: 24 },
+    isExpressAvailable: true,
+    sortOrder: 5,
+    pricing: [
+      { garmentType: "native_attire", basePrice: 800, expressMultiplier: 1.5 },
+      { garmentType: "shirt", basePrice: 400, expressMultiplier: 1.5 },
+      { garmentType: "trouser", basePrice: 400, expressMultiplier: 1.5 }
+    ]
+  },
+  {
+    _id: '6',
+    slug: 'express-service',
+    description: 'Quick turnaround for urgent needs.',
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    name: "Express Service",
+    serviceType: "express",
+    category: "laundry",
+    estimatedDuration: { standard: 12, express: 6 },
+    isExpressAvailable: false,
+    sortOrder: 6,
+    pricing: [
+      { garmentType: "shirt", basePrice: 450, expressMultiplier: 1 },
+      { garmentType: "trouser", basePrice: 500, expressMultiplier: 1 },
+      { garmentType: "dress", basePrice: 700, expressMultiplier: 1 },
+      { garmentType: "native_attire", basePrice: 900, expressMultiplier: 1 },
+      { garmentType: "suit", basePrice: 3500, expressMultiplier: 1 }
+    ]
+  }
 ];
 
 export const ServicesPage = () => {
+  useComponentLogger('ServicesPage');
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
   return (
@@ -155,7 +157,7 @@ export const ServicesPage = () => {
               Our Services
             </h1>
             <p className="text-xl text-neutral-600 leading-relaxed">
-              Premium laundry and cleaning services tailored to your needs. 
+              Premium laundry and cleaning services tailored to your needs.
               Transparent pricing, clear timelines, and exceptional quality.
             </p>
           </div>
@@ -167,8 +169,8 @@ export const ServicesPage = () => {
         <Container>
           <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
             {SERVICES_DATA.map((service) => (
-              <Card 
-                key={service.name} 
+              <Card
+                key={service.name}
                 className="flex flex-col h-full border border-neutral-100 hover:border-primary-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
                 padding="lg"
               >
@@ -189,7 +191,7 @@ export const ServicesPage = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Pricing Table */}
                 <div className="flex-1 bg-neutral-50/50 rounded-xl p-4 border border-neutral-100/50">
                   <table className="w-full text-sm">
@@ -281,7 +283,7 @@ export const ServicesPage = () => {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link to="/register">
-                <Button 
+                <Button
                   size="xl"
                   className="bg-white text-neutral-900 hover:bg-neutral-100 border-none min-w-[200px]"
                 >
@@ -289,8 +291,8 @@ export const ServicesPage = () => {
                 </Button>
               </Link>
               <Link to="/contact">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="xl"
                   className="border-neutral-700 text-white hover:bg-neutral-800 hover:border-neutral-600 min-w-[200px]"
                 >

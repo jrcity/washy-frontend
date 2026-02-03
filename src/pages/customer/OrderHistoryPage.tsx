@@ -1,19 +1,20 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useMyOrders } from '@/hooks';
+import { useMyOrders, useComponentLogger } from '@/hooks';
 import { PageWrapper } from '@/components/layout';
 import { Card, Badge, EmptyState, SkeletonCard, Button } from '@/components/ui';
 import { formatCurrency, formatDate, getStatusColor, getStatusText } from '@/lib/utils';
 import { Package, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const OrderHistoryPage = () => {
+  useComponentLogger('OrderHistoryPage');
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>('');
-  
-  const { data, isLoading } = useMyOrders({ 
-    page, 
+
+  const { data, isLoading } = useMyOrders({
+    page,
     limit: 10,
-    status: statusFilter 
+    status: statusFilter
   });
 
   const orders = data?.orders || [];
@@ -48,11 +49,10 @@ export const OrderHistoryPage = () => {
                 setStatusFilter(status.value);
                 setPage(1);
               }}
-              className={`px-3 py-1.5 text-sm font-medium rounded-full whitespace-nowrap transition-colors ${
-                statusFilter === status.value
+              className={`px-3 py-1.5 text-sm font-medium rounded-full whitespace-nowrap transition-colors ${statusFilter === status.value
                   ? 'bg-primary-600 text-white'
                   : 'bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50'
-              }`}
+                }`}
             >
               {status.label}
             </button>
@@ -113,8 +113,8 @@ export const OrderHistoryPage = () => {
       {/* Pagination */}
       {pagination && pagination.totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-8">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             disabled={page === 1}
             onClick={() => setPage(p => p - 1)}
@@ -124,8 +124,8 @@ export const OrderHistoryPage = () => {
           <span className="text-sm font-medium text-neutral-600">
             Page {page} of {pagination.totalPages}
           </span>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             disabled={page === pagination.totalPages}
             onClick={() => setPage(p => p + 1)}

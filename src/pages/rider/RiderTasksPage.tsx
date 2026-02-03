@@ -1,144 +1,228 @@
-import { useState } from 'react';
-import { useOrders } from '@/hooks';
-import { PageWrapper } from '@/components/layout';
-import { Card, Badge, Button, EmptyState, SkeletonCard } from '@/components/ui';
-import { MapPin, Truck, Package, RefreshCw, Clock } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import React, { useState, useEffect } from 'react';
+import { tasksService } from '@/services/tasks.service';
+import { TaskStatus, TaskPriority } from '@/types/task.types';
+import type { Task } from '@/types/task.types';
+import { MapPin, Clock, Calendar, CheckCircle2, ChevronRight, AlertCircle, Navigation } from 'lucide-react';
+import { format } from 'date-fns';
+import { Button, Badge, Spinner, Card } from '@/components/ui';
+import { useComponentLogger } from '@/hooks';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
 
-export const RiderTasksPage = () => {
-  const [activeTab, setActiveTab] = useState<'pickups' | 'deliveries'>('pickups');
-  // In real app, this would fetch 'unassigned' tasks in rider's zone
-  // For now using all orders for demo purposes, filtering client-side
-  const { data: ordersData, isLoading, refetch } = useOrders({ 
-    limit: 50, 
-    status: activeTab === 'pickups' ? 'confirmed' : 'ready' 
-  });
+export const RiderTasksPage: React.FC = () => {
+  useComponentLogger('RiderTasksPage');
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<TaskStatus | 'all'>('all');
 
-  const orders = ordersData?.orders || [];
-  
-  // Logic for available tasks
-  // Pickups: Status is 'confirmed' (Paid & ready for pickup)
-  // Deliveries: Status is 'ready' (Processed & ready for delivery)
-  const tasks = orders.filter(o => !o.pickupRider && !o.deliveryRider); 
+  useEffect(() => {
+    fetchTasks();
+  }, []);
 
-  // Count availability (separate queries would be better but for now distinct counts are harder without extra calls)
-  // We'll just show the count of current list
-  const availablePickupsCount = activeTab === 'pickups' ? tasks.length : '?'; 
-  const availableDeliveriesCount = activeTab === 'deliveries' ? tasks.length : '?';
-
-  const handleAcceptTask = (id: string) => {
-    // TODO: Implement accept task mutation
-    toast.success('Task accepted! Navigate to dashboard to start.');
+  const fetchTasks = async () => {
+    try {
+      const response = await tasksService.getMyTasks();
+      if (response.success && Array.isArray(response.data)) {
+        setTasks(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch my tasks', error);
+      toast.error('Could not load tasks');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return (
-    <PageWrapper
-      title="Available Tasks"
-      description="Accept new pickups and deliveries in your area"
-      action={
-        <Button variant="outline" size="sm" onClick={() => refetch()} leftIcon={<RefreshCw className="w-4 h-4" />}>
-          Refresh
-        </Button>
+  const handleAction = async (taskId: string, action: 'start' | 'complete') => {
+    try {
+      if (action === 'start') {
+        await tasksService.startTask(taskId);
+        toast.success('Task started! Safe trip.');
+      } else {
+        await tasksService.completeTask(taskId);
+        toast.success('Task completed! Good job.');
       }
-    >
-      {/* Tabs */}
-      <div className="flex border-b border-neutral-200 mb-6">
-        <button
-          onClick={() => setActiveTab('pickups')}
-          className={`flex items-center gap-2 px-6 py-3 font-medium border-b-2 transition-colors ${
-            activeTab === 'pickups' 
-              ? 'border-primary-600 text-primary-600' 
-              : 'border-transparent text-neutral-500 hover:text-neutral-700'
-          }`}
-        >
-          <Truck className="w-4 h-4" />
-          Pickups
-          {activeTab === 'pickups' && <Badge size="sm" variant="secondary" className="ml-2">{tasks.length}</Badge>}
-        </button>
-        <button
-          onClick={() => setActiveTab('deliveries')}
-          className={`flex items-center gap-2 px-6 py-3 font-medium border-b-2 transition-colors ${
-            activeTab === 'deliveries' 
-              ? 'border-primary-600 text-primary-600' 
-              : 'border-transparent text-neutral-500 hover:text-neutral-700'
-          }`}
-        >
-          <Package className="w-4 h-4" />
-          Deliveries
-          {activeTab === 'deliveries' && <Badge size="sm" variant="secondary" className="ml-2">{tasks.length}</Badge>}
-        </button>
+      fetchTasks();
+    } catch (error) {
+      console.error(`Failed to ${action} task`, error);
+      toast.error(`Failed to ${action} task`);
+    }
+  };
+
+  const filteredTasks = tasks.filter(t => filter === 'all' || t.status === filter);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+        <Spinner size="lg" className="text-primary-600" />
+        <p className="text-sm font-medium text-neutral-500 animate-pulse">Fetching your route...</p>
       </div>
+    );
+  }
 
-      {isLoading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => <SkeletonCard key={i} />)}
+  return (
+    <div className="pb-24">
+      {/* Mobile Header Segment */}
+      <div className="bg-white px-4 pt-6 pb-4 border-b border-neutral-100 sticky top-0 z-20 backdrop-blur-md bg-white/90">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-black text-neutral-900 tracking-tight">Daily Route</h1>
+            <p className="text-sm font-medium text-neutral-400 capitalize">
+              {format(new Date(), 'EEEE, MMMM do')}
+            </p>
+          </div>
+          <div className="w-12 h-12 rounded-2xl bg-neutral-50 flex items-center justify-center border border-neutral-100">
+            <Calendar className="w-6 h-6 text-neutral-400" />
+          </div>
         </div>
-      ) : tasks.length === 0 ? (
-        <Card variant="bordered" className="py-12">
-          <EmptyState
-            title={`No available ${activeTab}`}
-            description="There are no tasks available in your area right now."
-          />
-        </Card>
-      ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tasks.map((order) => (
-            <Card key={order._id} variant="bordered" className="flex flex-col h-full">
-              <div className="flex-1 p-4">
-                <div className="flex justify-between items-start mb-4">
-                  <Badge variant={activeTab === 'pickups' ? 'info' : 'warning'}>
-                    {activeTab === 'pickups' ? 'Pickup' : 'Delivery'}
-                  </Badge>
-                  <span className="text-sm font-medium text-neutral-900">{formatCurrency(order.deliveryFee)} Earn</span>
-                </div>
-                
-                <div className="space-y-3">
-                  <div className="flex gap-3">
-                    <MapPin className="w-5 h-5 text-neutral-400 mt-0.5" />
-                    <div>
-                      <p className="font-medium text-neutral-900">
-                        {activeTab === 'pickups' ? order.pickupAddress.area : order.deliveryAddress.area}
-                      </p>
-                      <p className="text-sm text-neutral-500 line-clamp-2">
-                        {activeTab === 'pickups' ? order.pickupAddress.street : order.deliveryAddress.street}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-3">
-                    <Clock className="w-5 h-5 text-neutral-400 mt-0.5" />
-                    <div>
-                      <p className="text-sm text-neutral-900">
-                        {activeTab === 'pickups' ? order.pickupTimeSlot : 'ASAP'}
-                      </p>
-                      <p className="text-sm text-neutral-500">
-                        {formatDate(activeTab === 'pickups' ? order.pickupDate : order.expectedDeliveryDate, 'PP')}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              <div className="p-4 border-t border-neutral-100 bg-neutral-50 rounded-b-xl">
-                <Button className="w-full" onClick={() => handleAcceptTask(order._id)}>
-                  Accept Task
-                </Button>
-              </div>
-            </Card>
+        {/* Filter Tabs */}
+        <div className="flex gap-2 p-1 bg-neutral-100 rounded-2xl overflow-x-auto no-scrollbar">
+          {['all', 'assigned', 'in_progress', 'completed'].map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f as any)}
+              className={cn(
+                "px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-300",
+                filter === f
+                  ? "bg-white text-primary-600 shadow-sm ring-1 ring-neutral-200"
+                  : "text-neutral-500 hover:text-neutral-700"
+              )}
+            >
+              {f.replace('_', ' ').toUpperCase()}
+            </button>
           ))}
         </div>
-      )}
-    </PageWrapper>
-  );
-};
+      </div>
 
-// Helper for currency since not imported
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-NG', {
-    style: 'currency',
-    currency: 'NGN',
-  }).format(amount);
+      {/* Tasks List */}
+      <div className="px-4 py-6 space-y-4">
+        <AnimatePresence mode="popLayout">
+          {filteredTasks.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center py-20 px-8"
+            >
+              <div className="w-20 h-20 bg-neutral-100 rounded-[40px] flex items-center justify-center mx-auto mb-6">
+                <Navigation className="w-8 h-8 text-neutral-300" />
+              </div>
+              <h3 className="text-lg font-bold text-neutral-900 mb-1">Clear Road!</h3>
+              <p className="text-sm text-neutral-500 leading-relaxed font-medium">
+                No tasks found in this category. Enjoy the breather or check back later.
+              </p>
+            </motion.div>
+          ) : (
+            filteredTasks.map((task, index) => (
+              <motion.div
+                key={task._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <Card className={cn(
+                  "p-0 overflow-hidden border-none shadow-xl rounded-[32px] transition-all duration-300",
+                  task.status === 'in_progress' ? "ring-2 ring-primary-500 shadow-primary-100" : "ring-1 ring-neutral-100"
+                )}>
+                  <div className="p-5">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex gap-2">
+                        <Badge variant={task.type === 'pickup' ? 'info' : 'success'} size="sm" className="rounded-lg px-2.5">
+                          {task.type.toUpperCase()}
+                        </Badge>
+                        {task.priority === 'critical' && (
+                          <Badge variant="error" size="sm" className="rounded-lg px-2.5 animate-pulse">
+                            CRITICAL
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="text-[10px] font-black text-neutral-300 uppercase tracking-widest leading-none mb-1">Order #</span>
+                        <span className="text-xs font-bold text-neutral-600">{task.order?.orderNumber}</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4 mb-6">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-2xl bg-neutral-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <MapPin className="w-5 h-5 text-neutral-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-0.5 leading-none">Address</p>
+                          <h3 className="font-bold text-neutral-900 leading-snug line-clamp-2">
+                            {task.address.street}, {task.address.area}
+                          </h3>
+                          <p className="text-[11px] font-medium text-neutral-500 mt-0.5">
+                            {task.address.city}, {task.address.state}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-2xl bg-neutral-100 flex items-center justify-center flex-shrink-0">
+                          <Clock className="w-5 h-5 text-neutral-500" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-0.5 leading-none">Schedule</p>
+                          <p className="text-sm font-bold text-neutral-700">
+                            {format(new Date(task.scheduledFor), 'HH:mm')}
+                            <span className="text-neutral-400 font-medium ml-2">— Today</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 pt-1 border-t border-neutral-50 mt-4">
+                      {task.status === 'assigned' && (
+                        <Button
+                          className="w-full h-12 rounded-2xl shadow-lg shadow-primary-100 font-bold"
+                          onClick={() => handleAction(task._id, 'start')}
+                          rightIcon={<ChevronRight className="w-4 h-4" />}
+                        >
+                          Start Journey
+                        </Button>
+                      )}
+                      {task.status === 'in_progress' && (
+                        <Button
+                          className="w-full h-12 rounded-2xl bg-success-600 hover:bg-success-700 shadow-lg shadow-success-100 font-bold"
+                          onClick={() => handleAction(task._id, 'complete')}
+                          leftIcon={<CheckCircle2 className="w-4 h-4" />}
+                        >
+                          Mark Done
+                        </Button>
+                      )}
+                      {task.status === 'completed' && (
+                        <div className="w-full h-12 rounded-2xl bg-neutral-50 flex items-center justify-center gap-2 text-success-600 font-bold">
+                          <CheckCircle2 className="w-5 h-5" />
+                          Completed
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Bottom strip for extra info */}
+                  <div className="bg-neutral-50/50 p-4 flex justify-between items-center text-[10px] font-bold text-neutral-400">
+                    <div className="flex items-center gap-1.5">
+                      <AlertCircle className="w-3.5 h-3.5" />
+                      Tap to view order details
+                    </div>
+                    <div className="flex items-center gap-1">
+                      {task.priority !== 'normal' && (
+                        <div className="w-1.5 h-1.5 rounded-full bg-error-500 animate-pulse" />
+                      )}
+                      {task.priority.toUpperCase()}
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            ))
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
 };
 
 export default RiderTasksPage;

@@ -1,19 +1,23 @@
 import { useState } from 'react';
-import { Plus, Edit, Trash2, Tag, Search, Filter } from 'lucide-react';
+import { Plus, Edit, Trash2, Tag, Search } from 'lucide-react';
 import { PageWrapper } from '@/components/layout';
 import { Card, Button, Input, Badge, LoadingScreen, EmptyState } from '@/components/ui';
+import { CategoryModal } from '@/components/admin';
 import { useCategories, useDeleteCategory } from '@/hooks/useCategories';
 import { formatDate } from '@/lib/utils';
-import toast from 'react-hot-toast';
+import type { Category } from '@/types';
 
 export const AdminCategoriesPage = () => {
     const [search, setSearch] = useState('');
-    const { data, isLoading } = useCategories();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+
+    const { data, isLoading, refetch } = useCategories();
     const { mutate: deleteCategory } = useDeleteCategory();
 
     const categories = data?.categories || [];
 
-    const filteredCategories = categories.filter(category => 
+    const filteredCategories = categories.filter(category =>
         category.name.toLowerCase().includes(search.toLowerCase())
     );
 
@@ -23,14 +27,30 @@ export const AdminCategoriesPage = () => {
         }
     };
 
+    const handleOpenCreate = () => {
+        setSelectedCategory(null);
+        setIsModalOpen(true);
+    };
+
+    const handleOpenEdit = (category: Category) => {
+        setSelectedCategory(category);
+        setIsModalOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        setSelectedCategory(null);
+        refetch();
+    };
+
     if (isLoading) return <LoadingScreen />;
 
     return (
-        <PageWrapper 
-            title="Categories" 
+        <PageWrapper
+            title="Categories"
             description="Manage service categories"
             action={
-                <Button leftIcon={<Plus className="w-4 h-4" />} onClick={() => toast('Create/Edit Modal coming soon')}>
+                <Button leftIcon={<Plus className="w-4 h-4" />} onClick={handleOpenCreate}>
                     Add Category
                 </Button>
             }
@@ -38,8 +58,8 @@ export const AdminCategoriesPage = () => {
             {/* Controls */}
             <div className="flex flex-col md:flex-row gap-4 mb-6">
                 <div className="flex-1">
-                    <Input 
-                        placeholder="Search categories..." 
+                    <Input
+                        placeholder="Search categories..."
                         leftIcon={<Search className="w-4 h-4" />}
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
@@ -80,7 +100,7 @@ export const AdminCategoriesPage = () => {
                                             {!category.isActive && <Badge variant="error" size="sm">Inactive</Badge>}
                                         </div>
                                     )}
-                                    
+
                                     <div className="mb-2">
                                         <h3 className="font-semibold text-lg text-neutral-900">{category.name}</h3>
                                         <p className="text-sm text-neutral-500 line-clamp-2">{category.description}</p>
@@ -89,13 +109,13 @@ export const AdminCategoriesPage = () => {
                                     <div className="mt-auto pt-4 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-400">
                                         <span>Added {formatDate(category.createdAt)}</span>
                                         <div className="flex gap-2">
-                                            <button 
-                                                onClick={() => toast('Edit coming soon')}
+                                            <button
+                                                onClick={() => handleOpenEdit(category)}
                                                 className="p-1 hover:bg-neutral-100 rounded text-neutral-500 transition-colors"
                                             >
                                                 <Edit className="w-4 h-4" />
                                             </button>
-                                            <button 
+                                            <button
                                                 onClick={() => handleDelete(category._id)}
                                                 className="p-1 hover:bg-error-50 rounded text-error-500 transition-colors"
                                             >
@@ -109,6 +129,12 @@ export const AdminCategoriesPage = () => {
                     </div>
                 )}
             </div>
+
+            <CategoryModal
+                isOpen={isModalOpen}
+                onClose={handleModalClose}
+                category={selectedCategory}
+            />
         </PageWrapper>
     );
 };

@@ -31,13 +31,13 @@ export const NewOrderPage = () => {
   useEffect(() => {
     if (!isLoadingUser && user && !user.address) {
       toast.error('Please add an address to your profile first');
-      navigate('/profile');
+      navigate('/dashboard/profile');
     }
     // Pre-fill address ID if user has one
     if (user?.address && !orderMeta.pickupAddressId) {
       setOrderMeta(prev => ({
         ...prev,
-        pickupAddressId: user._id, 
+        pickupAddressId: user._id,
         deliveryAddressId: user._id
       }));
     }
@@ -46,17 +46,17 @@ export const NewOrderPage = () => {
   // Fetch active branch
   useEffect(() => {
     const fetchBranch = async () => {
-       try {
-         const branches = await branchesService.getAll({ isActive: true });
-         if (branches.length > 0) {
-           setActiveBranchId(branches[0]._id);
-         } else {
-           toast.error('No active branches found.');
-         }
-       } catch (error) {
-         console.error('Failed to fetch branches', error);
-         toast.error('Could not load service availability');
-       }
+      try {
+        const branches = await branchesService.getAll({ isActive: true });
+        if (branches.length > 0) {
+          setActiveBranchId(branches[0]._id);
+        } else {
+          toast.error('No active branches found.');
+        }
+      } catch (error) {
+        console.error('Failed to fetch branches', error);
+        toast.error('Could not load service availability');
+      }
     };
     fetchBranch();
   }, []);
@@ -86,13 +86,13 @@ export const NewOrderPage = () => {
     }
 
     if (!user?.address) {
-       toast.error('User address not found');
-       return;
+      toast.error('User address not found');
+      return;
     }
 
     if (!activeBranchId) {
-       toast.error('Service unavailable (No Branch)');
-       return;
+      toast.error('Service unavailable (No Branch)');
+      return;
     }
 
     createOrder({
@@ -122,28 +122,28 @@ export const NewOrderPage = () => {
           {/* Desktop/Tablet Horizontal Stepper */}
           <div className="hidden md:flex items-center justify-between relative px-10 mb-6">
             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-neutral-100 rounded-full -z-10" />
-            <div 
-              className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-primary-600 rounded-full -z-10 transition-all duration-300 ease-out" 
-              style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }} 
+            <div
+              className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-primary-600 rounded-full -z-10 transition-all duration-300 ease-out"
+              style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
             />
-            
+
             {steps.map((step, index) => {
               const isActive = index <= currentStep;
               const isCompleted = index < currentStep;
-              
+
               return (
                 <div key={step} className="flex flex-col items-center gap-3 relative z-10 group cursor-default">
-                  <div 
+                  <div
                     className={`
                       w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 shadow-sm
-                      ${isActive 
-                        ? 'bg-primary-600 border-primary-600 text-white scale-110 shadow-primary-200' 
+                      ${isActive
+                        ? 'bg-primary-600 border-primary-600 text-white scale-110 shadow-primary-200'
                         : 'bg-white border-neutral-200 text-neutral-400 group-hover:border-neutral-300'}
                     `}
                   >
                     {isCompleted ? <Check className="w-5 h-5" /> : <span className="font-semibold text-sm">{index + 1}</span>}
                   </div>
-                  <span 
+                  <span
                     className={`
                       text-sm font-semibold transition-colors duration-200 absolute -bottom-8 whitespace-nowrap
                       ${isActive ? 'text-primary-700' : 'text-neutral-400'}
@@ -159,17 +159,17 @@ export const NewOrderPage = () => {
           {/* Mobile Vertical/Compact Stepper */}
           <div className="md:hidden flex items-center gap-4 bg-white p-4 rounded-xl border border-neutral-100 shadow-sm">
             <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-50 text-primary-600 font-bold border border-primary-100">
-               {currentStep + 1}
+              {currentStep + 1}
             </div>
             <div className="flex-1">
               <p className="text-xs text-neutral-500 font-medium uppercase tracking-wider mb-0.5">Step {currentStep + 1} of {steps.length}</p>
               <p className="font-bold text-neutral-900">{steps[currentStep]}</p>
             </div>
             <div className="w-16 h-1.5 bg-neutral-100 rounded-full overflow-hidden">
-               <div 
-                  className="h-full bg-primary-600 transition-all duration-300"
-                  style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-               />
+              <div
+                className="h-full bg-primary-600 transition-all duration-300"
+                style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+              />
             </div>
           </div>
         </div>
@@ -203,8 +203,8 @@ export const NewOrderPage = () => {
             <ChevronLeft className="w-4 h-4 mr-2" />
             {currentStep === 0 ? 'Cancel' : 'Back'}
           </Button>
-          <Button 
-            onClick={handleNext} 
+          <Button
+            onClick={handleNext}
             isLoading={isPending}
             disabled={
               (currentStep === 0 && cart.length === 0) ||

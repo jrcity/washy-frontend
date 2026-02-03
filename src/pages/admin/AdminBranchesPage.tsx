@@ -1,73 +1,114 @@
-import { useState } from 'react';
-import { Plus, MapPin, Phone, Edit, Trash2 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Plus, MapPin, Phone, Edit, ArrowRight } from 'lucide-react';
 import { PageWrapper } from '@/components/layout';
 import { Card, Button, Badge, LoadingScreen, EmptyState } from '@/components/ui';
 import { useBranches } from '@/hooks';
-import toast from 'react-hot-toast';
+import type { Branch } from '@/types';
+import { motion } from 'framer-motion';
 
 export const AdminBranchesPage = () => {
-  const { data, isLoading } = useBranches();
-  const branches = data || [];
+  const navigate = useNavigate();
+  const { data: branches, isLoading } = useBranches();
 
-  if (isLoading) return <LoadingScreen />;
+  if (isLoading) return (
+    <div className="flex items-center justify-center min-h-[40vh]">
+      <div className="w-10 h-10 border-4 border-primary-600 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
 
   return (
-    <PageWrapper 
-      title="Branches" 
-      description="Manage store locations and operations"
+    <PageWrapper
+      title="Operational Fleet"
+      description="Manage your service hubs and deployment centers"
       action={
-        <Button leftIcon={<Plus className="w-4 h-4" />}>
-          Add Branch
-        </Button>
+        <Link to="/admin/branches/create" className="block sm:inline-block w-full sm:w-auto">
+          <Button className="w-full sm:w-auto rounded-2xl h-12 shadow-xl shadow-primary-500/20 font-black">
+            <Plus className="w-4 h-4 mr-2" />
+            Establish Hub
+          </Button>
+        </Link>
       }
     >
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {branches.length === 0 ? (
-            <div className="col-span-full">
-                <Card variant="bordered" className="py-12">
-                    <EmptyState
-                        title="No branches found"
-                        description="Add your first branch location"
-                    />
-                </Card>
-            </div>
-        ) : (
-            branches.map((branch) => (
-            <Card key={branch._id} variant="bordered" className="flex flex-col h-full group">
-                <div className="flex justify-between items-start mb-4">
-                    <div className="w-10 h-10 bg-primary-100 text-primary-600 rounded-lg flex items-center justify-center">
-                        <MapPin className="w-5 h-5" />
-                    </div>
-                    <Badge variant={branch.isActive ? 'success' : 'error'}>
-                        {branch.isActive ? 'Active' : 'Inactive'}
-                    </Badge>
-                </div>
-
-                <div className="flex-1">
-                    <h3 className="font-bold text-neutral-900 mb-1">{branch.name}</h3>
-                    <p className="text-sm text-neutral-500 mb-4">{branch.code}</p>
-                    
-                    <div className="space-y-2 text-sm text-neutral-600">
-                        <div className="flex items-start gap-2">
-                            <MapPin className="w-4 h-4 mt-0.5 text-neutral-400" />
-                            <span>{branch.address.street}, {branch.address.city}, {branch.address.state}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Phone className="w-4 h-4 text-neutral-400" />
-                            <span>{branch.contactPhone}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="mt-6 pt-4 border-t border-neutral-100 flex justify-end gap-2">
-                     <Button variant="ghost" size="sm" onClick={() => toast('Edit coming soon')}>
-                        Edit
-                    </Button>
-                </div>
+        {!branches || branches.length === 0 ? (
+          <div className="col-span-full">
+            <Card className="py-20 rounded-[40px] border-neutral-100 border-dashed border-2">
+              <EmptyState
+                title="No Operational Hubs"
+                description="You haven't established any branches yet. Start your expansion today."
+              />
+              <div className="mt-8 flex justify-center">
+                <Link to="/admin/branches/create">
+                  <Button variant="outline" className="rounded-xl font-black">
+                    Establish First Hub
+                  </Button>
+                </Link>
+              </div>
             </Card>
-            ))
+          </div>
+        ) : (
+          branches.map((branch, i) => (
+            <motion.div
+              key={branch._id}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.05 }}
+            >
+              <Card
+                className="flex flex-col h-full rounded-[28px] md:rounded-[32px] border-neutral-100 hover:border-primary-100 hover:shadow-2xl hover:shadow-primary-500/5 transition-all group overflow-hidden"
+              >
+                <div className="p-5 md:p-6 relative">
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="w-12 h-12 bg-neutral-50 text-neutral-400 group-hover:bg-primary-50 group-hover:text-primary-600 rounded-2xl flex items-center justify-center transition-colors">
+                      <MapPin className="w-6 h-6" />
+                    </div>
+                    <Badge variant={branch.isActive ? 'success' : 'error'} className="rounded-lg px-3 py-1 font-black italic">
+                      {branch.isActive ? 'ACTIVE' : 'INACTIVE'}
+                    </Badge>
+                  </div>
+
+                  <div className="space-y-1 mb-6">
+                    <h3 className="text-xl font-black text-neutral-900 tracking-tight leading-tight group-hover:text-primary-600 transition-colors">
+                      {branch.name}
+                    </h3>
+                    <p className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">{branch.code}</p>
+                  </div>
+
+                  <div className="space-y-3 text-sm font-medium text-neutral-500">
+                    <div className="flex items-start gap-3">
+                      <MapPin className="w-4 h-4 mt-0.5 text-neutral-300" />
+                      <span>{branch.address.city}, {branch.address.state}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Phone className="w-4 h-4 text-neutral-300" />
+                      <span>{branch.contactPhone}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-auto p-4 bg-neutral-50 flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    className="flex-1 rounded-xl font-bold text-neutral-400 hover:text-primary-600 hover:bg-primary-50"
+                    onClick={() => navigate(`/admin/branches/edit/${branch._id}`)}
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    Configure
+                  </Button>
+                  <Button
+                    className="w-12 h-12 rounded-xl p-0 font-black shadow-lg shadow-primary-500/10"
+                    onClick={() => navigate(`/admin/branches/${branch._id}`)}
+                  >
+                    <ArrowRight className="w-5 h-5" />
+                  </Button>
+                </div>
+              </Card>
+            </motion.div>
+          ))
         )}
       </div>
     </PageWrapper>
   );
 };
+
+export default AdminBranchesPage;

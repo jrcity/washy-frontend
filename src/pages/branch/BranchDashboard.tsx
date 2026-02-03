@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom';
-import { Package, Clock, CheckCircle, TrendingUp, Users, BarChart3 } from 'lucide-react';
+import { Package, Clock, CheckCircle, TrendingUp, Users, BarChart3, ClipboardList, CreditCard } from 'lucide-react';
 import { Card, Badge, SkeletonCard } from '@/components/ui';
 import { PageWrapper } from '@/components/layout';
 import { useAuthContext } from '@/context/AuthContext';
-import { useOrders, useOrderStats } from '@/hooks';
+import { useOrders, useOrderStats, useComponentLogger } from '@/hooks';
 import { formatCurrency, getStatusColor, getStatusText } from '@/lib/utils';
 
 export const BranchDashboard = () => {
   const { user } = useAuthContext();
+  useComponentLogger('BranchDashboard', { userId: user?._id });
   const { data: ordersData, isLoading } = useOrders({ limit: 10 });
   const { data: stats } = useOrderStats();
 
@@ -33,7 +34,7 @@ export const BranchDashboard = () => {
             </div>
           </div>
         </Card>
-        
+
         <Card variant="bordered">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-warning-50 text-warning-600 rounded-xl">
@@ -45,7 +46,7 @@ export const BranchDashboard = () => {
             </div>
           </div>
         </Card>
-        
+
         <Card variant="bordered">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-success-50 text-success-600 rounded-xl">
@@ -57,7 +58,7 @@ export const BranchDashboard = () => {
             </div>
           </div>
         </Card>
-        
+
         <Card variant="bordered">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-secondary-100 text-secondary-600 rounded-xl">
@@ -81,7 +82,7 @@ export const BranchDashboard = () => {
               View all
             </Link>
           </div>
-          
+
           {isLoading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => <SkeletonCard key={i} />)}
@@ -91,7 +92,7 @@ export const BranchDashboard = () => {
               <p className="text-neutral-500">No pending orders</p>
             </Card>
           ) : (
-            <div className="space-y-3">
+            <div className="flex flex-col gap-4">
               {pendingOrders.slice(0, 5).map((order) => (
                 <Link key={order._id} to={`/branch/orders/${order._id}`}>
                   <Card variant="bordered" hover>
@@ -119,7 +120,7 @@ export const BranchDashboard = () => {
               View all
             </Link>
           </div>
-          
+
           {isLoading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => <SkeletonCard key={i} />)}
@@ -160,24 +161,39 @@ export const BranchDashboard = () => {
               <p className="font-medium text-neutral-900">All Orders</p>
             </Card>
           </Link>
-          <Link to="/branch/stats">
+
+          <Link to="/branch/tasks">
             <Card variant="bordered" hover className="text-center py-6">
-              <BarChart3 className="w-8 h-8 mx-auto mb-2 text-primary-600" />
-              <p className="font-medium text-neutral-900">Analytics</p>
+              <ClipboardList className="w-8 h-8 mx-auto mb-2 text-primary-600" />
+              <p className="font-medium text-neutral-900">Tasks</p>
             </Card>
           </Link>
-          <Link to="/branch/staff">
-            <Card variant="bordered" hover className="text-center py-6">
-              <Users className="w-8 h-8 mx-auto mb-2 text-primary-600" />
-              <p className="font-medium text-neutral-900">Staff</p>
-            </Card>
-          </Link>
-          <Link to="/services">
-            <Card variant="bordered" hover className="text-center py-6">
-              <TrendingUp className="w-8 h-8 mx-auto mb-2 text-primary-600" />
-              <p className="font-medium text-neutral-900">Services</p>
-            </Card>
-          </Link>
+
+          {user?.role === 'branch_manager' && (
+            <>
+              <Link to="/branch/analytics">
+                <Card variant="bordered" hover className="text-center py-6">
+                  <BarChart3 className="w-8 h-8 mx-auto mb-2 text-primary-600" />
+                  <p className="font-medium text-neutral-900">Analytics</p>
+                </Card>
+              </Link>
+              <Link to="/branch/payments">
+                <Card variant="bordered" hover className="text-center py-6">
+                  <CreditCard className="w-8 h-8 mx-auto mb-2 text-primary-600" />
+                  <p className="font-medium text-neutral-900">Payments</p>
+                </Card>
+              </Link>
+            </>
+          )}
+
+          {user?.role === 'admin' && (
+            <Link to="/branch/staff">
+              <Card variant="bordered" hover className="text-center py-6">
+                <Users className="w-8 h-8 mx-auto mb-2 text-primary-600" />
+                <p className="font-medium text-neutral-900">Staff</p>
+              </Card>
+            </Link>
+          )}
         </div>
       </div>
     </PageWrapper>

@@ -12,7 +12,7 @@ export const VerifyDeliveryPage = () => {
   const navigate = useNavigate();
   const { data: order, isLoading } = useOrder(id!);
   const { mutateAsync: uploadFile, isPending: isUploading } = useUpload();
-  
+
   const [otp, setOtp] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [photoUrl, setPhotoUrl] = useState<string>('');
@@ -23,16 +23,16 @@ export const VerifyDeliveryPage = () => {
     if (!file) return;
 
     try {
-        const upload = await uploadFile({
-            file,
-            category: order?.status === 'confirmed' ? 'pickup_proof' : 'delivery_proof',
-            relatedModel: 'Order',
-            relatedId: id
-        });
-        setPhotoUrl(upload.url);
-        toast.success('Photo uploaded successfully');
+      const upload = await uploadFile({
+        file,
+        category: 'proof_photo',
+        relatedModel: 'Order',
+        relatedId: id
+      });
+      setPhotoUrl(upload.url);
+      toast.success('Photo uploaded successfully');
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
   };
 
@@ -43,23 +43,23 @@ export const VerifyDeliveryPage = () => {
     }
 
     if (!photoUrl && order?.status === 'confirmed') {
-        toast.error('Please upload a photo of the items for pickup verification');
-        return;
+      toast.error('Please upload a photo of the items for pickup verification');
+      return;
     }
-    
+
     setIsSubmitting(true);
     try {
-        await ordersService.verifyDelivery(id!, {
-            type: order?.status === 'confirmed' ? 'pickup' : 'delivery',
-            otpCode: otp,
-            photoUrl
-        });
-        toast.success('Verification successful!');
-        navigate('/rider');
+      await ordersService.verifyDelivery(id!, {
+        type: order?.status === 'confirmed' ? 'pickup' : 'delivery',
+        otpCode: otp,
+        photoUrl
+      });
+      toast.success('Verification successful!');
+      navigate('/rider');
     } catch (error) {
-        toast.error('Verification failed. Check OTP.');
+      toast.error('Verification failed. Check OTP.');
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -75,35 +75,35 @@ export const VerifyDeliveryPage = () => {
           <div className="w-16 h-16 bg-success-50 text-success-600 rounded-full flex items-center justify-center mx-auto mb-6">
             <ShieldCheck className="w-8 h-8" />
           </div>
-          
+
           <h2 className="text-xl font-bold text-neutral-900 mb-2">Customer Confirmation</h2>
           <p className="text-neutral-500 mb-8">
             Ask the customer for the 4-digit OTP sent to their phone to verify this {isPickup ? 'pickup' : 'delivery'}.
           </p>
 
           <div className="space-y-6">
-             {/* Photo Upload Section */}
-             <div>
-                <input 
-                    type="file" 
-                    ref={fileInputRef}
-                    className="hidden" 
-                    accept="image/*"
-                    onChange={handleFileChange}
-                />
-                <Button 
-                    variant={photoUrl ? "outline" : "secondary"} 
-                    className={`w-full ${photoUrl ? 'border-primary-500 text-primary-600 bg-primary-50' : ''}`}
-                    onClick={() => fileInputRef.current?.click()}
-                    isLoading={isUploading}
-                >
-                  {photoUrl ? <Check className="w-4 h-4 mr-2" /> : <Camera className="w-4 h-4 mr-2" />}
-                  {photoUrl ? 'Photo Uploaded' : 'Upload Proof of Items'}
-                </Button>
-                {photoUrl && <p className="text-xs text-primary-600 mt-1">Image attached</p>}
-             </div>
+            {/* Photo Upload Section */}
+            <div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+              <Button
+                variant={photoUrl ? "outline" : "secondary"}
+                className={`w-full ${photoUrl ? 'border-primary-500 text-primary-600 bg-primary-50' : ''}`}
+                onClick={() => fileInputRef.current?.click()}
+                isLoading={isUploading}
+              >
+                {photoUrl ? <Check className="w-4 h-4 mr-2" /> : <Camera className="w-4 h-4 mr-2" />}
+                {photoUrl ? 'Photo Uploaded' : 'Upload Proof of Items'}
+              </Button>
+              {photoUrl && <p className="text-xs text-primary-600 mt-1">Image attached</p>}
+            </div>
 
-             <div className="relative">
+            <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-neutral-200" />
               </div>

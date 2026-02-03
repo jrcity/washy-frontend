@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { User, Lock, Bell, Home } from 'lucide-react';
+import { User, Lock, Bell, CreditCard, Building2 } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button, Card, Input } from '@/components/ui';
 import { PageWrapper } from '@/components/layout';
@@ -7,11 +7,16 @@ import { useAuthContext } from '@/context/AuthContext';
 import { updateProfile } from '@/services/auth.service';
 import toast from 'react-hot-toast';
 import { RiderProfileForm } from '@/components/profile/RiderProfileForm';
+import { ProfileNotificationPrefs } from '@/components/profile/ProfileNotificationPrefs';
+import { ProfileBankInfo } from '@/components/profile/ProfileBankInfo';
+import { ProfilePaymentSettings } from '@/components/profile/ProfilePaymentSettings';
+
+type TabId = 'general' | 'notifications' | 'bank' | 'payments';
 
 export const ProfilePage = () => {
   const { user } = useAuthContext();
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<'general' | 'preferences' | 'security'>('general');
+  const [activeTab, setActiveTab] = useState<TabId>('general');
   const [isLoading, setIsLoading] = useState(false);
 
   // Form State
@@ -69,10 +74,11 @@ export const ProfilePage = () => {
   };
 
   const tabs = [
-    { id: 'general', label: 'General', icon: User },
-    // { id: 'preferences', label: 'Preferences', icon: Bell }, // TODO: Implement if API ready
-    // { id: 'security', label: 'Security', icon: Lock },
-  ] as const;
+    { id: 'general' as TabId, label: 'General', icon: User },
+    { id: 'notifications' as TabId, label: 'Notifications', icon: Bell },
+    { id: 'bank' as TabId, label: 'Bank Info', icon: Building2 },
+    { id: 'payments' as TabId, label: 'Payments', icon: CreditCard },
+  ];
 
   return (
     <PageWrapper title="Settings" description="Manage your account preferences">
@@ -83,12 +89,11 @@ export const ProfilePage = () => {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium ${
-                  activeTab === tab.id 
-                    ? 'bg-primary-50 text-primary-700' 
+                onClick={() => setActiveTab(tab.id)}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium ${activeTab === tab.id
+                    ? 'bg-primary-50 text-primary-700'
                     : 'text-neutral-600 hover:bg-neutral-50'
-                }`}
+                  }`}
               >
                 <tab.icon className="w-4 h-4" />
                 {tab.label}
@@ -100,30 +105,31 @@ export const ProfilePage = () => {
         {/* Content */}
         <div className="flex-1 space-y-6">
           <Card className="p-6">
+            {/* General Tab */}
             {activeTab === 'general' && (
               <form onSubmit={onUpdateProfile} className="space-y-6">
                 <div>
                   <h3 className="text-lg font-semibold text-neutral-900 mb-1">Personal Information</h3>
                   <p className="text-sm text-neutral-500 mb-6">Update your personal details and address.</p>
-                  
+
                   <div className="grid md:grid-cols-2 gap-4">
-                    <Input 
-                      label="Full Name" 
+                    <Input
+                      label="Full Name"
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
                     />
-                    <Input 
-                      label="Phone Number" 
+                    <Input
+                      label="Phone Number"
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
                     />
                     <div className="md:col-span-2">
-                      <Input 
-                        label="Email Address" 
-                        value={formData.email} 
-                        disabled 
+                      <Input
+                        label="Email Address"
+                        value={formData.email}
+                        disabled
                         className="bg-neutral-50"
                       />
                     </div>
@@ -134,30 +140,30 @@ export const ProfilePage = () => {
                   <h3 className="text-lg font-semibold text-neutral-900 mb-4">Address Details</h3>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="md:col-span-2">
-                      <Input 
-                        label="Street Address" 
+                      <Input
+                        label="Street Address"
                         name="street"
                         value={formData.street}
                         onChange={handleInputChange}
                         placeholder="123 Main St"
                       />
                     </div>
-                    <Input 
-                      label="Area" 
+                    <Input
+                      label="Area"
                       name="area"
                       value={formData.area}
                       onChange={handleInputChange}
                       placeholder="Downtown"
                     />
-                    <Input 
-                      label="City" 
+                    <Input
+                      label="City"
                       name="city"
                       value={formData.city}
                       onChange={handleInputChange}
                       placeholder="Lagos"
                     />
-                    <Input 
-                      label="State" 
+                    <Input
+                      label="State"
                       name="state"
                       value={formData.state}
                       onChange={handleInputChange}
@@ -175,6 +181,15 @@ export const ProfilePage = () => {
                 </div>
               </form>
             )}
+
+            {/* Notifications Tab */}
+            {activeTab === 'notifications' && <ProfileNotificationPrefs />}
+
+            {/* Bank Info Tab */}
+            {activeTab === 'bank' && <ProfileBankInfo />}
+
+            {/* Payments Tab */}
+            {activeTab === 'payments' && <ProfilePaymentSettings />}
           </Card>
 
           {/* Role Specific Details */}
@@ -190,3 +205,4 @@ export const ProfilePage = () => {
     </PageWrapper>
   );
 };
+

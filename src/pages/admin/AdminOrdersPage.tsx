@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, Package } from 'lucide-react';
-import { useOrders } from '@/hooks';
+import { useOrders, useComponentLogger } from '@/hooks';
 import { PageWrapper } from '@/components/layout';
-import { Card, Input, Button, Badge, LoadingScreen, EmptyState } from '@/components/ui';
+import { Card, Input, Button, Badge, LoadingScreen, EmptyState, Select } from '@/components/ui';
 import { getStatusColor, getStatusText, formatCurrency, formatDate } from '@/lib/utils';
 import type { OrderStatus } from '@/types';
 
 export const AdminOrdersPage = () => {
+  useComponentLogger('AdminOrdersPage');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [search, setSearch] = useState('');
-  
-  const { data, isLoading } = useOrders({ 
+
+  const { data, isLoading } = useOrders({
     status: statusFilter === 'all' ? undefined : statusFilter,
     limit: 50
   });
@@ -43,8 +44,8 @@ export const AdminOrdersPage = () => {
   if (isLoading) return <LoadingScreen />;
 
   return (
-    <PageWrapper 
-      title="All Orders" 
+    <PageWrapper
+      title="All Orders"
       description="View and manage all system orders"
     >
       {/* Controls */}
@@ -59,16 +60,13 @@ export const AdminOrdersPage = () => {
           />
         </div>
         <div className="flex gap-2 items-center">
-            <Filter className="w-4 h-4 text-neutral-500" />
-            <select
-                className="h-10 px-3 py-2 rounded-lg border border-neutral-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-            >
-                {tabs.map(tab => (
-                    <option key={tab.value} value={tab.value}>{tab.label}</option>
-                ))}
-            </select>
+          <Select
+            label=""
+            options={tabs.map(tab => ({ value: tab.value, label: tab.label }))}
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="w-40"
+          />
         </div>
       </div>
 
@@ -77,8 +75,8 @@ export const AdminOrdersPage = () => {
         {filteredOrders.length === 0 ? (
           <Card variant="bordered" className="py-12">
             <EmptyState
-                title="No orders found"
-                description="Try adjusting your filters or search terms"
+              title="No orders found"
+              description="Try adjusting your filters or search terms"
             />
           </Card>
         ) : (
@@ -114,7 +112,7 @@ export const AdminOrdersPage = () => {
                         <p className="text-sm text-neutral-500">Total</p>
                         <p className="font-bold text-neutral-900">{formatCurrency(order.total)}</p>
                       </div>
-                      
+
                       <div className="text-right hidden md:block">
                         <p className="text-sm text-neutral-500">Payment</p>
                         <p className={`font-medium ${order.isPaid ? 'text-success-600' : 'text-warning-600'}`}>
