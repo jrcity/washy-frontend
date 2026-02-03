@@ -2,7 +2,7 @@ import type { User, Address } from './auth.types';
 import type { Service, ServiceType, GarmentType } from './service.types';
 import type { Branch } from './branch.types';
 
-export type OrderStatus = 
+export type OrderStatus =
   | 'pending'
   | 'confirmed'
   | 'picked_up'
@@ -52,8 +52,8 @@ export interface Order {
   deliveryTimeSlot?: string;
   pickupAddress: Address;
   deliveryAddress: Address;
-  pickupRider?: User;
-  deliveryRider?: User;
+  pickupRider?: string;
+  deliveryRider?: string;
   subtotal: number;
   discount: number;
   discountCode?: string;

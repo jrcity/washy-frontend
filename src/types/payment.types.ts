@@ -5,12 +5,13 @@ export interface Payment {
   _id: string;
   order: string; // ObjectId
   customer: string; // ObjectId
+  user?: string; // ObjectId (alias for customer for display)
   amount: number;
   amountPaid: number;
   currency: string;
   method: PaymentMethod;
   status: PaymentStatus;
-  
+
   // Paystack
   paystackReference?: string;
   paystackAccessCode?: string;
@@ -57,6 +58,8 @@ export interface PaymentFilters {
   method?: PaymentMethod;
   startDate?: string;
   endDate?: string;
+  limit?: number;
+  page?: number;
 }
 
 export interface InitializePaymentResponse {

@@ -21,7 +21,7 @@ export interface Branch {
   code: string;
   address: Address;
   coverageZones: CoverageZone[];
-  manager: string; // ObjectId
+  manager: string | { _id: string; name: string; email: string }; // ObjectId or Populated
   staff: string[]; // ObjectIds
   riders: string[]; // ObjectIds
   contactPhone: string;

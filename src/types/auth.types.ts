@@ -2,12 +2,12 @@ import type { Address } from './api.types';
 export type { Address };
 
 // User Roles matching backend enum
-export type UserRole = 
-  | 'customer' 
-  | 'rider' 
-  | 'staff' 
-  | 'branch_manager' 
-  | 'admin' 
+export type UserRole =
+  | 'customer'
+  | 'rider'
+  | 'staff'
+  | 'branch_manager'
+  | 'admin'
   | 'super_admin';
 
 // Base User Interface
@@ -21,6 +21,7 @@ export interface User {
   pushToken?: string;
   isActive?: boolean; // Not in schema but common, verify if needed or derived
   address?: Customer['address']; // Add optional address from Customer to allow easy access in frontend usually
+  branchId?: string;
   createdAt: string;
   updatedAt: string;
 }
