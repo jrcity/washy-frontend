@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getToken, getStoredUser, clearAuthData, setToken as storageSetToken, setStoredUser as storageSetUser } from '@/lib/storage';
+import { queryClient } from '@/lib/queryClient';
 import { useProfile } from '@/hooks/useAuth';
 import type { User, UserRole } from '@/types';
 
@@ -43,10 +44,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [token, profileLoading]);
 
   const login = (userData: User, authToken: string) => {
+    // 0. Clear any existing cache to ensure fresh start
+    queryClient.clear();
+
     // 1. Update Storage
     storageSetToken(authToken);
     storageSetUser(userData);
-    
+
     // 2. Update State
     setToken(authToken);
     setUser(userData);
@@ -54,6 +58,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
+    // 1. Clear all cached query data
+    queryClient.clear();
+
+    // 2. Clear storage and local state
     clearAuthData();
     setToken(null);
     setUser(null);
