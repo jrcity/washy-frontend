@@ -4,6 +4,7 @@ import { ChevronLeft } from 'lucide-react';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { Sidebar } from './Sidebar';
+import { BottomNav } from './BottomNav';
 import { cn } from '@/lib/utils';
 
 // Public layout with header and footer
@@ -27,13 +28,17 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout = ({ variant, children }: DashboardLayoutProps) => {
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-neutral-50 flex flex-col lg:block">
       <Sidebar variant={variant} />
-      <main className={cn('lg:ml-64 min-h-screen transition-all duration-300')}>
+      <main className={cn(
+        'lg:ml-64 min-h-screen transition-all duration-300',
+        'pb-20 lg:pb-0' // Add bottom padding on mobile for BottomNav
+      )}>
         <div className="p-4 sm:p-6 lg:p-8 xl:p-10 max-w-[1600px] mx-auto">
           {children || <Outlet />}
         </div>
       </main>
+      <BottomNav variant={variant} />
     </div>
   );
 };
@@ -80,7 +85,7 @@ export const PageWrapper = ({ title, description, action, children, className, s
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex-1">
             {showBack && (
-              <button 
+              <button
                 onClick={() => navigate(-1)}
                 className="flex items-center text-sm text-neutral-500 hover:text-neutral-800 mb-2 transition-colors"
               >

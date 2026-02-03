@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  ShoppingBag, 
-  Users, 
-  MapPin, 
-  Settings, 
+import {
+  LayoutDashboard,
+  ShoppingBag,
+  Users,
+  MapPin,
+  Settings,
   FileText,
   Tag,
   CreditCard,
@@ -17,7 +17,8 @@ import {
   Menu,
   X,
   ChevronLeft,
-  LogOut
+  LogOut,
+  MessageCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthContext } from '@/context/AuthContext';
@@ -35,19 +36,24 @@ const customerLinks: SidebarLink[] = [
   { href: '/dashboard/orders', label: 'My Orders', icon: ShoppingBag },
   { href: '/dashboard/new-order', label: 'New Order', icon: ClipboardList },
   { href: '/dashboard/profile', label: 'Profile', icon: Users },
+  { href: '/dashboard/support', label: 'Support Chat', icon: MessageCircle },
   { href: '/dashboard/notifications', label: 'Notifications', icon: Bell },
 ];
 
 const riderLinks: SidebarLink[] = [
   { href: '/rider', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/rider/assignments', label: 'Assignments', icon: Truck },
+  { href: '/rider/tasks', label: 'Tasks', icon: Truck },
+  { href: '/rider/notifications', label: 'Notifications', icon: Bell },
   { href: '/rider/profile', label: 'Profile', icon: Users },
 ];
 
 const branchLinks: SidebarLink[] = [
   { href: '/branch', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/branch/orders', label: 'Orders', icon: ShoppingBag },
-  { href: '/branch/stats', label: 'Analytics', icon: BarChart3 },
+  { href: '/branch/analytics', label: 'Analytics', icon: BarChart3, roles: ['branch_manager'] },
+  { href: '/branch/payments', label: 'Payments', icon: CreditCard, roles: ['branch_manager'] },
+  { href: '/branch/tasks', label: 'Branch Tasks', icon: ClipboardList },
+  { href: '/branch/notifications', label: 'Notifications', icon: Bell },
   { href: '/branch/profile', label: 'Profile', icon: Users },
 ];
 
@@ -60,7 +66,10 @@ const adminLinks: SidebarLink[] = [
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/payments', label: 'Payments', icon: CreditCard },
   { href: '/admin/uploads', label: 'Uploads', icon: Upload },
+  { href: '/admin/tasks', label: 'Tasks', icon: ClipboardList },
   { href: '/admin/reports', label: 'Reports', icon: BarChart3 },
+  { href: '/admin/chat', label: 'Support Chat', icon: MessageCircle },
+  { href: '/admin/notifications', label: 'Notifications', icon: Bell },
   { href: '/admin/profile', label: 'Profile', icon: Users },
 ];
 
@@ -107,6 +116,10 @@ export const Sidebar = ({ variant }: SidebarProps) => {
           const Icon = link.icon;
           const isActive = location.pathname === link.href;
 
+          if (link.roles && user && !link.roles.includes(user.role)) {
+            return null;
+          }
+
           return (
             <Link
               key={link.href}
@@ -140,7 +153,7 @@ export const Sidebar = ({ variant }: SidebarProps) => {
                   <span className="w-1.5 h-1.5 rounded-full bg-success-500 mr-2"></span>
                   <p className="text-xs text-neutral-500 capitalize">{user.role?.replace('_', ' ')}</p>
                 </div>
-                <button 
+                <button
                   onClick={logout}
                   className="p-1 text-neutral-400 hover:text-error-500 hover:bg-error-50 rounded transition-colors"
                   title="Logout"
