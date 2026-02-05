@@ -36,6 +36,7 @@ export interface Branch {
     sunday: OperatingHours;
   };
   isActive: boolean;
+  is_featured?: boolean;
   capacity: {
     dailyOrderLimit: number;
     currentDailyOrders: number;
