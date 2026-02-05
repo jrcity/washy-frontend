@@ -90,8 +90,8 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     const checkboxId = useId();
 
     return (
-      <div className="flex items-start gap-3 group">
-        <div className="relative flex items-center justify-center mt-0.5">
+      <div className={cn("flex items-start gap-3 group", className)}>
+        <div className="relative flex items-center justify-center mt-1">
           <input
             ref={ref}
             type="checkbox"
@@ -99,12 +99,12 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             className={cn(
               'peer w-6 h-6 rounded-lg border-2 border-neutral-300 bg-white transition-all duration-300',
               'checked:bg-primary-600 checked:border-primary-600',
-              'focus:ring-4 focus:ring-primary-500/10 focus:outline-none',
+              'focus:ring-4 focus:ring-primary-500/20 focus:outline-none focus:border-primary-500',
               'hover:border-primary-400 cursor-pointer',
-              'disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-neutral-100',
-              'appearance-none',
-              className
+              'active:scale-95',
+              'disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-neutral-100'
             )}
+            style={{ appearance: 'none' }}
             {...props}
           />
           {/* Custom checkmark */}
@@ -123,11 +123,11 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           </svg>
         </div>
         {(label || description) && (
-          <div className="flex flex-col">
+          <div className="flex flex-col py-0.5">
             {label && (
               <label
                 htmlFor={checkboxId}
-                className="text-sm font-semibold text-neutral-700 cursor-pointer select-none group-hover:text-neutral-900 transition-colors"
+                className="text-sm font-semibold text-neutral-700 cursor-pointer select-none group-hover:text-neutral-900 transition-colors peer-checked:text-primary-700"
               >
                 {label}
               </label>
@@ -155,8 +155,8 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
     const radioId = useId();
 
     return (
-      <div className="flex items-start gap-3 group">
-        <div className="relative flex items-center justify-center mt-0.5">
+      <div className={cn("flex items-start gap-3 group", className)}>
+        <div className="relative flex items-center justify-center mt-1">
           <input
             ref={ref}
             type="radio"
@@ -164,23 +164,23 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
             className={cn(
               'peer w-6 h-6 rounded-full border-2 border-neutral-300 bg-white transition-all duration-300',
               'checked:border-primary-600',
-              'focus:ring-4 focus:ring-primary-500/10 focus:outline-none',
+              'focus:ring-4 focus:ring-primary-500/20 focus:outline-none focus:border-primary-500',
               'hover:border-primary-400 cursor-pointer',
-              'disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-neutral-100',
-              'appearance-none',
-              className
+              'active:scale-95',
+              'disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-neutral-100'
             )}
+            style={{ appearance: 'none' }}
             {...props}
           />
           {/* Custom radio dot */}
           <div className="absolute w-3 h-3 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 pointer-events-none opacity-0 peer-checked:opacity-100 transition-all duration-300 scale-50 peer-checked:scale-100 shadow-sm shadow-primary-500/20" />
         </div>
         {(label || description) && (
-          <div className="flex flex-col">
+          <div className="flex flex-col py-0.5">
             {label && (
               <label
                 htmlFor={radioId}
-                className="text-sm font-semibold text-neutral-700 cursor-pointer select-none group-hover:text-neutral-900 transition-colors"
+                className="text-sm font-semibold text-neutral-700 cursor-pointer select-none group-hover:text-neutral-900 transition-colors peer-checked:text-primary-700"
               >
                 {label}
               </label>

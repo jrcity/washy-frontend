@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { Send, Paperclip, X, MoreVertical, Smile } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Send, Paperclip, X, MoreVertical, Smile, ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button, Spinner } from '@/components/ui';
 import { useAuthContext } from '@/context/AuthContext';
 import { useChat } from '@/context/ChatContext';
@@ -24,6 +24,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId, onClose, classN
         messages,
         sendMessage,
         setActiveConversationId,
+        activeConversationId,
         isLoadingMessages,
         isConnected,
         typingUsers,
@@ -31,16 +32,49 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId, onClose, classN
     } = useChat();
 
     const bottomRef = useRef<HTMLDivElement>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [showScrollButton, setShowScrollButton] = useState(false);
     const { register, handleSubmit, reset } = useForm<MessageForm>();
+
+    const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
+        bottomRef.current?.scrollIntoView({ behavior });
+    }, []);
+
+    // Listen to scroll to show/hide "Scroll to Bottom" button
+    const handleScroll = () => {
+        if (!scrollContainerRef.current) return;
+        const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+        const isNearBottom = scrollHeight - scrollTop - clientHeight < 150;
+        setShowScrollButton(!isNearBottom);
+    };
 
     useEffect(() => {
         setActiveConversationId(conversationId);
         return () => setActiveConversationId(null);
     }, [conversationId, setActiveConversationId]);
 
+    const hasInitialScrolled = useRef<string | null>(null);
+
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+        // Auto-scroll on new messages
+        if (scrollContainerRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+            const isNearBottom = scrollHeight - scrollTop - clientHeight < 300;
+            const isFirstLoad = hasInitialScrolled.current !== conversationId && messages.length > 0;
+
+            if (isNearBottom || isFirstLoad) {
+                scrollToBottom(isFirstLoad ? 'auto' : 'smooth');
+                if (isFirstLoad) {
+                    hasInitialScrolled.current = conversationId;
+                }
+            }
+        }
+    }, [messages, conversationId, scrollToBottom]);
+
+    // Clear initial scroll ref when conversation changes
+    useEffect(() => {
+        hasInitialScrolled.current = null;
+    }, [conversationId]);
 
     const onSubmit = async (data: MessageForm) => {
         if (!data.content.trim()) return;
@@ -89,7 +123,11 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId, onClose, classN
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-neutral-50/30 custom-scrollbar">
+            <div
+                ref={scrollContainerRef}
+                onScroll={handleScroll}
+                className="flex-1 overflow-y-auto p-4 space-y-6 bg-neutral-50/30 custom-scrollbar relative"
+            >
                 {isLoadingMessages ? (
                     <div className="flex flex-col items-center justify-center h-full gap-3">
                         <Spinner size="lg" className="text-primary-500" />
@@ -124,7 +162,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId, onClose, classN
                                     )}
 
                                     <div className={cn(
-                                        "flex flex-col group max-w-[80%]",
+                                        "flex flex-col group max-w-[80%] relative",
                                         isMe ? "items-end" : "items-start"
                                     )}>
                                         <div className={cn(
@@ -135,7 +173,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId, onClose, classN
                                         )}>
                                             {msg.content}
                                         </div>
-                                        <span className="text-[10px] font-medium text-neutral-400 mt-1 px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <span className="text-[10px] font-bold text-neutral-400 mt-1 px-1 tracking-tight">
                                             {format(new Date(msg.createdAt), 'HH:mm')}
                                         </span>
                                     </div>
@@ -160,6 +198,21 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId, onClose, classN
                 )}
 
                 <div ref={bottomRef} className="h-2" />
+
+                {/* Scroll to Bottom Button */}
+                <AnimatePresence>
+                    {showScrollButton && (
+                        <motion.button
+                            initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.8, y: 10 }}
+                            onClick={() => scrollToBottom('smooth')}
+                            className="absolute bottom-24 right-8 w-10 h-10 rounded-full bg-white shadow-xl border border-neutral-100 flex items-center justify-center text-primary-600 z-20 hover:bg-primary-50 transition-colors group"
+                        >
+                            <ChevronDown className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
+                        </motion.button>
+                    )}
+                </AnimatePresence>
             </div>
 
             {/* Input Bar */}

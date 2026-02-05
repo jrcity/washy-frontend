@@ -44,12 +44,14 @@ const riderLinks: SidebarLink[] = [
   { href: '/rider', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/rider/tasks', label: 'Tasks', icon: Truck },
   { href: '/rider/notifications', label: 'Notifications', icon: Bell },
+  { href: '/rider/chat', label: 'Support Chat', icon: MessageCircle },
   { href: '/rider/profile', label: 'Profile', icon: Users },
 ];
 
 const branchLinks: SidebarLink[] = [
   { href: '/branch', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/branch/orders', label: 'Orders', icon: ShoppingBag },
+  { href: '/branch/chat', label: 'Support Chat', icon: MessageCircle },
   { href: '/branch/analytics', label: 'Analytics', icon: BarChart3, roles: ['branch_manager'] },
   { href: '/branch/payments', label: 'Payments', icon: CreditCard, roles: ['branch_manager'] },
   { href: '/branch/tasks', label: 'Branch Tasks', icon: ClipboardList },
@@ -68,7 +70,7 @@ const adminLinks: SidebarLink[] = [
   { href: '/admin/uploads', label: 'Uploads', icon: Upload },
   { href: '/admin/tasks', label: 'Tasks', icon: ClipboardList },
   { href: '/admin/reports', label: 'Reports', icon: BarChart3 },
-  { href: '/admin/chat', label: 'Support Chat', icon: MessageCircle },
+  { href: '/admin/support', label: 'Support Chat', icon: MessageCircle },
   { href: '/admin/notifications', label: 'Notifications', icon: Bell },
   { href: '/admin/profile', label: 'Profile', icon: Users },
 ];
