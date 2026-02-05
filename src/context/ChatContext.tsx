@@ -3,6 +3,7 @@ import { io, Socket } from 'socket.io-client';
 import { getToken } from '@/lib/storage';
 import { useAuthContext } from './AuthContext';
 import { chatService } from '@/services/chat.service';
+import { EMESSAGE_TYPE } from '@/types/chat.types';
 import type { Message, Conversation } from '@/types/chat.types';
 import toast from 'react-hot-toast';
 
@@ -13,7 +14,7 @@ interface ChatContextType {
     activeConversationId: string | null;
     setActiveConversationId: (id: string | null) => void;
     messages: Message[];
-    sendMessage: (content: string, attachments?: string[]) => Promise<void>;
+    sendMessage: (content: string, type?: EMESSAGE_TYPE, attachments?: any[]) => Promise<void>;
     isLoadingConversations: boolean;
     isLoadingMessages: boolean;
     typingUsers: Record<string, string[]>; // conversationId -> userIds[]
@@ -43,7 +44,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsLoadingConversations(true);
         try {
             const response = await chatService.getConversations();
-            if (response.success) {
+            if (response.success && response.data) {
                 setConversations(response.data);
             }
         } catch (error) {
@@ -58,8 +59,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsLoadingMessages(true);
         try {
             const response = await chatService.getMessages(conversationId);
-            if (response.success) {
-                setMessages(response.data.reverse());
+            if (response.success && response.data?.messages) {
+                setMessages(response.data.messages);
             }
         } catch (error) {
             console.error('Failed to fetch messages', error);
@@ -104,15 +105,37 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         // Backend event: message:received (emitted to conversation room)
         newSocket.on('message:received', (message: Message) => {
-            if (message.conversationId === activeConvRef.current) {
-                setMessages(prev => [...prev, message]);
+            const conversationId = message.conversation;
+            if (conversationId === activeConvRef.current) {
+                setMessages(prev => {
+                    // Prevent duplicates
+                    if (prev.some(m => m._id === message._id)) return prev;
+                    return [...prev, message];
+                });
                 // Automatically mark as read if we are looking at it
-                newSocket.emit('messages:read', { conversationId: message.conversationId });
+                newSocket.emit('messages:read', { conversationId });
             }
         });
 
         // Backend event: message:new (emitted to personal user room for notifications)
-        newSocket.on('message:new', ({ conversationId, message }: { conversationId: string, message: Message }) => {
+        newSocket.on('message:new', ({ conversationId: cid, message }: { conversationId: string, message: Message }) => {
+            const conversationId = cid || message.conversation;
+
+            // FALLBACK: If we are in this conversation, update messages list too
+            // This is critical for users who aren't yet in the conversation room (e.g. Managers joining)
+            if (conversationId === activeConvRef.current) {
+                setMessages(prev => {
+                    if (prev.some(m => m._id === message._id)) return prev;
+                    return [...prev, message];
+                });
+                newSocket.emit('messages:read', { conversationId });
+            }
+
+            // Update unread count if we are not in this conversation
+            if (conversationId !== activeConvRef.current) {
+                // Potential sound or toast
+            }
+
             // Update conversations list globally
             setConversations(prev => {
                 const index = prev.findIndex(c => c._id === conversationId);
@@ -146,9 +169,9 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
 
         // Backend events: typing indicators
-        newSocket.on('typing:started', ({ userId, conversationId }: { userId: string, conversationId?: string }) => {
+        newSocket.on('typing:started', ({ userId, conversationId: cid }: { userId: string, conversationId?: string }) => {
             if (userId === user?._id) return;
-            const convId = conversationId || activeConvRef.current;
+            const convId = cid || activeConvRef.current;
             if (!convId) return;
 
             setTypingUsers(prev => ({
@@ -157,9 +180,9 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }));
         });
 
-        newSocket.on('typing:stopped', ({ userId, conversationId }: { userId: string, conversationId?: string }) => {
+        newSocket.on('typing:stopped', ({ userId, conversationId: cid }: { userId: string, conversationId?: string }) => {
             if (userId === user?._id) return;
-            const convId = conversationId || activeConvRef.current;
+            const convId = cid || activeConvRef.current;
             if (!convId) return;
 
             setTypingUsers(prev => ({
@@ -169,10 +192,16 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
 
         // Backend event: messages:marked-read
-        newSocket.on('messages:marked-read', ({ userId, conversationId }: { userId: string, conversationId: string }) => {
+        newSocket.on('messages:marked-read', ({ userId, conversationId: cid }: { userId: string, conversationId: string }) => {
             if (userId !== user?._id) {
                 // Potential UI update to show "read" receipt
             }
+        });
+
+        // Backend event: error
+        newSocket.on('error', (err: any) => {
+            console.error('Socket error:', err);
+            toast.error(err.message || 'Chat error occurred');
         });
 
         setSocket(newSocket);
@@ -205,7 +234,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
     }, [activeConversationId, socket, fetchMessages]);
 
-    const sendMessage = async (content: string, attachments?: string[]) => {
+    const sendMessage = async (content: string, type: EMESSAGE_TYPE = EMESSAGE_TYPE.TEXT, attachments?: any[]) => {
         if (!activeConversationId || !socket || !isConnected) {
             toast.error('Chat not connected');
             return;
@@ -215,7 +244,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         socket.emit('message:send', {
             conversationId: activeConversationId,
             content,
-            // type: EMESSAGE_TYPE.TEXT, // Default on backend is likely text
+            type,
+            attachments
         });
 
         // Stop typing indicator on send
