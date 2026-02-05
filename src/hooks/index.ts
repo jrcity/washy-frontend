@@ -11,3 +11,4 @@ export * from './usePayments';
 export * from './useUpload';
 export * from './useBranchStats';
 export * from './useComponentLogger';
+export * from './useGeolocation';
