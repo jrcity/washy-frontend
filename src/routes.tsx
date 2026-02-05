@@ -8,6 +8,7 @@ import {
   LandingPage,
   AboutPage,
   ServicesPage,
+  ContactPage,
   MaintenancePage,
   NotFoundPage
 } from '@/pages/public';
@@ -15,20 +16,29 @@ import {
 // Auth Pages
 import { LoginPage, RegisterPage } from '@/pages/auth';
 
-// Dashboard Pages
 import {
   AdminDashboard,
   AdminReportsPage,
   AdminChatPage,
   AdminRBACPage,
-  AdminTasksPage
+  AdminTasksPage,
+  AdminBranchesPage,
+  AdminBranchDetailsPage,
+  AdminEditBranchPage,
+  AdminUsersPage,
+  AdminServicesPage,
+  AdminCategoriesPage,
+  AdminPaymentsPage,
+  AdminPaymentDetailsPage,
 } from '@/pages/admin';
+import { ProfilePage } from '@/pages/profile/ProfilePage';
 
 import {
   RiderDashboard,
   RiderTasksPage,
   ActiveDeliveryPage,
-  VerifyDeliveryPage
+  VerifyDeliveryPage,
+  RiderChatPage
 } from '@/pages/rider';
 
 import {
@@ -36,7 +46,8 @@ import {
   BranchOrderManagerPage,
   BranchProcessOrderPage,
   BranchTasksPage,
-  BranchAnalyticsPage
+  BranchAnalyticsPage,
+  BranchChatPage
 } from '@/pages/branch';
 import {
   CustomerDashboard,
@@ -114,7 +125,7 @@ export const routes: RouteObject[] = [
       { path: '/', element: <LandingPage /> },
       { path: '/about', element: <AboutPage /> },
       { path: '/services', element: <ServicesPage /> },
-      { path: '/contact', element: <AboutPage /> }, // Reuse about for now
+      { path: '/contact', element: <ContactPage /> },
     ],
   },
 
@@ -147,6 +158,7 @@ export const routes: RouteObject[] = [
       { path: 'orders', element: <OrderHistoryPage /> },
       { path: 'orders/:id', element: <OrderDetailsPage /> },
       { path: 'support', element: <CustomerSupportChatPage /> },
+      { path: 'profile', element: <ProfilePage /> },
     ],
   },
 
@@ -162,7 +174,9 @@ export const routes: RouteObject[] = [
       { index: true, element: <RiderDashboard /> },
       { path: 'tasks', element: <RiderTasksPage /> },
       { path: 'active/:id', element: <ActiveDeliveryPage /> },
+      { path: 'chat', element: <RiderChatPage /> },
       { path: 'verify/:id', element: <VerifyDeliveryPage /> },
+      { path: 'profile', element: <ProfilePage /> },
     ],
   },
 
@@ -178,8 +192,10 @@ export const routes: RouteObject[] = [
       { index: true, element: <BranchDashboard /> },
       { path: 'orders', element: <BranchOrderManagerPage /> },
       { path: 'orders/:id', element: <BranchProcessOrderPage /> },
+      { path: 'chat', element: <BranchChatPage /> },
       { path: 'tasks', element: <BranchTasksPage /> },
       { path: 'analytics', element: <BranchAnalyticsPage /> },
+      { path: 'profile', element: <ProfilePage /> },
     ],
   },
 
@@ -197,6 +213,16 @@ export const routes: RouteObject[] = [
       { path: 'chat', element: <AdminChatPage /> },
       { path: 'rbac', element: <AdminRBACPage /> },
       { path: 'tasks', element: <AdminTasksPage /> },
+      { path: 'branches', element: <AdminBranchesPage /> },
+      { path: 'branches/create', element: <AdminEditBranchPage /> },
+      { path: 'branches/edit/:id', element: <AdminEditBranchPage /> },
+      { path: 'branches/:id', element: <AdminBranchDetailsPage /> },
+      { path: 'users', element: <AdminUsersPage /> },
+      { path: 'services', element: <AdminServicesPage /> },
+      { path: 'categories', element: <AdminCategoriesPage /> },
+      { path: 'payments', element: <AdminPaymentsPage /> },
+      { path: 'payments/:id', element: <AdminPaymentDetailsPage /> },
+      { path: 'profile', element: <ProfilePage /> },
     ],
   },
 

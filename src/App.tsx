@@ -41,7 +41,8 @@ import {
   ActiveDeliveryPage,
   VerifyDeliveryPage,
   RiderNotificationsPage,
-  ActivePickupPage
+  ActivePickupPage,
+  RiderChatPage
 } from '@/pages/rider';
 
 // Branch Pages
@@ -55,6 +56,7 @@ import {
   BranchAnalyticsPage,
   BranchPaymentsPage,
   BranchOrderDetailsPage,
+  BranchChatPage,
   BranchTasksPage
 } from '@/pages/branch';
 import { ProfilePage } from '@/pages/profile/ProfilePage';
@@ -203,6 +205,7 @@ const AppRoutes = () => {
             <Route path="tasks" element={<RiderTasksPage />} />
             <Route path="delivery/:id" element={<ActiveDeliveryPage />} />
             <Route path="verify/:id" element={<VerifyDeliveryPage />} />
+            <Route path="chat" element={<RiderChatPage />} />
             <Route path="notifications" element={<RiderNotificationsPage />} />
             <Route path="profile" element={<ProfilePage />} />
           </Route>
@@ -218,6 +221,7 @@ const AppRoutes = () => {
             <Route path="staff" element={<BranchStaffPage />} />
             <Route path="analytics" element={<BranchAnalyticsPage />} />
             <Route path="payments" element={<BranchPaymentsPage />} />
+            <Route path="chat" element={<BranchChatPage />} />
             <Route path="tasks" element={<BranchTasksPage />} />
             <Route path="notifications" element={<BranchNotificationsPage />} />
             <Route path="profile" element={<ProfilePage />} />
