@@ -30,12 +30,7 @@ export const AdminPaymentDetailsPage = () => {
         <PageWrapper
             title={`Payment ${displayReference}`}
             description="View payment transaction details"
-            action={
-                <Button variant="outline" size="sm" onClick={() => navigate('/admin/payments')}>
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back to Payments
-                </Button>
-            }
+            showBack={true}
         >
             <div className="grid lg:grid-cols-3 gap-6">
                 {/* Main Content */}

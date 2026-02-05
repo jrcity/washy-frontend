@@ -33,6 +33,7 @@ export const AdminNotificationsPage = () => {
         <PageWrapper
             title="Notifications"
             description="View system alerts and updates"
+            showBack={true}
             action={
                 notifications.some(n => !n.isRead) ? (
                     <Button
@@ -52,8 +53,8 @@ export const AdminNotificationsPage = () => {
                 <button
                     onClick={() => setFilter('all')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'all'
-                            ? 'bg-primary-100 text-primary-700'
-                            : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                        ? 'bg-primary-100 text-primary-700'
+                        : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
                         }`}
                 >
                     All
@@ -61,8 +62,8 @@ export const AdminNotificationsPage = () => {
                 <button
                     onClick={() => setFilter('unread')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'unread'
-                            ? 'bg-primary-100 text-primary-700'
-                            : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                        ? 'bg-primary-100 text-primary-700'
+                        : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
                         }`}
                 >
                     Unread

@@ -82,6 +82,7 @@ export const AdminUploadsPage = () => {
         <PageWrapper
             title="File Manager"
             description="Manage system uploads and assets"
+            showBack={true}
             action={
                 <div className="relative">
                     <input

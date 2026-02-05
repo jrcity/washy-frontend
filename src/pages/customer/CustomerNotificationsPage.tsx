@@ -69,6 +69,7 @@ export const CustomerNotificationsPage = () => {
         <PageWrapper
             title="Notifications"
             description="Stay updated on your orders and account activity"
+            showBack={true}
             action={
                 <div className="flex gap-2">
                     <Button
@@ -98,8 +99,8 @@ export const CustomerNotificationsPage = () => {
                 <button
                     onClick={() => setFilter('all')}
                     className={`flex items-center gap-2 px-6 py-3 font-medium border-b-2 transition-colors ${filter === 'all'
-                            ? 'border-primary-600 text-primary-600'
-                            : 'border-transparent text-neutral-500 hover:text-neutral-700'
+                        ? 'border-primary-600 text-primary-600'
+                        : 'border-transparent text-neutral-500 hover:text-neutral-700'
                         }`}
                 >
                     All
@@ -108,8 +109,8 @@ export const CustomerNotificationsPage = () => {
                 <button
                     onClick={() => setFilter('unread')}
                     className={`flex items-center gap-2 px-6 py-3 font-medium border-b-2 transition-colors ${filter === 'unread'
-                            ? 'border-primary-600 text-primary-600'
-                            : 'border-transparent text-neutral-500 hover:text-neutral-700'
+                        ? 'border-primary-600 text-primary-600'
+                        : 'border-transparent text-neutral-500 hover:text-neutral-700'
                         }`}
                 >
                     Unread

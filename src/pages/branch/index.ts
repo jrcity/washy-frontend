@@ -7,5 +7,5 @@ export * from './BranchStatsPage';
 export * from './BranchNotificationsPage';
 export * from './BranchAnalyticsPage';
 export * from './BranchPaymentsPage';
-export * from './BranchPaymentsPage';
 export * from './BranchTasksPage';
+export * from './BranchChatPage';

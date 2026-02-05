@@ -3,6 +3,7 @@ import { rbacService } from '@/services/rbac.service';
 import type { Policy } from '@/types/rbac.types';
 import { Shield, Plus, Trash2, Edit2, GripVertical } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { PageWrapper } from '@/components/layout';
 
 export const AdminRBACPage: React.FC = () => {
     const [policies, setPolicies] = useState<Policy[]>([]);
@@ -37,18 +38,17 @@ export const AdminRBACPage: React.FC = () => {
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Access Control</h1>
-                    <p className="text-gray-600">Manage roles, permissions, and security policies</p>
-                </div>
+        <PageWrapper
+            title="Access Control"
+            description="Manage roles, permissions, and security policies"
+            showBack={true}
+            action={
                 <Button onClick={() => { }} className="flex items-center gap-2">
                     <Plus className="w-4 h-4" />
                     Create Policy
                 </Button>
-            </div>
-
+            }
+        >
             <div className="bg-white shadow-sm rounded-lg border overflow-hidden">
                 {loading ? (
                     <div className="p-8 text-center text-gray-500">Loading policies...</div>
@@ -130,7 +130,7 @@ export const AdminRBACPage: React.FC = () => {
                     </table>
                 )}
             </div>
-        </div>
+        </PageWrapper>
     );
 };
 

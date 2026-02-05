@@ -3,10 +3,11 @@ import { useOrder, useRateOrder } from '@/hooks';
 import { PageWrapper } from '@/components/layout';
 import { Card, Badge, Button, Spinner, Alert } from '@/components/ui';
 import { formatCurrency, formatDate, getStatusColor, getStatusText } from '@/lib/utils';
-import { ChevronLeft, MapPin, Clock, CreditCard, Star, Truck, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, MapPin, Clock, CreditCard, Star, Truck, CheckCircle2, MessageCircle, FileText, Building2 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { verifyPayment } from '@/services/payments.service';
 import { cn } from '@/lib/utils';
+import { chatService } from '@/services/chat.service';
 import toast from 'react-hot-toast';
 
 import { PaymentModal } from '@/components/payment/PaymentModal';
@@ -23,6 +24,8 @@ export const OrderDetailsPage = () => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
   const verifyAttempted = useRef(false);
+  const [isStartingSupportChat, setIsStartingSupportChat] = useState(false);
+  const [isStartingRiderChat, setIsStartingRiderChat] = useState(false);
 
   // Payment Verification Effect
   useEffect(() => {
@@ -67,10 +70,42 @@ export const OrderDetailsPage = () => {
     rateOrder({ id: order._id, data: { rating, feedback } });
   };
 
+  const handleContactSupport = async () => {
+    if (!order.branch) return;
+    setIsStartingSupportChat(true);
+    try {
+      const response = await chatService.startSupportChat({
+        branchId: typeof order.branch === 'string' ? order.branch : order.branch._id
+      });
+      if (response.success && response.data) {
+        navigate('/dashboard/support');
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to start chat');
+    } finally {
+      setIsStartingSupportChat(false);
+    }
+  };
+
+  const handleContactRider = async () => {
+    setIsStartingRiderChat(true);
+    try {
+      const response = await chatService.startRiderChat({ orderId: order._id });
+      if (response.success && response.data) {
+        navigate('/dashboard/support');
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Rider is currently unavailable for chat');
+    } finally {
+      setIsStartingRiderChat(false);
+    }
+  };
+
   return (
     <PageWrapper
       title={`Order #${order.orderNumber}`}
       description={`Placed on ${formatDate(order.createdAt, 'PPP')}`}
+      showBack={true}
       action={
         order.status === 'pending' && !order.isPaid ? (
           <Button onClick={() => setIsPaymentModalOpen(true)}>
@@ -100,13 +135,45 @@ export const OrderDetailsPage = () => {
 
             {/* Simple Timeline logic could go here */}
             {['pending', 'confirmed', 'picked_up', 'in_process', 'ready', 'out_for_delivery', 'delivered', 'completed'].includes(order.status) && (
-              <div className="bg-neutral-50 p-4 rounded-xl border border-neutral-100 flex items-center gap-3">
-                <Truck className="w-5 h-5 text-primary-600" />
-                <p className="text-sm text-neutral-600">
-                  {order.status === 'out_for_delivery'
-                    ? 'Your order is on its way to you!'
-                    : 'We are processing your order with care.'}
-                </p>
+              <div className="bg-neutral-50 p-4 rounded-xl border border-neutral-100 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <Truck className="w-5 h-5 text-primary-600" />
+                  <p className="text-sm text-neutral-600">
+                    {order.status === 'out_for_delivery'
+                      ? 'Your order is on its way to you!'
+                      : 'We are processing your order with care.'}
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 text-xs gap-1.5"
+                  onClick={handleContactSupport}
+                  isLoading={isStartingSupportChat}
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  Support
+                </Button>
+              </div>
+            )}We are processing your order with care.
+
+            {(order.pickupRider || order.deliveryRider) && ['picked_up', 'out_for_delivery'].includes(order.status) && (
+              <div className="mt-4 p-4 bg-primary-50 rounded-xl border border-primary-100 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-primary-600 shadow-sm font-bold">
+                    R
+                  </div>
+                  <p className="text-sm font-medium text-primary-900">Contact assigned rider</p>
+                </div>
+                <Button
+                  size="sm"
+                  className="h-8 text-xs gap-1.5"
+                  onClick={handleContactRider}
+                  isLoading={isStartingRiderChat}
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  Chat
+                </Button>
               </div>
             )}
           </Card>
@@ -116,41 +183,79 @@ export const OrderDetailsPage = () => {
             <h3 className="font-semibold text-lg mb-4">Items & Services</h3>
             <div className="space-y-4">
               {order.items.map((item, idx) => (
-                <div key={idx} className="flex justify-between items-center py-2 border-b border-neutral-100 last:border-0">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded bg-primary-50 flex items-center justify-center text-primary-600 font-medium text-sm">
+                <div key={idx} className="flex justify-between items-start py-3 border-b border-neutral-100 last:border-0">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600 font-bold text-sm shadow-sm">
                       {item.quantity}x
                     </div>
                     <div>
-                      <p className="font-medium text-neutral-900">
+                      <p className="font-semibold text-neutral-900">
                         {typeof item.service === 'string' ? 'Service' : item.service.name}
                       </p>
-                      <p className="text-xs text-neutral-500 capitalize">{item.garmentType}</p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <p className="text-xs text-neutral-500 capitalize px-2 py-0.5 bg-neutral-100 rounded-full">{item.garmentType.replace('_', ' ')}</p>
+                        {item.isExpress && <Badge variant="warning" size="sm" className="h-4 text-[10px]">Express</Badge>}
+                        <span className="text-[10px] text-neutral-400">@ {formatCurrency(item.unitPrice || 0)} / unit</span>
+                      </div>
                     </div>
                   </div>
-                  <p className="font-medium text-neutral-900">{formatCurrency(item.subtotal)}</p>
+                  <p className="font-bold text-neutral-900">{formatCurrency(item.subtotal)}</p>
                 </div>
               ))}
             </div>
-            <div className="border-t border-neutral-100 mt-4 pt-4 space-y-2">
-              <div className="flex justify-between text-sm text-neutral-600">
+            <div className="border-t border-neutral-100 mt-6 pt-6 space-y-3">
+              <div className="flex justify-between text-sm text-neutral-500">
                 <span>Subtotal</span>
-                <span>{formatCurrency(order.subtotal)}</span>
+                <span className="font-medium text-neutral-900">{formatCurrency(order.subtotal)}</span>
               </div>
-              <div className="flex justify-between text-sm text-neutral-600">
+              <div className="flex justify-between text-sm text-neutral-500">
                 <span>Delivery Fee</span>
-                <span>{formatCurrency(order.deliveryFee)}</span>
+                <span className="font-medium text-neutral-900">{formatCurrency(order.deliveryFee)}</span>
               </div>
-              <div className="flex justify-between font-bold text-lg text-neutral-900 pt-2">
-                <span>Total</span>
-                <span>{formatCurrency(order.total)}</span>
+              {order.discount > 0 && (
+                <div className="flex justify-between text-sm text-success-600">
+                  <span>Discount</span>
+                  <span className="font-medium">-{formatCurrency(order.discount)}</span>
+                </div>
+              )}
+              <div className="flex justify-between font-bold text-xl text-neutral-900 pt-3 border-t border-dashed border-neutral-200">
+                <span>Total Amount</span>
+                <span className="text-primary-600">{formatCurrency(order.total)}</span>
               </div>
             </div>
           </Card>
+
+          {/* Customer Notes */}
+          {order.customerNotes && (
+            <Card className="p-6 border-l-4 border-l-secondary-400 bg-secondary-50/30">
+              <h3 className="text-sm font-bold text-secondary-900 uppercase tracking-wider mb-2 flex items-center gap-2">
+                <FileText className="w-4 h-4" />
+                Special Instructions
+              </h3>
+              <p className="text-neutral-700 italic leading-relaxed">"{order.customerNotes}"</p>
+            </Card>
+          )}
         </div>
 
         {/* Sidebar Info */}
         <div className="space-y-6">
+          <Card className="p-6">
+            <h3 className="font-bold text-neutral-900 mb-4 flex items-center gap-2">
+              <Building2 className="w-4 h-4 text-primary-50" />
+              Processing Branch
+            </h3>
+            {typeof order.branch !== 'string' ? (
+              <div className="space-y-1">
+                <p className="font-bold text-neutral-900">{order.branch.name}</p>
+                <Badge variant="info" className="text-[10px] h-4 bg-neutral-50 text-neutral-500 border-neutral-200">
+                  Code: {order.branch.code}
+                </Badge>
+              </div>
+            ) : (
+              <p className="text-sm text-neutral-600">Branch ID: {order.branch}</p>
+            )}
+          </Card>
+
           <Card className="p-6">
             <h3 className="font-semibold mb-4 flex items-center gap-2">
               <Clock className="w-4 h-4 text-neutral-500" />
@@ -158,13 +263,13 @@ export const OrderDetailsPage = () => {
             </h3>
             <div className="space-y-4">
               <div>
-                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-1">Pickup</p>
-                <p className="text-sm font-medium">{formatDate(order.pickupDate, 'PP')}</p>
-                <p className="text-sm text-neutral-600">{order.pickupTimeSlot}</p>
+                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-1">Pickup Window</p>
+                <p className="text-sm font-bold text-neutral-900">{formatDate(order.pickupDate, 'PPP')}</p>
+                <p className="text-sm text-neutral-600 font-medium">{order.pickupTimeSlot}</p>
               </div>
               <div>
-                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-1">Delivery Estimate</p>
-                <p className="text-sm font-medium">{formatDate(order.expectedDeliveryDate, 'PP')}</p>
+                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-1">Expected Delivery</p>
+                <p className="text-sm font-bold text-neutral-900">{formatDate(order.expectedDeliveryDate, 'PPP')}</p>
               </div>
             </div>
           </Card>
@@ -172,16 +277,49 @@ export const OrderDetailsPage = () => {
           <Card className="p-6">
             <h3 className="font-semibold mb-4 flex items-center gap-2">
               <MapPin className="w-4 h-4 text-neutral-500" />
-              Locations
+              Pickup & Delivery
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div>
-                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-1">Pickup Address</p>
-                <p className="text-sm text-neutral-600 whitespace-pre-line">{order.pickupAddress.street}</p>
+                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary-500" />
+                  Pickup Address
+                </p>
+                <div className="space-y-1">
+                  <p className="text-sm font-bold text-neutral-900 leading-tight">
+                    {order.pickupAddress.street}
+                  </p>
+                  <p className="text-xs text-neutral-500">
+                    {order.pickupAddress.area}, {order.pickupAddress.city}, {order.pickupAddress.state}
+                  </p>
+                  {order.pickupAddress.landmark && (
+                    <p className="text-[11px] font-medium text-secondary-600 flex items-center gap-1 mt-1">
+                      <MapPin className="w-3 h-3" />
+                      Near {order.pickupAddress.landmark}
+                    </p>
+                  )}
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-1">Delivery Address</p>
-                <p className="text-sm text-neutral-600 whitespace-pre-line">{order.deliveryAddress.street}</p>
+
+              <div className="pt-4 border-t border-neutral-100">
+                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-secondary-500" />
+                  Delivery Address
+                </p>
+                <div className="space-y-1">
+                  <p className="text-sm font-bold text-neutral-900 leading-tight">
+                    {order.deliveryAddress.street}
+                  </p>
+                  <p className="text-xs text-neutral-500">
+                    {order.deliveryAddress.area}, {order.deliveryAddress.city}, {order.deliveryAddress.state}
+                  </p>
+                  {order.deliveryAddress.landmark && (
+                    <p className="text-[11px] font-medium text-secondary-600 flex items-center gap-1 mt-1">
+                      <MapPin className="w-3 h-3" />
+                      Near {order.deliveryAddress.landmark}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </Card>

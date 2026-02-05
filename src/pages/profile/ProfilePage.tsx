@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { User, Lock, Bell, CreditCard, Building2 } from 'lucide-react';
+import { User, Bell, CreditCard, Building2, MapPin } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button, Card, Input } from '@/components/ui';
 import { PageWrapper } from '@/components/layout';
 import { useAuthContext } from '@/context/AuthContext';
 import { updateProfile } from '@/services/auth.service';
+import { useGeolocation } from '@/hooks';
 import toast from 'react-hot-toast';
 import { RiderProfileForm } from '@/components/profile/RiderProfileForm';
 import { ProfileNotificationPrefs } from '@/components/profile/ProfileNotificationPrefs';
@@ -16,6 +17,7 @@ type TabId = 'general' | 'notifications' | 'bank' | 'payments';
 export const ProfilePage = () => {
   const { user } = useAuthContext();
   const queryClient = useQueryClient();
+  const { detectLocation, isLoading: isLocating } = useGeolocation();
   const [activeTab, setActiveTab] = useState<TabId>('general');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,7 +29,8 @@ export const ProfilePage = () => {
     street: '',
     city: '',
     state: '',
-    area: ''
+    area: '',
+    landmark: ''
   });
 
   // Initialize form data when user loads
@@ -40,7 +43,8 @@ export const ProfilePage = () => {
         street: user.address?.street || '',
         city: user.address?.city || '',
         state: user.address?.state || '',
-        area: user.address?.area || ''
+        area: user.address?.area || '',
+        landmark: user.address?.landmark || ''
       });
     }
   }, [user]);
@@ -48,6 +52,16 @@ export const ProfilePage = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleDetectLocation = async () => {
+    const address = await detectLocation();
+    if (address) {
+      setFormData(prev => ({
+        ...prev,
+        ...address
+      }));
+    }
   };
 
   const onUpdateProfile = async (e: React.FormEvent) => {
@@ -59,9 +73,10 @@ export const ProfilePage = () => {
         phone: formData.phone,
         address: {
           street: formData.street,
+          area: formData.area,
           city: formData.city,
           state: formData.state,
-          area: formData.area
+          landmark: formData.landmark
         }
       });
       await queryClient.invalidateQueries({ queryKey: ['profile'] });
@@ -81,7 +96,7 @@ export const ProfilePage = () => {
   ];
 
   return (
-    <PageWrapper title="Settings" description="Manage your account preferences">
+    <PageWrapper title="Settings" description="Manage your account preferences" showBack={true}>
       <div className="flex flex-col md:flex-row gap-8">
         {/* Sidebar */}
         <div className="w-full md:w-64 flex-shrink-0">
@@ -91,8 +106,8 @@ export const ProfilePage = () => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium ${activeTab === tab.id
-                    ? 'bg-primary-50 text-primary-700'
-                    : 'text-neutral-600 hover:bg-neutral-50'
+                  ? 'bg-primary-50 text-primary-700'
+                  : 'text-neutral-600 hover:bg-neutral-50'
                   }`}
               >
                 <tab.icon className="w-4 h-4" />
@@ -137,7 +152,20 @@ export const ProfilePage = () => {
                 </div>
 
                 <div className="pt-6 border-t border-neutral-100">
-                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">Address Details</h3>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-neutral-900">Address Details</h3>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleDetectLocation}
+                      className="text-primary-600 border-primary-100 hover:bg-primary-50"
+                      disabled={isLoading || isLocating}
+                    >
+                      <MapPin className="w-4 h-4 mr-2" />
+                      Detect Location
+                    </Button>
+                  </div>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="md:col-span-2">
                       <Input
@@ -154,6 +182,13 @@ export const ProfilePage = () => {
                       value={formData.area}
                       onChange={handleInputChange}
                       placeholder="Downtown"
+                    />
+                    <Input
+                      label="Nearby Landmark"
+                      name="landmark"
+                      value={formData.landmark}
+                      onChange={handleInputChange}
+                      placeholder="Near Barnawa Market"
                     />
                     <Input
                       label="City"

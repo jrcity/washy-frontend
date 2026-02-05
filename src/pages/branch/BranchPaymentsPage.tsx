@@ -65,6 +65,7 @@ export const BranchPaymentsPage = () => {
         <PageWrapper
             title="Financial Ledger"
             description="Operational cash flow and transaction matrix"
+            showBack={true}
             action={
                 <Button variant="outline" className="w-full sm:w-auto rounded-2xl h-12 px-6 font-black border-neutral-100 bg-white shadow-sm" leftIcon={<Download className="w-4 h-4" />}>
                     Export Statement

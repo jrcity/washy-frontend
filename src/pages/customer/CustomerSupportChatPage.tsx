@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { chatService } from '@/services/chat.service';
+import { useBranches } from '@/hooks';
 import ChatWindow from '@/components/chat/ChatWindow';
-import { MessageCircle, Headphones, Mail, Phone, ArrowLeft } from 'lucide-react';
-import { Button, Input, Select, Card } from '@/components/ui';
+import { MessageCircle, Headphones, Mail, Phone, ArrowLeft, Building2 } from 'lucide-react';
+import { Button, Input, Select, Card, Spinner } from '@/components/ui';
 import { PageWrapper } from '@/components/layout';
 import { motion } from 'framer-motion';
 
 interface StartChatForm {
+    branchId: string;
     reason: string;
     orderId?: string;
 }
 
 export const CustomerSupportChatPage: React.FC = () => {
     const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+    const { data: branches, isLoading: isLoadingBranches } = useBranches();
     const { register, control, handleSubmit, formState: { errors, isSubmitting } } = useForm<StartChatForm>();
 
     const onSubmit = async (data: StartChatForm) => {
@@ -50,7 +53,7 @@ export const CustomerSupportChatPage: React.FC = () => {
     }
 
     return (
-        <PageWrapper title="Support Center" description="We're here to help you with anything you need.">
+        <PageWrapper title="Support Center" description="We're here to help you with anything you need." showBack={true}>
             <div className="max-w-5xl mx-auto space-y-12">
                 <div className="grid md:grid-cols-5 gap-8 items-start">
                     {/* Left Side: Info */}
@@ -101,6 +104,26 @@ export const CustomerSupportChatPage: React.FC = () => {
                             <Card className="p-8 border-neutral-100 shadow-xl rounded-[40px]">
                                 <h3 className="text-xl font-bold text-neutral-900 mb-6">Start Support Session</h3>
                                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                                    <Controller
+                                        name="branchId"
+                                        control={control}
+                                        rules={{ required: 'Please select a branch' }}
+                                        render={({ field }) => (
+                                            <Select
+                                                label="Select Branch"
+                                                options={branches?.map(b => ({
+                                                    value: b._id,
+                                                    label: `${b.name} - ${b.address.city}`
+                                                })) || []}
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                onBlur={field.onBlur}
+                                                error={errors.branchId?.message}
+                                                disabled={isLoadingBranches}
+                                            />
+                                        )}
+                                    />
+
                                     <Controller
                                         name="reason"
                                         control={control}

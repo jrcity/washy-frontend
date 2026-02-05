@@ -1,19 +1,21 @@
 import { Link } from 'react-router-dom';
-import { 
-  Truck, 
-  Clock, 
-  Shield, 
-  Star, 
+import {
+  Truck,
+  Clock,
+  Shield,
+  Star,
   ArrowRight,
   Play,
   WifiOff,
   CheckCircle2,
   Smartphone,
-  Zap
+  Zap,
+  MapPin
 } from 'lucide-react';
-import { Button, Card, Badge } from '@/components/ui';
+import { Button, Card, Badge, Spinner } from '@/components/ui';
 import { Container } from '@/components/layout';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { useBranches } from '@/hooks';
 
 // Animation Variants
 const containerVariants = {
@@ -29,8 +31,8 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: { duration: 0.5, ease: "easeOut" }
   },
@@ -101,6 +103,10 @@ const services = [
 export const LandingPage = () => {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const { data: branches, isLoading: isLoadingBranches } = useBranches();
+
+  // Featured branches for display
+  const featuredBranches = branches?.filter(b => b.isActive).slice(0, 3) || [];
 
   return (
     <div className="overflow-hidden bg-white">
@@ -111,7 +117,7 @@ export const LandingPage = () => {
         <div className="absolute inset-0 z-0">
           {/* Video Element */}
           <div className="absolute inset-0 w-full h-full overflow-hidden">
-             <video
+            <video
               autoPlay
               muted
               loop
@@ -121,9 +127,9 @@ export const LandingPage = () => {
             >
               <source src="https://videos.pexels.com/video-files/6192775/6192775-uhd_2560_1440_25fps.mp4" type="video/mp4" />
               {/* Fallback to image if video fails or while loading */}
-              <img 
-                src="https://images.unsplash.com/photo-1582735689369-26b976c534dd?q=80&w=2070" 
-                alt="Laundry Service" 
+              <img
+                src="https://images.unsplash.com/photo-1582735689369-26b976c534dd?q=80&w=2070"
+                alt="Laundry Service"
                 className="w-full h-full object-cover"
               />
             </video>
@@ -131,17 +137,17 @@ export const LandingPage = () => {
 
           {/* Dark Overlay for Contrast */}
           <div className="absolute inset-0 bg-neutral-900/80" />
-          
+
           {/* Gradient Accents */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary-900/50 via-neutral-900/50 to-neutral-950/80 mix-blend-multiply" />
-          
+
           {/* Animated Blobs */}
           <div className="absolute -top-[500px] -left-[500px] w-[1000px] h-[1000px] bg-primary-500/10 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-0 right-[-200px] w-[800px] h-[800px] bg-accent-600/10 rounded-full blur-3xl animate-pulse delay-700" />
         </div>
-        
+
         <Container className="relative z-10 py-20 lg:py-32">
-          <motion.div 
+          <motion.div
             className="max-w-5xl mx-auto text-center"
             initial="hidden"
             animate="visible"
@@ -155,21 +161,27 @@ export const LandingPage = () => {
               </span>
               <span className="text-sm font-medium text-white tracking-wide">Nigeria's #1 Premium Laundry Service</span>
             </motion.div>
-            
+
             {/* Headline */}
-            <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl lg:text-8xl font-bold !text-white mb-8 leading-[1.1] tracking-tight text-shadow-lg">
+            <motion.h1
+              variants={itemVariants}
+              className="text-5xl md:text-7xl lg:text-8xl font-bold !text-white mb-8 leading-[1.1] tracking-tight [text-shadow:_0_4px_24px_rgba(0,0,0,0.5)]"
+            >
               Laundry Done <br className="hidden md:block" />
-              <span className="bg-gradient-to-r from-primary-300 via-primary-100 to-white bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary-300 via-primary-100 to-white bg-clip-text text-transparent drop-shadow-sm">
                 The Right Way.
               </span>
             </motion.h1>
-            
+
             {/* Subheadline */}
-            <motion.p variants={itemVariants} className="text-xl md:text-2xl !text-neutral-100 mb-12 max-w-3xl mx-auto leading-relaxed font-light text-shadow">
-              Experience the ultimate convenience with our premium pickup & delivery service. 
+            <motion.p
+              variants={itemVariants}
+              className="text-xl md:text-2xl !text-neutral-100 mb-12 max-w-3xl mx-auto leading-relaxed font-light [text-shadow:_0_2px_12px_rgba(0,0,0,0.4)]"
+            >
+              Experience the ultimate convenience with our premium pickup & delivery service.
               Professional care for your clothes, reclaimed time for you.
             </motion.p>
-            
+
             {/* CTA Buttons */}
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-5">
               <Link to="/register" className="w-full sm:w-auto">
@@ -185,7 +197,7 @@ export const LandingPage = () => {
                 </Button>
               </Link>
             </motion.div>
-            
+
             {/* Trust Indicators */}
             <motion.div variants={itemVariants} className="mt-16 pt-8 border-t border-white/10 flex flex-wrap justify-center gap-x-12 gap-y-6">
               <div className="flex flex-col items-center gap-1">
@@ -222,7 +234,7 @@ export const LandingPage = () => {
       <section className="py-20 bg-white relative overflow-hidden">
         <Container>
           <div className="flex flex-col lg:flex-row items-center gap-16">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -263,8 +275,8 @@ export const LandingPage = () => {
                 </Card>
               </div>
             </motion.div>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -296,11 +308,11 @@ export const LandingPage = () => {
               Redefining Laundry Excellence
             </h2>
             <p className="text-xl text-neutral-600 max-w-2xl mx-auto leading-relaxed">
-              We combine cutting-edge technology with expert care to deliver a service that's 
+              We combine cutting-edge technology with expert care to deliver a service that's
               simply unmatched.
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, idx) => (
               <motion.div
@@ -310,16 +322,16 @@ export const LandingPage = () => {
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1, duration: 0.5 }}
               >
-                <Card 
+                <Card
                   className="group relative h-full bg-white border border-neutral-100 hover:border-primary-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary-900/5"
                   padding="lg"
                 >
                   <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${feature.gradient} opacity-5 group-hover:opacity-10 rounded-bl-full transition-opacity duration-300`} />
-                  
+
                   <div className={`inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br ${feature.gradient} text-white rounded-2xl mb-6 shadow-lg transform group-hover:scale-110 transition-transform duration-300`}>
                     <feature.icon className="w-7 h-7" />
                   </div>
-                  
+
                   <h3 className="text-xl font-bold text-neutral-900 mb-3">{feature.title}</h3>
                   <p className="text-neutral-600 leading-relaxed">{feature.description}</p>
                 </Card>
@@ -350,10 +362,10 @@ export const LandingPage = () => {
               </Button>
             </Link>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, idx) => (
-              <motion.div 
+              <motion.div
                 key={service.name}
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -367,7 +379,7 @@ export const LandingPage = () => {
                   <p className="text-neutral-600 mb-8 leading-relaxed text-sm md:text-base">{service.description}</p>
                   <div className="flex items-center justify-between mt-auto">
                     <span className="font-bold text-lg text-neutral-900">{service.price}</span>
-                    <motion.div 
+                    <motion.div
                       whileHover={{ x: 5 }}
                       className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm"
                     >
@@ -377,6 +389,84 @@ export const LandingPage = () => {
                 </div>
               </motion.div>
             ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Local Branches Section */}
+      <section className="py-24 bg-neutral-50 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-full blur-[100px] -mr-32 -mt-32" />
+        <Container>
+          <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-6">
+            <div className="max-w-2xl">
+              <Badge variant="primary" className="mb-4">Local Presence</Badge>
+              <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-6 tracking-tight">
+                Operating in Your <br />
+                <span className="text-primary-600">Neighborhood</span>
+              </h2>
+              <p className="text-xl text-neutral-600">
+                With multiple branches across the city, we ensure fast turnaround and personalized service.
+              </p>
+            </div>
+            <Link to="/register">
+              <Button variant="outline" rightIcon={<ArrowRight className="w-4 h-4" />}>
+                Join Our Network
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {isLoadingBranches ? (
+              Array(3).fill(0).map((_, i) => (
+                <div key={i} className="h-64 rounded-3xl bg-neutral-100 animate-pulse" />
+              ))
+            ) : featuredBranches.length > 0 ? (
+              featuredBranches.map((branch, idx) => (
+                <motion.div
+                  key={branch._id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                >
+                  <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-white">
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={(branch as any).image || `https://images.unsplash.com/photo-1545173168-9f1947eebb8f?q=80&w=800`}
+                        alt={branch.name}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/80 via-transparent to-transparent" />
+                      <div className="absolute bottom-4 left-4">
+                        <Badge variant="success" size="sm" className="bg-success-500 border-none shadow-lg">Open Now</Badge>
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <div className="flex items-center gap-2 text-primary-600 mb-2">
+                        <MapPin className="w-4 h-4" />
+                        <span className="text-sm font-semibold uppercase tracking-wider">{branch.address.city}</span>
+                      </div>
+                      <h3 className="text-xl font-bold text-neutral-900 mb-1">{branch.name}</h3>
+                      <p className="text-neutral-500 text-sm mb-4 line-clamp-1">{branch.address.street}, {branch.address.area}</p>
+                      <div className="flex items-center gap-3 pt-4 border-t border-neutral-100">
+                        <div className="flex -space-x-2">
+                          {[1, 2, 3].map(i => (
+                            <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-neutral-100 overflow-hidden">
+                              <img src={`https://i.pravatar.cc/100?img=${i + idx * 5}`} alt="User" />
+                            </div>
+                          ))}
+                        </div>
+                        <span className="text-xs text-neutral-400 font-medium">100+ Customers served here</span>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))
+            ) : (
+              <div className="col-span-3 py-12 text-center bg-white rounded-3xl border-2 border-dashed border-neutral-200">
+                <p className="text-neutral-400">Expanding to more locations soon!</p>
+              </div>
+            )}
           </div>
         </Container>
       </section>
@@ -394,7 +484,7 @@ export const LandingPage = () => {
           <div className="relative max-w-5xl mx-auto">
             {/* Connecting Line (Desktop) */}
             <div className="hidden md:block absolute top-24 left-0 w-full h-1 bg-gradient-to-r from-primary-100 via-primary-300 to-primary-100" />
-            
+
             <div className="grid md:grid-cols-3 gap-12">
               {[
                 {
@@ -416,8 +506,8 @@ export const LandingPage = () => {
                   icon: '🚚'
                 },
               ].map((item, idx) => (
-                <motion.div 
-                  key={item.step} 
+                <motion.div
+                  key={item.step}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -427,7 +517,7 @@ export const LandingPage = () => {
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white border-4 border-primary-50 rounded-full flex items-center justify-center z-10 shadow-sm group-hover:border-primary-100 group-hover:scale-110 transition-all duration-300">
                     <span className="text-lg font-bold text-primary-600">{item.step}</span>
                   </div>
-                  
+
                   <div className="text-center px-6">
                     <div className="text-6xl mb-6 transform group-hover:-translate-y-2 transition-transform duration-300">{item.icon}</div>
                     <h3 className="text-2xl font-bold text-neutral-900 mb-3">{item.title}</h3>
@@ -441,49 +531,78 @@ export const LandingPage = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-20 bg-neutral-900 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-600/10 rounded-full blur-[100px]" />
-          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-secondary-600/10 rounded-full blur-[100px]" />
-        </div>
-
+      <section className="py-24 bg-white relative overflow-hidden">
         <Container className="relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-gradient-to-br from-primary-900 to-primary-950 rounded-3xl p-8 md:p-16 text-center border border-white/10 shadow-2xl overflow-hidden relative"
+            className="bg-primary-600 rounded-[40px] md:rounded-[60px] p-10 md:p-24 text-center text-white shadow-2xl overflow-hidden relative"
           >
-            <div 
-              className="absolute top-0 left-0 w-full h-full opacity-10" 
-              style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '24px 24px' }}
+            {/* Background Decorative Elements */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+              <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-white/10 rounded-full blur-3xl animate-pulse" />
+              <div className="absolute bottom-[-10%] left-[-5%] w-[30%] h-[30%] bg-secondary-400/20 rounded-full blur-3xl animate-pulse delay-700" />
+            </div>
+
+            {/* Subtle Texture Overlay */}
+            <div
+              className="absolute inset-0 opacity-[0.05]"
+              style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '32px 32px' }}
             />
-            
-            <div className="relative z-10 max-w-3xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-                Ready for a Laundry-Free Life?
+
+            <div className="relative z-10 max-w-4xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="w-20 h-20 bg-white/20 rounded-3xl flex items-center justify-center mb-10 mx-auto backdrop-blur-md border border-white/20 shadow-xl"
+              >
+                <Zap className="w-10 h-10 text-white fill-current" />
+              </motion.div>
+
+              <h2 className="text-4xl md:text-7xl font-black text-white mb-8 tracking-tight leading-[1.1]">
+                Ready for a <br className="hidden sm:block" />
+                <span className="text-primary-100 italic">Laundry-Free</span> Life?
               </h2>
-              <p className="text-xl text-primary-100 mb-10 leading-relaxed">
-                Join thousands of satisfied customers who have taken back their free time. 
-                Get 20% off your first order when you sign up today.
+
+              <p className="text-xl md:text-2xl text-primary-50 mb-14 leading-relaxed font-medium max-w-2xl mx-auto opacity-90">
+                Join thousands of satisfied customers who have taken back their free time.
+                Get <span className="text-secondary-400 font-bold">20% off</span> your first order today.
               </p>
-              
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                 <Link to="/register" className="w-full sm:w-auto">
-                  <Button size="lg" variant="secondary" className="w-full sm:w-auto h-14 text-lg font-bold shadow-lg shadow-secondary-900/20">
-                    Claim Your Layout
+                  <Button
+                    size="xl"
+                    className="w-full sm:w-auto h-20 px-12 text-2xl font-black bg-white text-primary-600 hover:bg-primary-50 border-none shadow-2xl transition-all hover:scale-105 active:scale-95"
+                  >
+                    Claim Your Discount
                   </Button>
                 </Link>
                 <Link to="/contact" className="w-full sm:w-auto">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto h-14 text-lg border-white/20 text-white hover:bg-white/10 hover:border-white/40">
+                  <Button
+                    size="xl"
+                    variant="glass"
+                    className="w-full sm:w-auto h-20 px-12 text-2xl font-bold border-white/30 text-white hover:bg-white/10 backdrop-blur-sm transition-all hover:scale-105 active:scale-95"
+                  >
                     Contact Sales
                   </Button>
                 </Link>
               </div>
-              
-              <p className="mt-6 text-sm text-white/50">
-                No credit card required for account creation.
-              </p>
+
+              <div className="mt-14 flex items-center justify-center gap-2">
+                <div className="flex -space-x-3">
+                  {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="w-10 h-10 rounded-full border-2 border-primary-500 bg-neutral-200 overflow-hidden shadow-lg">
+                      <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" />
+                    </div>
+                  ))}
+                </div>
+                <p className="text-sm text-primary-100 font-bold uppercase tracking-widest ml-2">
+                  15,000+ Active Users • Instant Activation
+                </p>
+              </div>
             </div>
           </motion.div>
         </Container>

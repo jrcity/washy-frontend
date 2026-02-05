@@ -49,14 +49,11 @@ export const AdminBranchDetailsPage = () => {
         <PageWrapper
             title={branch.name}
             description={`Code: ${branch.code} • ${branch.address.city}, ${branch.address.state}`}
+            showBack={true}
         >
             <div className="max-w-6xl mx-auto space-y-6 md:space-y-8">
                 {/* Header Actions */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-                    <Button variant="ghost" className="rounded-xl justify-start w-fit" onClick={() => navigate('/admin/branches')}>
-                        <ChevronLeft className="w-4 h-4 mr-2" />
-                        Operational Fleet
-                    </Button>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-4">
                     <div className="flex gap-3">
                         <Link to={`/admin/branches/edit/${branch._id}`} className="flex-1 sm:flex-none">
                             <Button className="w-full rounded-2xl h-12 px-6 font-black shadow-xl shadow-primary-500/10">

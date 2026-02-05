@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useOrder } from '@/hooks';
+import { chatService } from '@/services/chat.service';
 import { PageWrapper } from '@/components/layout';
 import { Card, Button, Badge, Spinner } from '@/components/ui';
-import { Phone, MapPin, Navigation, CheckCircle } from 'lucide-react';
+import { Phone, MapPin, Navigation, CheckCircle, MessageCircle } from 'lucide-react';
 
 export const ActiveDeliveryPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,6 +18,22 @@ export const ActiveDeliveryPage = () => {
   const targetAddress = isPickup ? order.pickupAddress : order.deliveryAddress;
   const targetName = order.customer.name;
   const targetPhone = order.customer.phone;
+
+  const [isStartingChat, setIsStartingChat] = useState(false);
+
+  const handleMessageCustomer = async () => {
+    setIsStartingChat(true);
+    try {
+      const response = await chatService.startRiderChat({ orderId: id! });
+      if (response.success && response.data) {
+        navigate('/chat');
+      }
+    } catch (error) {
+      console.error('Failed to start chat', error);
+    } finally {
+      setIsStartingChat(false);
+    }
+  };
 
   const handleComplete = () => {
     navigate(`/rider/verify/${id}`);
@@ -39,7 +57,7 @@ export const ActiveDeliveryPage = () => {
               </Badge>
               <h2 className="text-xl font-bold text-neutral-900">{order.orderNumber}</h2>
             </div>
-            
+
             <div className="space-y-6">
               <div>
                 <p className="text-sm font-medium text-neutral-500 uppercase tracking-wider mb-2">Location</p>
@@ -50,9 +68,9 @@ export const ActiveDeliveryPage = () => {
                   <div>
                     <p className="font-medium text-neutral-900">{targetAddress.area}</p>
                     <p className="text-neutral-600 text-sm">{targetAddress.street}</p>
-                    <a 
-                      href={`https://maps.google.com/?q=${targetAddress.street}`} 
-                      target="_blank" 
+                    <a
+                      href={`https://maps.google.com/?q=${targetAddress.street}`}
+                      target="_blank"
                       rel="noreferrer"
                       className="text-primary-600 text-sm font-medium hover:underline mt-1 inline-block"
                     >
@@ -65,15 +83,25 @@ export const ActiveDeliveryPage = () => {
               <div>
                 <p className="text-sm font-medium text-neutral-500 uppercase tracking-wider mb-2">Customer</p>
                 <div className="flex gap-3">
-                   <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center flex-shrink-0">
                     <span className="font-bold text-neutral-600">{targetName[0]}</span>
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <p className="font-medium text-neutral-900">{targetName}</p>
-                    <a href={`tel:${targetPhone}`} className="flex items-center gap-1 text-neutral-600 text-sm hover:text-primary-600">
-                      <Phone className="w-3 h-3" />
-                      {targetPhone}
-                    </a>
+                    <div className="flex gap-4 mt-1">
+                      <a href={`tel:${targetPhone}`} className="flex items-center gap-1 text-neutral-600 text-sm hover:text-primary-600">
+                        <Phone className="w-3 h-3" />
+                        Call
+                      </a>
+                      <button
+                        onClick={handleMessageCustomer}
+                        disabled={isStartingChat}
+                        className="flex items-center gap-1 text-primary-600 text-sm hover:underline"
+                      >
+                        <MessageCircle className="w-3 h-3" />
+                        {isStartingChat ? 'Connecting...' : 'Message'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

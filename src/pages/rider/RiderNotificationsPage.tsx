@@ -33,6 +33,7 @@ export const RiderNotificationsPage = () => {
         <PageWrapper
             title="Notifications"
             description="Delivery alerts and task updates"
+            showBack={true}
             action={
                 notifications.some(n => !n.isRead) ? (
                     <Button
@@ -52,8 +53,8 @@ export const RiderNotificationsPage = () => {
                 <button
                     onClick={() => setFilter('all')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'all'
-                            ? 'bg-primary-100 text-primary-700'
-                            : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                        ? 'bg-primary-100 text-primary-700'
+                        : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
                         }`}
                 >
                     All
@@ -61,8 +62,8 @@ export const RiderNotificationsPage = () => {
                 <button
                     onClick={() => setFilter('unread')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === 'unread'
-                            ? 'bg-primary-100 text-primary-700'
-                            : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                        ? 'bg-primary-100 text-primary-700'
+                        : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
                         }`}
                 >
                     Unread

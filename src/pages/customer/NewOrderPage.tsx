@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { Button, Card } from '@/components/ui';
 import { PageWrapper } from '@/components/layout';
 import { useCreateOrder, useProfile } from '@/hooks';
-import { StepServices, StepAddress, StepReview } from './components';
+import { StepServices, StepAddress, StepReview, StepBranchSelect } from './components';
 import type { CreateOrderItemInput } from '@/types';
 import toast from 'react-hot-toast';
 
@@ -61,7 +61,7 @@ export const NewOrderPage = () => {
     fetchBranch();
   }, []);
 
-  const steps = ['Select Services', 'Pickup & Delivery', 'Review'];
+  const steps = ['Select Services', 'Pickup & Delivery', 'Select Branch', 'Review'];
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
@@ -114,6 +114,7 @@ export const NewOrderPage = () => {
     <PageWrapper
       title="Create New Order"
       description="Select services and schedule your pickup"
+      showBack={true}
     >
       <div className="max-w-4xl mx-auto">
         {/* Progress Stepper */}
@@ -191,7 +192,13 @@ export const NewOrderPage = () => {
                 <StepAddress data={orderMeta} setData={setOrderMeta} />
               )}
               {currentStep === 2 && (
-                <StepReview cart={cart} meta={orderMeta} />
+                <StepBranchSelect
+                  selectedBranchId={activeBranchId}
+                  onSelect={setActiveBranchId}
+                />
+              )}
+              {currentStep === 3 && (
+                <StepReview cart={cart} meta={orderMeta} branchId={activeBranchId} userAddress={user?.address} />
               )}
             </motion.div>
           </AnimatePresence>
@@ -208,7 +215,8 @@ export const NewOrderPage = () => {
             isLoading={isPending}
             disabled={
               (currentStep === 0 && cart.length === 0) ||
-              (currentStep === 1 && (!orderMeta.pickupDate || !orderMeta.pickupAddressId))
+              (currentStep === 1 && (!orderMeta.pickupDate || !orderMeta.pickupAddressId)) ||
+              (currentStep === 2 && !activeBranchId)
             }
           >
             {currentStep === steps.length - 1 ? 'Place Order' : 'Next Step'}

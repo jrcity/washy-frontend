@@ -82,6 +82,7 @@ export const BranchAnalyticsPage: React.FC = () => {
         <PageWrapper
             title="Hub Analytics"
             description={`Operational insights for ${new Date().toLocaleString('default', { month: 'long' })} ${new Date().getFullYear()}`}
+            showBack={true}
         >
             <div className="space-y-8">
                 {/* Summary Grid */}

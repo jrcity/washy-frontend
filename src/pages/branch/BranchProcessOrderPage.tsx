@@ -50,12 +50,7 @@ export const BranchProcessOrderPage = () => {
     <PageWrapper
       title={`Order #${order.orderNumber}`}
       description="Process and manage order details"
-      action={
-        <Button variant="outline" size="sm" onClick={() => navigate('/branch/orders')}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to List
-        </Button>
-      }
+      showBack={true}
     >
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Main Content */}

@@ -73,7 +73,7 @@ export const StepAddress = ({ data, setData }: StepAddressProps) => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-neutral-900">Address</h3>
-            <Button size="sm" variant="ghost" className="text-primary-600" onClick={() => navigate('/profile')}>
+            <Button size="sm" variant="ghost" className="text-primary-600" onClick={() => navigate('/dashboard/profile')}>
               Manage
             </Button>
           </div>
@@ -98,7 +98,7 @@ export const StepAddress = ({ data, setData }: StepAddressProps) => {
               <div>
                 <p className="font-medium text-neutral-900">{user.name}'s Address</p>
                 <p className="text-sm text-neutral-600">
-                  {user.address.street}, {user.address.area}, {user.address.city}
+                  {user.address.street}, {user.address.area}{user.address.landmark ? ` (Near ${user.address.landmark})` : ''}, {user.address.city}
                 </p>
               </div>
 

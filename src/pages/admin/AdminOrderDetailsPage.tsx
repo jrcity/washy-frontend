@@ -45,12 +45,7 @@ export const AdminOrderDetailsPage = () => {
         <PageWrapper
             title={`Order #${order.orderNumber}`}
             description="View and manage order details"
-            action={
-                <Button variant="outline" size="sm" onClick={() => navigate('/admin/orders')}>
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back to Orders
-                </Button>
-            }
+            showBack={true}
         >
             <div className="grid lg:grid-cols-3 gap-6">
                 {/* Main Content */}

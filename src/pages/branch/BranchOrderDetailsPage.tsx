@@ -23,12 +23,9 @@ export const BranchOrderDetailsPage = () => {
         <PageWrapper
             title={`Order #${order.orderNumber}`}
             description="View order details and status"
+            showBack={true}
             action={
                 <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => navigate('/branch/orders')}>
-                        <ArrowLeft className="w-4 h-4 mr-2" />
-                        Back to List
-                    </Button>
                     <Button
                         onClick={() => navigate(`/branch/orders/${order._id}/process`)}
                         leftIcon={<PlayCircle className="w-4 h-4" />}

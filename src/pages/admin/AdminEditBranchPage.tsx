@@ -116,15 +116,10 @@ export const AdminEditBranchPage = () => {
         <PageWrapper
             title={isEditMode ? 'Edit Branch' : 'Create Branch'}
             description={isEditMode ? `Updating ${formData.name}` : 'Setup a new operational center'}
+            showBack={true}
         >
             <div className="max-w-4xl mx-auto space-y-6">
-                {/* Header Actions */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-                    <Button variant="ghost" className="rounded-xl justify-start w-fit" onClick={() => navigate(-1)}>
-                        <ChevronLeft className="w-4 h-4 mr-2" />
-                        Back to List
-                    </Button>
-                </div>
+
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid lg:grid-cols-3 gap-6">
