@@ -3,7 +3,7 @@ import type { ApiResponse } from '@/types';
 import type { Branch, CreateBranchInput } from '@/types/branch.types';
 
 export const branchesService = {
-  getAll: async (params?: { isActive?: boolean; city?: string }) => {
+  getAll: async (params?: { isActive?: boolean; city?: string; lat?: number; lng?: number }) => {
     const response = await api.get<ApiResponse<Branch[]>>('/branches', { params });
     return response.data.data!;
   },
