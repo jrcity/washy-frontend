@@ -55,8 +55,8 @@ export const RiderTasksPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <Spinner size="lg" className="text-primary-600" />
-        <p className="text-sm font-medium text-neutral-500 animate-pulse">Fetching your route...</p>
+        <Spinner size="lg" className="text-primary" />
+        <p className="text-sm font-medium text-muted-foreground animate-pulse">Fetching your route...</p>
       </div>
     );
   }
@@ -64,21 +64,21 @@ export const RiderTasksPage: React.FC = () => {
   return (
     <div className="pb-24">
       {/* Mobile Header Segment */}
-      <div className="bg-white px-4 pt-6 pb-4 border-b border-neutral-100 sticky top-0 z-20 backdrop-blur-md bg-white/90">
+      <div className="bg-background px-4 pt-6 pb-4 border-b border-border sticky top-0 z-20 backdrop-blur-md bg-background/90">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-black text-neutral-900 tracking-tight">Daily Route</h1>
-            <p className="text-sm font-medium text-neutral-400 capitalize">
+            <h1 className="text-2xl font-black text-foreground tracking-tight">Daily Route</h1>
+            <p className="text-sm font-medium text-muted-foreground/60 capitalize">
               {format(new Date(), 'EEEE, MMMM do')}
             </p>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-neutral-50 flex items-center justify-center border border-neutral-100">
-            <Calendar className="w-6 h-6 text-neutral-400" />
+          <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center border border-border">
+            <Calendar className="w-6 h-6 text-muted-foreground/60" />
           </div>
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex gap-2 p-1 bg-neutral-100 rounded-2xl overflow-x-auto no-scrollbar">
+        <div className="flex gap-2 p-1 bg-muted rounded-2xl overflow-x-auto no-scrollbar">
           {['all', 'assigned', 'in_progress', 'completed'].map((f) => (
             <button
               key={f}
@@ -86,8 +86,8 @@ export const RiderTasksPage: React.FC = () => {
               className={cn(
                 "px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-300",
                 filter === f
-                  ? "bg-white text-primary-600 shadow-sm ring-1 ring-neutral-200"
-                  : "text-neutral-500 hover:text-neutral-700"
+                  ? "bg-card text-primary shadow-sm ring-1 ring-border"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               {f.replace('_', ' ').toUpperCase()}
@@ -105,11 +105,11 @@ export const RiderTasksPage: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-20 px-8"
             >
-              <div className="w-20 h-20 bg-neutral-100 rounded-[40px] flex items-center justify-center mx-auto mb-6">
-                <Navigation className="w-8 h-8 text-neutral-300" />
+              <div className="w-20 h-20 bg-muted rounded-[40px] flex items-center justify-center mx-auto mb-6">
+                <Navigation className="w-8 h-8 text-muted-foreground/30" />
               </div>
-              <h3 className="text-lg font-bold text-neutral-900 mb-1">Clear Road!</h3>
-              <p className="text-sm text-neutral-500 leading-relaxed font-medium">
+              <h3 className="text-lg font-bold text-foreground mb-1">Clear Road!</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-medium">
                 No tasks found in this category. Enjoy the breather or check back later.
               </p>
             </motion.div>
@@ -122,8 +122,8 @@ export const RiderTasksPage: React.FC = () => {
                 transition={{ delay: index * 0.05 }}
               >
                 <Card className={cn(
-                  "p-0 overflow-hidden border-none shadow-xl rounded-[32px] transition-all duration-300",
-                  task.status === 'in_progress' ? "ring-2 ring-primary-500 shadow-primary-100" : "ring-1 ring-neutral-100"
+                  "p-0 overflow-hidden border-none shadow-xl rounded-[32px] transition-all duration-300 bg-card",
+                  task.status === 'in_progress' ? "ring-2 ring-primary shadow-primary/20" : "ring-1 ring-border"
                 )}>
                   <div className="p-5">
                     <div className="flex justify-between items-start mb-4">
@@ -138,46 +138,46 @@ export const RiderTasksPage: React.FC = () => {
                         )}
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="text-[10px] font-black text-neutral-300 uppercase tracking-widest leading-none mb-1">Order #</span>
-                        <span className="text-xs font-bold text-neutral-600">{task.order?.orderNumber}</span>
+                        <span className="text-[10px] font-black text-muted-foreground/30 uppercase tracking-widest leading-none mb-1">Order #</span>
+                        <span className="text-xs font-bold text-muted-foreground">{task.order?.orderNumber}</span>
                       </div>
                     </div>
 
                     <div className="space-y-4 mb-6">
                       <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-2xl bg-neutral-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <MapPin className="w-5 h-5 text-neutral-500" />
+                        <div className="w-10 h-10 rounded-2xl bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <MapPin className="w-5 h-5 text-muted-foreground" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-0.5 leading-none">Address</p>
-                          <h3 className="font-bold text-neutral-900 leading-snug line-clamp-2">
+                          <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-wider mb-0.5 leading-none">Address</p>
+                          <h3 className="font-bold text-foreground leading-snug line-clamp-2">
                             {task.address.street}, {task.address.area}
                           </h3>
-                          <p className="text-[11px] font-medium text-neutral-500 mt-0.5">
+                          <p className="text-[11px] font-medium text-muted-foreground/80 mt-0.5">
                             {task.address.city}, {task.address.state}
                           </p>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-2xl bg-neutral-100 flex items-center justify-center flex-shrink-0">
-                          <Clock className="w-5 h-5 text-neutral-500" />
+                        <div className="w-10 h-10 rounded-2xl bg-muted flex items-center justify-center flex-shrink-0">
+                          <Clock className="w-5 h-5 text-muted-foreground" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-0.5 leading-none">Schedule</p>
-                          <p className="text-sm font-bold text-neutral-700">
+                          <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-wider mb-0.5 leading-none">Schedule</p>
+                          <p className="text-sm font-bold text-foreground/80">
                             {format(new Date(task.scheduledFor), 'HH:mm')}
-                            <span className="text-neutral-400 font-medium ml-2">— Today</span>
+                            <span className="text-muted-foreground font-medium ml-2">— Today</span>
                           </p>
                         </div>
                       </div>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex gap-2 pt-1 border-t border-neutral-50 mt-4">
+                    <div className="flex gap-2 pt-1 border-t border-border mt-4">
                       {task.status === 'assigned' && (
                         <Button
-                          className="w-full h-12 rounded-2xl shadow-lg shadow-primary-100 font-bold"
+                          className="w-full h-12 rounded-2xl shadow-lg shadow-primary/10 font-bold"
                           onClick={() => handleAction(task._id, 'start')}
                           rightIcon={<ChevronRight className="w-4 h-4" />}
                         >
@@ -186,7 +186,7 @@ export const RiderTasksPage: React.FC = () => {
                       )}
                       {task.status === 'in_progress' && (
                         <Button
-                          className="w-full h-12 rounded-2xl bg-success-600 hover:bg-success-700 shadow-lg shadow-success-100 font-bold"
+                          className="w-full h-12 rounded-2xl bg-success hover:bg-success/90 shadow-lg shadow-success/10 font-bold"
                           onClick={() => handleAction(task._id, 'complete')}
                           leftIcon={<CheckCircle2 className="w-4 h-4" />}
                         >
@@ -194,7 +194,7 @@ export const RiderTasksPage: React.FC = () => {
                         </Button>
                       )}
                       {task.status === 'completed' && (
-                        <div className="w-full h-12 rounded-2xl bg-neutral-50 flex items-center justify-center gap-2 text-success-600 font-bold">
+                        <div className="w-full h-12 rounded-2xl bg-muted flex items-center justify-center gap-2 text-success font-bold">
                           <CheckCircle2 className="w-5 h-5" />
                           Completed
                         </div>
@@ -203,14 +203,14 @@ export const RiderTasksPage: React.FC = () => {
                   </div>
 
                   {/* Bottom strip for extra info */}
-                  <div className="bg-neutral-50/50 p-4 flex justify-between items-center text-[10px] font-bold text-neutral-400">
+                  <div className="bg-muted/50 p-4 flex justify-between items-center text-[10px] font-bold text-muted-foreground/60">
                     <div className="flex items-center gap-1.5">
                       <AlertCircle className="w-3.5 h-3.5" />
                       Tap to view order details
                     </div>
                     <div className="flex items-center gap-1">
                       {task.priority !== 'normal' && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-error-500 animate-pulse" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-destructive animate-pulse" />
                       )}
                       {task.priority.toUpperCase()}
                     </div>

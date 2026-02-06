@@ -32,12 +32,12 @@ export const RiderDashboard = () => {
         <Link to="/rider/tasks">
           <Card variant="bordered" hover>
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-info-50 text-info-600 rounded-xl">
+              <div className="p-3 bg-info/10 text-info rounded-xl">
                 <Truck className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-sm text-neutral-500">Pickups</p>
-                <p className="text-2xl font-bold text-neutral-900">{pickups.length}</p>
+                <p className="text-sm text-muted-foreground">Pickups</p>
+                <p className="text-2xl font-bold text-foreground">{pickups.length}</p>
               </div>
             </div>
           </Card>
@@ -46,12 +46,12 @@ export const RiderDashboard = () => {
         <Link to="/rider/tasks">
           <Card variant="bordered" hover>
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-warning-50 text-warning-600 rounded-xl">
-                <Package className="w-6 h-6" />
+              <div className="p-3 bg-warning/10 text-warning rounded-xl">
+                <Truck className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-sm text-neutral-500">Deliveries</p>
-                <p className="text-2xl font-bold text-neutral-900">{deliveries.length}</p>
+                <p className="text-sm text-muted-foreground">Deliveries</p>
+                <p className="text-2xl font-bold text-foreground">{deliveries.length}</p>
               </div>
             </div>
           </Card>
@@ -59,24 +59,24 @@ export const RiderDashboard = () => {
 
         <Card variant="bordered">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-success-50 text-success-600 rounded-xl">
+            <div className="p-3 bg-success/10 text-success rounded-xl">
               <CheckCircle className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-sm text-neutral-500">Completed</p>
-              <p className="text-2xl font-bold text-neutral-900">{completed.length}</p>
+              <p className="text-sm text-muted-foreground">Completed</p>
+              <p className="text-2xl font-bold text-foreground">{completed.length}</p>
             </div>
           </div>
         </Card>
 
         <Card variant="bordered">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-primary-100 text-primary-600 rounded-xl">
+            <div className="p-3 bg-primary/10 text-primary rounded-xl">
               <Clock className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-sm text-neutral-500">Total Today</p>
-              <p className="text-2xl font-bold text-neutral-900">{myAssignments.length}</p>
+              <p className="text-sm text-muted-foreground">Total Today</p>
+              <p className="text-2xl font-bold text-foreground">{myAssignments.length}</p>
             </div>
           </div>
         </Card>
@@ -84,8 +84,8 @@ export const RiderDashboard = () => {
 
       {/* Pending Pickups */}
       <div className="mt-8">
-        <h2 className="text-lg font-semibold text-neutral-900 mb-4 flex items-center gap-2">
-          <Truck className="w-5 h-5" />
+        <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+          <Truck className="w-5 h-5 text-primary" />
           Pending Pickups ({pickups.length})
         </h2>
 
@@ -108,13 +108,13 @@ export const RiderDashboard = () => {
                   <div className="flex flex-col sm:flex-row gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="font-semibold text-neutral-900">{order.orderNumber}</span>
+                        <span className="font-semibold text-foreground">{order.orderNumber}</span>
                         <Badge variant="info">Pickup</Badge>
                       </div>
-                      <p className="text-sm text-neutral-600 mb-2">
+                      <p className="text-sm text-muted-foreground mb-2">
                         Customer: {order.customer?.name || 'N/A'}
                       </p>
-                      <div className="flex items-start gap-1 text-sm text-neutral-500">
+                      <div className="flex items-start gap-1 text-sm text-muted-foreground/60">
                         <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
                         <span>
                           {order.pickupAddress?.street}, {order.pickupAddress?.area}
@@ -122,10 +122,10 @@ export const RiderDashboard = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium text-neutral-900">
+                      <p className="font-medium text-foreground">
                         {order.pickupTimeSlot}
                       </p>
-                      <p className="text-sm text-neutral-500">
+                      <p className="text-sm text-muted-foreground/80">
                         {formatDate(order.pickupDate, 'PP')}
                       </p>
                     </div>
@@ -139,8 +139,8 @@ export const RiderDashboard = () => {
 
       {/* Pending Deliveries */}
       <div className="mt-8">
-        <h2 className="text-lg font-semibold text-neutral-900 mb-4 flex items-center gap-2">
-          <Package className="w-5 h-5" />
+        <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+          <Package className="w-5 h-5 text-warning" />
           Pending Deliveries ({deliveries.length})
         </h2>
 
@@ -163,13 +163,13 @@ export const RiderDashboard = () => {
                   <div className="flex flex-col sm:flex-row gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="font-semibold text-neutral-900">{order.orderNumber}</span>
+                        <span className="font-semibold text-foreground">{order.orderNumber}</span>
                         <Badge variant="warning">Delivery</Badge>
                       </div>
-                      <p className="text-sm text-neutral-600 mb-2">
+                      <p className="text-sm text-muted-foreground mb-2">
                         Customer: {order.customer?.name || 'N/A'}
                       </p>
-                      <div className="flex items-start gap-1 text-sm text-neutral-500">
+                      <div className="flex items-start gap-1 text-sm text-muted-foreground/60">
                         <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
                         <span>
                           {order.deliveryAddress?.street}, {order.deliveryAddress?.area}
@@ -177,10 +177,10 @@ export const RiderDashboard = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium text-neutral-900">
+                      <p className="font-medium text-foreground">
                         {order.items?.length || 0} items
                       </p>
-                      <p className="text-sm text-neutral-500">
+                      <p className="text-sm text-muted-foreground/80">
                         {formatDate(order.expectedDeliveryDate, 'PP')}
                       </p>
                     </div>

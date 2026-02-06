@@ -7,12 +7,12 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantClasses = {
-  primary: 'bg-primary-50 text-primary-700 border border-primary-100',
-  secondary: 'bg-secondary-50 text-secondary-700 border border-secondary-100',
-  success: 'bg-success-50 text-success-700 border border-success-100',
-  warning: 'bg-warning-50 text-warning-700 border border-warning-100',
-  error: 'bg-error-50 text-error-700 border border-error-100',
-  info: 'bg-info-50 text-info-700 border border-info-100',
+  primary: 'bg-primary/10 text-primary border border-primary/20',
+  secondary: 'bg-secondary/10 text-secondary border border-secondary/20',
+  success: 'bg-success/10 text-success border border-success/20',
+  warning: 'bg-warning/10 text-warning border border-warning/20',
+  error: 'bg-destructive/10 text-destructive border border-destructive/20',
+  info: 'bg-info/10 text-info border border-info/20',
 };
 
 const sizeClasses = {

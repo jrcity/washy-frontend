@@ -12,7 +12,7 @@ export const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  
+
   const navigate = useNavigate();
   const { login: contextLogin } = useAuthContext();
   const loginMutation = useLogin();
@@ -57,17 +57,17 @@ export const LoginPage = () => {
       {/* Logo */}
       <div className="text-center mb-8">
         <Link to="/" className="inline-flex items-center justify-center space-x-3 mb-6">
-          <div className="w-14 h-14 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl flex items-center justify-center shadow-lg">
-            <span className="text-white font-bold text-2xl">W</span>
+          <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg">
+            <span className="text-primary-foreground font-bold text-2xl">W</span>
           </div>
-          <span className="font-bold text-2xl text-neutral-900">Washy</span>
+          <span className="font-bold text-2xl text-foreground">Washy</span>
         </Link>
-        <h1 className="text-3xl font-bold text-neutral-900 mb-2">Welcome back</h1>
-        <p className="text-neutral-600">Sign in to continue to your account</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Welcome back</h1>
+        <p className="text-muted-foreground">Sign in to continue to your account</p>
       </div>
 
       {/* Form Card */}
-      <div className="bg-white rounded-2xl shadow-xl border border-neutral-100 p-8">
+      <div className="bg-card rounded-2xl shadow-xl border border-border p-8">
         <form onSubmit={handleSubmit} className="space-y-5">
           <Input
             label="Phone Number"
@@ -92,7 +92,7 @@ export const LoginPage = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="hover:text-neutral-600 transition-colors"
+                className="hover:text-foreground transition-colors"
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
@@ -100,14 +100,14 @@ export const LoginPage = () => {
           />
 
           <div className="flex items-center justify-between">
-            <Checkbox 
+            <Checkbox
               label="Remember me"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
             />
-            <Link 
-              to="/forgot-password" 
-              className="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors"
+            <Link
+              to="/forgot-password"
+              className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
             >
               Forgot password?
             </Link>
@@ -124,10 +124,10 @@ export const LoginPage = () => {
         </form>
 
         <div className="mt-6 text-center">
-          <span className="text-sm text-neutral-600">Don't have an account? </span>
-          <Link 
-            to="/register" 
-            className="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+          <span className="text-sm text-muted-foreground">Don't have an account? </span>
+          <Link
+            to="/register"
+            className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
           >
             Create account
           </Link>
@@ -135,13 +135,13 @@ export const LoginPage = () => {
       </div>
 
       {/* Demo Credentials */}
-      <div className="mt-6 p-5 bg-gradient-to-br from-primary-50 to-secondary-50 rounded-xl border border-primary-100">
-        <p className="text-xs font-semibold text-neutral-700 mb-2">Demo Credentials</p>
+      <div className="mt-6 p-5 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl border border-primary/20">
+        <p className="text-xs font-semibold text-foreground mb-2">Demo Credentials</p>
         <div className="space-y-1">
-          <p className="text-sm text-neutral-600">
+          <p className="text-sm text-muted-foreground">
             <span className="font-medium">Phone:</span> +2348100000006
           </p>
-          <p className="text-sm text-neutral-600">
+          <p className="text-sm text-muted-foreground">
             <span className="font-medium">Password:</span> Customer@123
           </p>
         </div>

@@ -41,7 +41,8 @@ export const AdminServicesPage = () => {
       title="Services"
       description="Manage laundry services and pricing"
       action={
-        <Button leftIcon={<Plus className="w-4 h-4" />} onClick={handleOpenCreate}>
+        <Button onClick={handleOpenCreate} className="rounded-2xl h-12 px-8 font-black shadow-xl shadow-primary/20 bg-primary hover:bg-primary/90 transition-all text-xs uppercase tracking-widest">
+          <Plus className="w-4 h-4 mr-3" />
           Add Service
         </Button>
       }
@@ -52,13 +53,13 @@ export const AdminServicesPage = () => {
           leftIcon={<Search className="w-4 h-4" />}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="max-w-md"
+          className="max-w-md rounded-2xl border-border bg-card shadow-sm"
         />
       </div>
 
       <div className="grid gap-4">
         {filteredServices.length === 0 ? (
-          <Card variant="bordered" className="py-12">
+          <Card className="py-24 rounded-[48px] border-border border-dashed border-2 text-center shadow-inner bg-muted/20">
             <EmptyState
               title="No services found"
               description="Create a new service to get started"
@@ -66,8 +67,9 @@ export const AdminServicesPage = () => {
           </Card>
         ) : (
           filteredServices.map((service) => (
-            <Card key={service._id} variant="bordered" className="group">
-              <div className="flex items-center justify-between">
+            <Card key={service._id} className="p-8 rounded-[40px] border-border bg-card hover:border-primary/50 hover:shadow-2xl transition-all group overflow-hidden relative">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-[60px] -mr-16 -mt-16" />
+              <div className="flex items-center justify-between relative z-10">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-primary-50 rounded-lg flex items-center justify-center text-primary-600 font-bold text-xl uppercase">
                     {service.name.charAt(0)}
@@ -102,12 +104,21 @@ export const AdminServicesPage = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button variant="ghost" size="sm" onClick={() => handleOpenEdit(service)}>
-                    <Edit className="w-4 h-4 text-neutral-500" />
+                <div className="flex items-center gap-3">
+                  <Button
+                    variant="ghost"
+                    size="md"
+                    onClick={() => handleOpenEdit(service)}
+                    className="w-12 h-12 rounded-2xl p-0 hover:bg-primary/5 hover:text-primary transition-all"
+                  >
+                    <Edit className="w-5 h-5" />
                   </Button>
-                  <Button variant="ghost" size="sm">
-                    <Trash2 className="w-4 h-4 text-error-500" />
+                  <Button
+                    variant="ghost"
+                    size="md"
+                    className="w-12 h-12 rounded-2xl p-0 hover:bg-destructive/5 hover:text-destructive transition-all"
+                  >
+                    <Trash2 className="w-5 h-5" />
                   </Button>
                 </div>
               </div>

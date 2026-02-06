@@ -22,8 +22,8 @@ export const AdminBranchesPage = () => {
       description="Manage your service hubs and deployment centers"
       action={
         <Link to="/admin/branches/create" className="block sm:inline-block w-full sm:w-auto">
-          <Button className="w-full sm:w-auto rounded-2xl h-12 shadow-xl shadow-primary-500/20 font-black">
-            <Plus className="w-4 h-4 mr-2" />
+          <Button className="w-full sm:w-auto rounded-2xl h-12 shadow-xl shadow-primary/20 bg-primary hover:bg-primary/90 transition-all font-black text-xs uppercase tracking-widest px-8">
+            <Plus className="w-4 h-4 mr-3" />
             Establish Hub
           </Button>
         </Link>
@@ -55,9 +55,10 @@ export const AdminBranchesPage = () => {
               transition={{ delay: i * 0.05 }}
             >
               <Card
-                className="flex flex-col h-full rounded-[28px] md:rounded-[32px] border-neutral-100 hover:border-primary-100 hover:shadow-2xl hover:shadow-primary-500/5 transition-all group overflow-hidden"
+                className="flex flex-col h-full rounded-[40px] border-border bg-card hover:border-primary/40 hover:shadow-2xl transition-all group overflow-hidden relative"
               >
-                <div className="p-5 md:p-6 relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-[60px] -mr-16 -mt-16" />
+                <div className="p-6 relative z-10 flex-1">
                   <div className="flex justify-between items-start mb-6">
                     <div className="w-12 h-12 bg-neutral-50 text-neutral-400 group-hover:bg-primary-50 group-hover:text-primary-600 rounded-2xl flex items-center justify-center transition-colors">
                       <MapPin className="w-6 h-6" />
@@ -86,17 +87,17 @@ export const AdminBranchesPage = () => {
                   </div>
                 </div>
 
-                <div className="mt-auto p-4 bg-neutral-50 flex items-center gap-2">
+                <div className="mt-auto p-5 bg-muted/30 border-t border-border flex items-center gap-3 relative z-10">
                   <Button
                     variant="ghost"
-                    className="flex-1 rounded-xl font-bold text-neutral-400 hover:text-primary-600 hover:bg-primary-50"
+                    className="flex-1 rounded-2xl font-black text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 h-12"
                     onClick={() => navigate(`/admin/branches/edit/${branch._id}`)}
                   >
                     <Edit className="w-4 h-4 mr-2" />
                     Configure
                   </Button>
                   <Button
-                    className="w-12 h-12 rounded-xl p-0 font-black shadow-lg shadow-primary-500/10"
+                    className="w-12 h-12 rounded-2xl p-0 font-black shadow-xl shadow-primary/20 hover:scale-110 transition-transform"
                     onClick={() => navigate(`/admin/branches/${branch._id}`)}
                   >
                     <ArrowRight className="w-5 h-5" />

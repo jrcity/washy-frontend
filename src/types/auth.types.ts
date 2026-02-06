@@ -22,6 +22,9 @@ export interface User {
   isActive?: boolean; // Not in schema but common, verify if needed or derived
   address?: Customer['address']; // Add optional address from Customer to allow easy access in frontend usually
   branchId?: string;
+  branch?: string; // Standard sync'd field
+  managedBranch?: string; // For managers
+  assignedBranch?: string; // For staff/riders
   createdAt: string;
   updatedAt: string;
 }

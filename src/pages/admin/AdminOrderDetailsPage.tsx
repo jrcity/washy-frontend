@@ -225,6 +225,7 @@ export const AdminOrderDetailsPage = () => {
                                     <RiderSelector
                                         orderId={order._id}
                                         type="pickup"
+                                        branchId={typeof order.branch === 'string' ? order.branch : (order.branch as any)?._id}
                                         onAssigned={() => { }}
                                     />
                                 )}
@@ -245,6 +246,7 @@ export const AdminOrderDetailsPage = () => {
                                     <RiderSelector
                                         orderId={order._id}
                                         type="delivery"
+                                        branchId={typeof order.branch === 'string' ? order.branch : (order.branch as any)?._id}
                                         onAssigned={() => { }}
                                     />
                                 )}
@@ -257,9 +259,9 @@ export const AdminOrderDetailsPage = () => {
     );
 };
 
-const RiderSelector = ({ orderId, type, onAssigned }: { orderId: string, type: 'pickup' | 'delivery', onAssigned: () => void }) => {
+const RiderSelector = ({ orderId, type, branchId, onAssigned }: { orderId: string, type: 'pickup' | 'delivery', branchId?: string, onAssigned: () => void }) => {
     const [selectedRider, setSelectedRider] = useState('');
-    const { data: ridersData, isLoading } = useUsers({ role: 'rider', limit: 100 });
+    const { data: ridersData, isLoading } = useUsers({ role: 'rider', branchId, limit: 100 });
     const { mutate: assignRider, isPending } = useAssignRider();
 
     const handleAssign = () => {

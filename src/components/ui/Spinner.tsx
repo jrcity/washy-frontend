@@ -16,7 +16,7 @@ export const Spinner = ({ size = 'md', className }: SpinnerProps) => {
   return (
     <Loader2
       className={cn(
-        'animate-spin text-primary-600',
+        'animate-spin text-primary',
         sizeClasses[size],
         className
       )}
@@ -30,9 +30,9 @@ interface LoadingScreenProps {
 
 export const LoadingScreen = ({ message = 'Loading...' }: LoadingScreenProps) => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-50">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background">
       <Spinner size="lg" />
-      <p className="mt-4 text-neutral-600">{message}</p>
+      <p className="mt-4 text-muted-foreground font-medium">{message}</p>
     </div>
   );
 };
@@ -43,9 +43,9 @@ interface LoadingOverlayProps {
 
 export const LoadingOverlay = ({ message }: LoadingOverlayProps) => {
   return (
-    <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center z-50">
+    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center z-50">
       <Spinner size="lg" />
-      {message && <p className="mt-4 text-neutral-600">{message}</p>}
+      {message && <p className="mt-4 text-muted-foreground font-medium">{message}</p>}
     </div>
   );
 };

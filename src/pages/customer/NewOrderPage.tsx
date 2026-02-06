@@ -122,9 +122,9 @@ export const NewOrderPage = () => {
         <div className="mb-8">
           {/* Desktop/Tablet Horizontal Stepper */}
           <div className="hidden md:flex items-center justify-between relative px-10 mb-6">
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-neutral-100 rounded-full -z-10" />
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-muted rounded-full -z-10" />
             <div
-              className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-primary-600 rounded-full -z-10 transition-all duration-300 ease-out"
+              className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-primary rounded-full -z-10 transition-all duration-300 ease-out"
               style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
             />
 
@@ -138,8 +138,8 @@ export const NewOrderPage = () => {
                     className={`
                       w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 shadow-sm
                       ${isActive
-                        ? 'bg-primary-600 border-primary-600 text-white scale-110 shadow-primary-200'
-                        : 'bg-white border-neutral-200 text-neutral-400 group-hover:border-neutral-300'}
+                        ? 'bg-primary border-primary text-primary-foreground scale-110 shadow-primary/20'
+                        : 'bg-card border-border text-muted-foreground group-hover:border-primary/30'}
                     `}
                   >
                     {isCompleted ? <Check className="w-5 h-5" /> : <span className="font-semibold text-sm">{index + 1}</span>}
@@ -147,7 +147,7 @@ export const NewOrderPage = () => {
                   <span
                     className={`
                       text-sm font-semibold transition-colors duration-200 absolute -bottom-8 whitespace-nowrap
-                      ${isActive ? 'text-primary-700' : 'text-neutral-400'}
+                      ${isActive ? 'text-primary' : 'text-muted-foreground'}
                     `}
                   >
                     {step}
@@ -158,17 +158,17 @@ export const NewOrderPage = () => {
           </div>
 
           {/* Mobile Vertical/Compact Stepper */}
-          <div className="md:hidden flex items-center gap-4 bg-white p-4 rounded-xl border border-neutral-100 shadow-sm">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-50 text-primary-600 font-bold border border-primary-100">
+          <div className="md:hidden flex items-center gap-4 bg-card p-4 rounded-xl border border-border shadow-sm">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary font-bold border border-primary/20">
               {currentStep + 1}
             </div>
             <div className="flex-1">
-              <p className="text-xs text-neutral-500 font-medium uppercase tracking-wider mb-0.5">Step {currentStep + 1} of {steps.length}</p>
-              <p className="font-bold text-neutral-900">{steps[currentStep]}</p>
+              <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-0.5">Step {currentStep + 1} of {steps.length}</p>
+              <p className="font-bold text-foreground">{steps[currentStep]}</p>
             </div>
-            <div className="w-16 h-1.5 bg-neutral-100 rounded-full overflow-hidden">
+            <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
               <div
-                className="h-full bg-primary-600 transition-all duration-300"
+                className="h-full bg-primary transition-all duration-300"
                 style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
               />
             </div>

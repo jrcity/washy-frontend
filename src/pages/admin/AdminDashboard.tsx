@@ -43,39 +43,39 @@ export const AdminDashboard = () => {
       description={`Welcome back, ${user?.name}. Here's your mission overview.`}
     >
       {/* Premium Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           {
-            label: 'Gross Volume',
+            label: 'Fleet Revenue',
             value: formatCurrency(analytics?.revenue?.current?.totalRevenue || 0),
             icon: TrendingUp,
-            color: 'text-success-600',
-            bg: 'bg-success-50',
-            growth: `${analytics?.revenue?.growth?.revenueGrowth || 0}%`
+            color: 'text-success',
+            bg: 'bg-success/5',
+            trend: analytics?.revenue?.growth?.revenueGrowth ? `${analytics?.revenue?.growth?.revenueGrowth > 0 ? '+' : ''}${analytics?.revenue?.growth?.revenueGrowth}%` : 'STABLE'
           },
           {
-            label: 'Active Missions',
+            label: 'Total Missions',
             value: analytics?.orders?.total || 0,
             icon: Package,
-            color: 'text-primary-600',
-            bg: 'bg-primary-50',
-            growth: `${analytics?.revenue?.growth?.orderGrowth || 0}%`
+            color: 'text-primary',
+            bg: 'bg-primary/5',
+            trend: (analytics?.orders?.total || 0) > 100 ? 'PEAK' : 'ACTIVE'
           },
           {
-            label: 'Rider Squad',
-            value: analytics?.customers?.totalCustomers || 0, // Using customers as placeholder or update to riders if available
+            label: 'Active Personnel',
+            value: analytics?.customers?.totalCustomers || 0,
             icon: Users,
-            color: 'text-info-600',
-            bg: 'bg-info-50',
-            growth: 'Stable'
+            color: 'text-info',
+            bg: 'bg-info/5',
+            trend: 'STABLE'
           },
           {
-            label: 'Efficiency',
+            label: 'Tactical Efficiency',
             value: `${analytics?.orders?.completionRate || '0.0'}%`,
             icon: Activity,
-            color: 'text-warning-600',
-            bg: 'bg-warning-50',
-            growth: 'Target: 95%'
+            color: 'text-warning',
+            bg: 'bg-warning/5',
+            trend: 'TARGET: 95%'
           }
         ].map((stat, i) => (
           <motion.div
@@ -84,19 +84,21 @@ export const AdminDashboard = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
           >
-            <Card className="p-6 rounded-[32px] border-neutral-100 shadow-sm hover:shadow-xl transition-all group relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-16 h-16 bg-neutral-50 rounded-full -mr-8 -mt-8 group-hover:scale-150 transition-transform" />
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-4">
-                  <div className={cn("p-2.5 rounded-xl", stat.bg)}>
-                    <stat.icon className={cn("w-5 h-5", stat.color)} />
-                  </div>
-                  <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">{stat.growth}</span>
+            <Card className="p-8 rounded-[40px] border-border bg-card shadow-xl relative overflow-hidden group hover:border-primary/30 transition-all">
+              <div className={cn("absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl -mr-12 -mt-12 transition-colors", stat.bg)} />
+              <div className="relative z-10 flex flex-col gap-6">
+                <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform", stat.bg)}>
+                  <stat.icon className={cn("w-7 h-7", stat.color)} />
                 </div>
-                <p className="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-1">{stat.label}</p>
-                <h3 className="text-2xl font-black text-neutral-900 tracking-tight">
-                  {analyticsLoading ? '...' : stat.value}
-                </h3>
+                <div>
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">{stat.label}</p>
+                  <div className="flex items-end justify-between">
+                    <h4 className="text-3xl font-black text-foreground tracking-tighter italic leading-none">
+                      {analyticsLoading ? '...' : stat.value}
+                    </h4>
+                    <Badge className="bg-muted text-muted-foreground/60 border-none font-black text-[8px] tracking-tighter uppercase rounded-full px-2 py-0.5">{stat.trend}</Badge>
+                  </div>
+                </div>
               </div>
             </Card>
           </motion.div>
@@ -130,7 +132,7 @@ export const AdminDashboard = () => {
                   transition={{ delay: i * 0.1 }}
                 >
                   <Link to={`/admin/orders/${order._id}`}>
-                    <Card className="p-5 rounded-[24px] border-neutral-100 hover:border-primary-100 hover:shadow-lg transition-all group">
+                    <Card className="p-6 rounded-[32px] border-border bg-card hover:border-primary/40 hover:shadow-xl transition-all group overflow-hidden relative">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 rounded-2xl bg-neutral-50 flex items-center justify-center font-bold text-neutral-400 group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors">
@@ -182,7 +184,7 @@ export const AdminDashboard = () => {
                 transition={{ delay: i * 0.1 }}
               >
                 <Link to={`/admin/branches/${branch._id}`}>
-                  <Card className="p-4 rounded-[24px] border-neutral-100 hover:shadow-md transition-all">
+                  <Card className="p-4 rounded-[24px] border-border bg-card hover:border-primary/40 hover:shadow-lg transition-all">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", branch.isActive ? "bg-success-50 text-success-600" : "bg-neutral-50 text-neutral-400")}>
@@ -204,8 +206,8 @@ export const AdminDashboard = () => {
           </div>
 
           {/* Premium CTA Card */}
-          <Card className="mt-6 p-6 rounded-[32px] bg-neutral-900 text-white relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary-600/20 blur-[40px] rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform" />
+          <Card className="mt-6 p-8 rounded-[40px] bg-neutral-900 text-white relative overflow-hidden group shadow-2xl">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-primary/20 blur-[60px] rounded-full -mr-24 -mt-24 group-hover:scale-110 transition-transform" />
             <div className="relative z-10 space-y-4">
               <h3 className="text-lg font-black tracking-tight leading-tight">Scale Your Operation</h3>
               <p className="text-xs text-neutral-400 leading-relaxed font-medium">Add new service categories or expand to a new territory today.</p>
@@ -241,8 +243,8 @@ export const AdminDashboard = () => {
               transition={{ delay: 0.5 + (i * 0.05) }}
             >
               <Link to={item.path}>
-                <Card className="text-center py-6 rounded-[32px] border-neutral-100 hover:border-primary-100 hover:shadow-xl hover:shadow-primary-100/10 transition-all cursor-pointer group">
-                  <div className={cn("w-12 h-12 rounded-2xl bg-neutral-50 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform", item.color.replace('text-', 'bg-').replace('-600', '-50'))}>
+                <Card className="text-center py-8 rounded-[40px] border-border bg-card hover:border-primary/50 hover:shadow-2xl hover:bg-muted/30 transition-all cursor-pointer group shadow-sm">
+                  <div className={cn("w-16 h-16 rounded-[24px] bg-muted flex items-center justify-center mx-auto mb-6 group-hover:rotate-6 group-hover:scale-110 transition-transform shadow-inner", item.color.replace('text-', 'bg-').replace('-600', '-50'))}>
                     <item.icon className={cn("w-6 h-6", item.color)} />
                   </div>
                   <p className="text-xs font-black text-neutral-900 tracking-widest uppercase">{item.label}</p>

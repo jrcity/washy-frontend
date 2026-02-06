@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useChat } from '@/context/ChatContext';
 import { useAuthContext } from '@/context/AuthContext';
 import ChatWindow from '@/components/chat/ChatWindow';
-import { Input, Badge, Spinner, Button } from '@/components/ui';
+import { Input, Badge, Spinner, Button, Modal } from '@/components/ui';
 import { PageWrapper } from '@/components/layout';
 import { format } from 'date-fns';
-import { Users, Search, MessageSquare, Filter, Clock } from 'lucide-react';
+import { Users, Search, MessageSquare, Filter, Clock, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { chatService } from '@/services/chat.service';
 import toast from 'react-hot-toast';
@@ -22,7 +22,9 @@ export const AdminChatPage: React.FC = () => {
     const { user } = useAuthContext();
 
     const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
-
+    const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
+    const [closeReason, setCloseReason] = useState('');
+    const [idToClose, setIdToClose] = useState<string | null>(null);
     const [search, setSearch] = useState('');
 
     const filteredConversations = conversations.filter(conv =>
@@ -33,13 +35,34 @@ export const AdminChatPage: React.FC = () => {
     const activeConversation = conversations.find(c => c._id === activeConversationId);
 
     const handleStatusUpdate = async (conversationId: string, action: 'close' | 'reopen') => {
+        if (action === 'close') {
+            setIdToClose(conversationId);
+            setIsCloseModalOpen(true);
+            return;
+        }
+
         setIsUpdatingStatus(true);
         try {
             await chatService.updateConversationStatus(conversationId, action);
-            toast.success(`Conversation ${action === 'close' ? 'closed' : 'reopened'} successfully`);
-            // The ChatContext handles the socket event or we might need to refresh
+            toast.success(`Conversation reopened successfully`);
         } catch (error) {
             toast.error('Failed to update status');
+        } finally {
+            setIsUpdatingStatus(false);
+        }
+    };
+
+    const confirmCloseTicket = async () => {
+        if (!idToClose) return;
+        setIsUpdatingStatus(true);
+        try {
+            await chatService.updateConversationStatus(idToClose, 'close', closeReason || 'Issue resolved');
+            toast.success(`Conversation closed successfully`);
+            setIsCloseModalOpen(false);
+            setCloseReason('');
+            setIdToClose(null);
+        } catch (error) {
+            toast.error('Failed to close ticket');
         } finally {
             setIsUpdatingStatus(false);
         }
@@ -51,13 +74,16 @@ export const AdminChatPage: React.FC = () => {
             description="Real-time multi-channel assistance"
             showBack={true}
         >
-            <div className="h-[calc(100vh-18rem)] flex gap-6">
+            <div className="h-[calc(100vh-12rem)] lg:h-[calc(100vh-18rem)] flex flex-col lg:flex-row gap-6 relative">
                 {/* Sidebar List */}
-                <div className="w-96 flex flex-col bg-white rounded-3xl border border-neutral-200 shadow-xl overflow-hidden">
-                    <div className="p-6 border-b border-neutral-100 bg-white/80 backdrop-blur-md">
+                <div className={cn(
+                    "flex-col bg-card rounded-3xl border border-border shadow-xl overflow-hidden transition-all duration-300",
+                    activeConversationId ? "hidden lg:flex w-96" : "flex w-full lg:w-96"
+                )}>
+                    <div className="p-6 border-b border-border bg-card/80 backdrop-blur-md">
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="font-bold text-2xl text-neutral-900 flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-2xl bg-primary-100 flex items-center justify-center text-primary-600">
+                            <h2 className="font-bold text-2xl text-foreground flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                                     <MessageSquare className="w-5 h-5" />
                                 </div>
                                 Inbox
@@ -69,15 +95,15 @@ export const AdminChatPage: React.FC = () => {
 
                         <div className="flex gap-2">
                             <div className="relative flex-1">
-                                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
+                                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/60" />
                                 <Input
                                     placeholder="Search chats..."
-                                    className="pl-10 h-11 bg-neutral-50 border-neutral-100 rounded-2xl focus-within:bg-white transition-all"
+                                    className="pl-10 h-11 bg-muted border-none rounded-2xl focus-within:bg-card transition-all"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
                             </div>
-                            <button className="w-11 h-11 rounded-2xl border border-neutral-100 bg-neutral-50 flex items-center justify-center text-neutral-500 hover:bg-white transition-all shadow-sm">
+                            <button className="w-11 h-11 rounded-2xl border border-border bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-muted transition-all shadow-sm">
                                 <Filter className="w-4 h-4" />
                             </button>
                         </div>
@@ -86,16 +112,16 @@ export const AdminChatPage: React.FC = () => {
                     <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1">
                         {isLoadingConversations ? (
                             <div className="flex flex-col items-center justify-center py-20 gap-3">
-                                <Spinner size="lg" className="text-primary-500" />
-                                <p className="text-sm font-medium text-neutral-400">Loading inbox...</p>
+                                <Spinner size="lg" className="text-primary" />
+                                <p className="text-sm font-medium text-muted-foreground">Loading inbox...</p>
                             </div>
                         ) : filteredConversations.length === 0 ? (
                             <div className="py-20 text-center px-10">
-                                <div className="w-16 h-16 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-4 opacity-50">
-                                    <Users className="w-8 h-8 text-neutral-400" />
+                                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4 opacity-50">
+                                    <Users className="w-8 h-8 text-muted-foreground" />
                                 </div>
-                                <p className="font-bold text-neutral-900 mb-1">No chats found</p>
-                                <p className="text-sm text-neutral-500">Wait for users to start a support session.</p>
+                                <p className="font-bold text-foreground mb-1">No chats found</p>
+                                <p className="text-sm text-muted-foreground">Wait for users to start a support session.</p>
                             </div>
                         ) : (
                             filteredConversations.map((conv) => {
@@ -112,19 +138,19 @@ export const AdminChatPage: React.FC = () => {
                                         className={cn(
                                             "w-full p-4 rounded-2xl text-left transition-all duration-300 flex gap-4 items-start group relative",
                                             isActive
-                                                ? "bg-primary-500 text-white shadow-lg shadow-primary-200"
-                                                : "hover:bg-neutral-50 text-neutral-600"
+                                                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                                                : "hover:bg-muted/50 text-muted-foreground"
                                         )}
                                     >
                                         <div className="relative flex-shrink-0">
                                             <div className={cn(
-                                                "w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg border-2 border-white shadow-sm",
-                                                isActive ? "bg-white/20 text-white" : "bg-primary-50 text-primary-600"
+                                                "w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg border-2 border-background shadow-sm",
+                                                isActive ? "bg-background/20 text-primary-foreground" : "bg-primary/10 text-primary"
                                             )}>
                                                 {participant?.name?.charAt(0) || '?'}
                                             </div>
                                             {hasUnread && !isActive && (
-                                                <div className="absolute -top-1 -right-1 w-5 h-5 bg-error-500 rounded-full flex items-center justify-center text-[10px] text-white font-bold border-2 border-white">
+                                                <div className="absolute -top-1 -right-1 w-5 h-5 bg-destructive rounded-full flex items-center justify-center text-[10px] text-destructive-foreground font-bold border-2 border-background">
                                                     {conv.unreadCount}
                                                 </div>
                                             )}
@@ -134,13 +160,13 @@ export const AdminChatPage: React.FC = () => {
                                             <div className="flex justify-between items-start mb-1">
                                                 <span className={cn(
                                                     "font-bold truncate",
-                                                    isActive ? "text-white" : "text-neutral-900"
+                                                    isActive ? "text-primary-foreground" : "text-foreground"
                                                 )}>
                                                     {participant?.name || 'Customer'}
                                                 </span>
                                                 <span className={cn(
                                                     "text-[10px] whitespace-nowrap ml-2 font-medium flex items-center gap-1",
-                                                    isActive ? "text-primary-100" : "text-neutral-400"
+                                                    isActive ? "text-primary-foreground/80" : "text-muted-foreground/60"
                                                 )}>
                                                     <Clock className="w-3 h-3" />
                                                     {format(new Date(conv.updatedAt), 'HH:mm')}
@@ -148,8 +174,8 @@ export const AdminChatPage: React.FC = () => {
                                             </div>
                                             <p className={cn(
                                                 "text-xs truncate",
-                                                isActive ? "text-white/80" : "text-neutral-500",
-                                                hasUnread && !isActive && "font-bold text-neutral-900"
+                                                isActive ? "text-primary-foreground/70" : "text-muted-foreground",
+                                                hasUnread && !isActive && "font-bold text-foreground"
                                             )}>
                                                 {conv.lastMessage?.content || 'New conversation'}
                                             </p>
@@ -158,7 +184,7 @@ export const AdminChatPage: React.FC = () => {
                                         {isActive && (
                                             <motion.div
                                                 layoutId="activeIndicator"
-                                                className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-white rounded-r-full"
+                                                className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-primary-foreground rounded-r-full"
                                             />
                                         )}
                                     </motion.button>
@@ -169,7 +195,10 @@ export const AdminChatPage: React.FC = () => {
                 </div>
 
                 {/* Main Chat Window */}
-                <div className="flex-1 h-full min-w-0">
+                <div className={cn(
+                    "flex-1 h-full min-w-0 transition-all duration-300",
+                    !activeConversationId ? "hidden lg:block" : "block"
+                )}>
                     <AnimatePresence mode="wait">
                         {activeConversationId ? (
                             <motion.div
@@ -181,13 +210,21 @@ export const AdminChatPage: React.FC = () => {
                                 className="h-full flex flex-col pt-0"
                             >
                                 {activeConversation && (
-                                    <div className="flex items-center justify-between px-6 py-3 bg-white border border-neutral-200 rounded-t-3xl mb-1 shadow-sm">
+                                    <div className="flex items-center justify-between px-4 lg:px-6 py-3 bg-card border border-border rounded-t-3xl mb-1 shadow-sm">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center text-primary-600 font-bold">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="lg:hidden p-2 h-auto rounded-xl"
+                                                onClick={() => setActiveConversationId(null)}
+                                            >
+                                                <ArrowLeft className="w-5 h-5" />
+                                            </Button>
+                                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold">
                                                 {(activeConversation.participants?.find(p => p._id !== user?._id) || activeConversation.participants?.[0])?.name?.[0] || 'C'}
                                             </div>
                                             <div>
-                                                <p className="text-sm font-bold text-neutral-900 truncate max-w-[200px]">
+                                                <p className="text-sm font-bold text-foreground truncate max-w-[200px]">
                                                     {(activeConversation.participants?.find(p => p._id !== user?._id) || activeConversation.participants?.[0])?.name || 'Customer'}
                                                 </p>
                                                 <Badge variant={activeConversation.status === 'closed' ? 'error' : 'success'} size="sm" className="h-4 text-[10px]">
@@ -216,13 +253,13 @@ export const AdminChatPage: React.FC = () => {
                             <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                className="h-full bg-white rounded-3xl border border-neutral-200 shadow-sm flex flex-col items-center justify-center text-center p-12"
+                                className="h-full bg-card rounded-3xl border border-border shadow-sm flex flex-col items-center justify-center text-center p-12"
                             >
-                                <div className="w-24 h-24 bg-primary-50 rounded-[40px] flex items-center justify-center text-5xl mb-6 shadow-inner">
+                                <div className="w-24 h-24 bg-primary/10 rounded-[40px] flex items-center justify-center text-5xl mb-6 shadow-inner">
                                     👋
                                 </div>
-                                <h3 className="text-2xl font-bold text-neutral-900 mb-2">Select a Conversation</h3>
-                                <p className="max-w-xs text-neutral-500 font-medium leading-relaxed">
+                                <h3 className="text-2xl font-bold text-foreground mb-2">Select a Conversation</h3>
+                                <p className="max-w-xs text-muted-foreground font-medium leading-relaxed">
                                     Choose a message from the left to start responding to customer inquiries in real-time.
                                 </p>
                             </motion.div>
@@ -230,6 +267,30 @@ export const AdminChatPage: React.FC = () => {
                     </AnimatePresence>
                 </div>
             </div>
+
+            <Modal
+                isOpen={isCloseModalOpen}
+                onClose={() => setIsCloseModalOpen(false)}
+                title="Close Support Ticket"
+                footer={
+                    <div className="flex gap-3 w-full justify-end">
+                        <Button variant="ghost" onClick={() => setIsCloseModalOpen(false)}>Cancel</Button>
+                        <Button isLoading={isUpdatingStatus} onClick={confirmCloseTicket}>Close Ticket</Button>
+                    </div>
+                }
+            >
+                <div className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                        Please provide a reason for closing this conversation. This will be visible to the customer.
+                    </p>
+                    <Input
+                        label="Reason"
+                        placeholder="e.g. Issue resolved, Customer satisfied..."
+                        value={closeReason}
+                        onChange={(e) => setCloseReason(e.target.value)}
+                    />
+                </div>
+            </Modal>
         </PageWrapper>
     );
 };

@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Bell, ChevronDown, LogOut, User, Settings } from 'lucide-react';
+import { Menu, X, Bell, ChevronDown, LogOut, User, Settings, Sun, Moon, Monitor } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthContext } from '@/context/AuthContext';
+import { useTheme } from '@/context/ThemeContext';
 import { useUnreadNotificationCount } from '@/hooks/useNotifications';
 import { Button, Avatar, Badge } from '@/components/ui';
 
@@ -18,6 +19,7 @@ export const Header = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const location = useLocation();
   const { user, isAuthenticated, logout } = useAuthContext();
+  const { theme, setTheme } = useTheme();
   const { data: unreadCount } = useUnreadNotificationCount();
 
   const getDashboardLink = () => {
@@ -53,15 +55,15 @@ export const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-neutral-200/60 shadow-sm transition-all duration-300">
+    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/60 shadow-sm transition-all duration-300">
       <div className="container max-w-7xl mx-auto">
         <div className="flex items-center justify-between h-20 px-4">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-2xl">W</span>
+            <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg">
+              <span className="text-primary-foreground font-bold text-2xl">W</span>
             </div>
-            <span className="font-bold text-2xl text-neutral-900">Washy</span>
+            <span className="font-bold text-2xl text-foreground">Washy</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -73,8 +75,8 @@ export const Header = () => {
                 className={cn(
                   'text-base font-medium transition-colors px-1 py-2 relative',
                   location.pathname === link.href
-                    ? 'text-primary-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary-600'
-                    : 'text-neutral-600 hover:text-primary-600'
+                    ? 'text-primary after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary'
+                    : 'text-muted-foreground hover:text-primary'
                 )}
               >
                 {link.label}
@@ -86,14 +88,48 @@ export const Header = () => {
           <div className="flex items-center space-x-4">
             {isAuthenticated ? (
               <>
+                {/* Theme Toggle */}
+                <div className="flex items-center space-x-1 bg-muted/50 p-1 rounded-full border border-border/50">
+                  <button
+                    onClick={() => setTheme('light')}
+                    className={cn(
+                      "p-1.5 rounded-full transition-all",
+                      theme === 'light' ? "bg-background text-primary shadow-sm" : "text-muted-foreground hover:text-foreground"
+                    )}
+                    title="Light Mode"
+                  >
+                    <Sun className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setTheme('dark')}
+                    className={cn(
+                      "p-1.5 rounded-full transition-all",
+                      theme === 'dark' ? "bg-background text-primary shadow-sm" : "text-muted-foreground hover:text-foreground"
+                    )}
+                    title="Dark Mode"
+                  >
+                    <Moon className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setTheme('system')}
+                    className={cn(
+                      "p-1.5 rounded-full transition-all",
+                      theme === 'system' ? "bg-background text-primary shadow-sm" : "text-muted-foreground hover:text-foreground"
+                    )}
+                    title="System Default"
+                  >
+                    <Monitor className="w-4 h-4" />
+                  </button>
+                </div>
+
                 {/* Notifications */}
                 <Link
                   to="/notifications"
-                  className="relative p-2 text-neutral-500 hover:text-neutral-700"
+                  className="relative p-2 text-muted-foreground hover:text-foreground"
                 >
                   <Bell className="w-5 h-5" />
                   {unreadCount && unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary text-secondary-foreground text-xs font-bold rounded-full flex items-center justify-center">
                       {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                   )}
@@ -103,13 +139,13 @@ export const Header = () => {
                 <div className="relative">
                   <button
                     onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                    className="flex items-center space-x-2 p-2 rounded-lg hover:bg-neutral-100"
+                    className="flex items-center space-x-2 p-2 rounded-lg hover:bg-muted"
                   >
                     <Avatar name={user?.name || 'User'} size="sm" src={user?.profileImage} />
-                    <span className="hidden lg:block text-sm font-medium text-neutral-700">
+                    <span className="hidden lg:block text-sm font-medium text-foreground">
                       {user?.name?.split(' ')[0]}
                     </span>
-                    <ChevronDown className="w-4 h-4 text-neutral-500" />
+                    <ChevronDown className="w-4 h-4 text-muted-foreground" />
                   </button>
 
                   {isProfileMenuOpen && (
@@ -118,17 +154,17 @@ export const Header = () => {
                         className="fixed inset-0 z-40"
                         onClick={() => setIsProfileMenuOpen(false)}
                       />
-                      <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-neutral-100 py-2 z-50">
-                        <div className="px-4 py-2 border-b border-neutral-100">
-                          <p className="font-medium text-neutral-900">{user?.name}</p>
-                          <p className="text-sm text-neutral-500">{user?.email}</p>
+                      <div className="absolute right-0 mt-2 w-56 bg-card rounded-xl shadow-lg border border-border py-2 z-50">
+                        <div className="px-4 py-2 border-b border-border">
+                          <p className="font-medium text-foreground">{user?.name}</p>
+                          <p className="text-sm text-muted-foreground">{user?.email}</p>
                           <Badge variant="primary" size="sm" className="mt-1">
                             {user?.role?.replace('_', ' ')}
                           </Badge>
                         </div>
                         <Link
                           to={getDashboardLink()}
-                          className="flex items-center space-x-2 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+                          className="flex items-center space-x-2 px-4 py-2 text-sm text-foreground hover:bg-muted"
                           onClick={() => setIsProfileMenuOpen(false)}
                         >
                           <User className="w-4 h-4" />
@@ -136,7 +172,7 @@ export const Header = () => {
                         </Link>
                         <Link
                           to={getProfileLink()}
-                          className="flex items-center space-x-2 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+                          className="flex items-center space-x-2 px-4 py-2 text-sm text-foreground hover:bg-muted"
                           onClick={() => setIsProfileMenuOpen(false)}
                         >
                           <Settings className="w-4 h-4" />
@@ -147,7 +183,7 @@ export const Header = () => {
                             setIsProfileMenuOpen(false);
                             logout();
                           }}
-                          className="flex items-center space-x-2 px-4 py-2 text-sm text-error-600 hover:bg-error-50 w-full"
+                          className="flex items-center space-x-2 px-4 py-2 text-sm text-destructive hover:bg-destructive/10 w-full"
                         >
                           <LogOut className="w-4 h-4" />
                           <span>Logout</span>
@@ -180,7 +216,7 @@ export const Header = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-neutral-100">
+          <div className="md:hidden py-4 border-t border-border">
             <nav className="flex flex-col space-y-2">
               {navLinks.map((link) => (
                 <Link
@@ -190,8 +226,8 @@ export const Header = () => {
                   className={cn(
                     'px-4 py-2 text-sm font-medium rounded-lg transition-colors',
                     location.pathname === link.href
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-neutral-600 hover:bg-neutral-50'
+                      ? 'text-primary bg-primary/10'
+                      : 'text-muted-foreground hover:bg-muted'
                   )}
                 >
                   {link.label}
@@ -201,7 +237,7 @@ export const Header = () => {
                 <Link
                   to="/login"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-4 py-2 text-sm font-medium text-neutral-600 hover:bg-neutral-50 rounded-lg"
+                  className="px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-muted rounded-lg"
                 >
                   Login
                 </Link>

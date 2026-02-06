@@ -40,11 +40,11 @@ export const ProfileBankInfo = () => {
     const isVerified = bankDetails.isVerified;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 pt-4 border-t border-border">
             <div className="flex items-center justify-between">
                 <div>
-                    <h3 className="text-lg font-semibold text-neutral-900 mb-1">Bank Information</h3>
-                    <p className="text-sm text-neutral-500">Manage your bank account for payouts.</p>
+                    <h3 className="text-lg font-medium text-foreground">Bank Details</h3>
+                    <p className="text-sm text-muted-foreground">Manage your bank account for payouts.</p>
                 </div>
                 {isVerified && (
                     <Badge variant="success" size="sm">Verified</Badge>
@@ -52,11 +52,11 @@ export const ProfileBankInfo = () => {
             </div>
 
             {/* Info Alert */}
-            <div className="flex items-start gap-3 p-4 bg-primary-50 rounded-xl border border-primary-100">
-                <AlertCircle className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-4 bg-primary/10 rounded-xl border border-primary/20">
+                <AlertCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <div>
-                    <p className="text-sm font-medium text-primary-900">Secure Banking</p>
-                    <p className="text-xs text-primary-700 mt-1">
+                    <p className="text-sm font-medium text-primary">Secure Banking</p>
+                    <p className="text-xs text-primary/80 mt-1">
                         Your bank details are encrypted and securely stored. We use bank-grade security to protect your information.
                     </p>
                 </div>
@@ -64,9 +64,9 @@ export const ProfileBankInfo = () => {
 
             {/* Bank Details Form */}
             <div className="space-y-4">
-                <div className="flex items-center gap-3 p-4 bg-neutral-50 rounded-xl">
-                    <div className="w-12 h-12 bg-neutral-200 rounded-lg flex items-center justify-center">
-                        <Building2 className="w-6 h-6 text-neutral-500" />
+                <div className="flex items-center gap-3 p-4 bg-muted rounded-xl">
+                    <div className="w-12 h-12 bg-foreground/5 rounded-lg flex items-center justify-center">
+                        <Building2 className="w-6 h-6 text-muted-foreground" />
                     </div>
                     <div className="flex-1">
                         {isEditing ? (
@@ -75,19 +75,20 @@ export const ProfileBankInfo = () => {
                                 placeholder="Enter bank name"
                                 value={formData.bankName}
                                 onChange={handleInputChange}
+                                className="bg-card"
                             />
                         ) : (
                             <>
-                                <p className="text-sm text-neutral-500">Bank Name</p>
-                                <p className="font-medium text-neutral-900">{formData.bankName || 'Not set'}</p>
+                                <p className="text-sm text-muted-foreground">Bank Name</p>
+                                <p className="font-medium text-foreground">{formData.bankName || 'Not set'}</p>
                             </>
                         )}
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3 p-4 bg-neutral-50 rounded-xl">
-                    <div className="w-12 h-12 bg-neutral-200 rounded-lg flex items-center justify-center">
-                        <CreditCard className="w-6 h-6 text-neutral-500" />
+                <div className="flex items-center gap-3 p-4 bg-muted rounded-xl">
+                    <div className="w-12 h-12 bg-foreground/5 rounded-lg flex items-center justify-center">
+                        <CreditCard className="w-6 h-6 text-muted-foreground" />
                     </div>
                     <div className="flex-1">
                         {isEditing ? (
@@ -99,8 +100,8 @@ export const ProfileBankInfo = () => {
                             />
                         ) : (
                             <>
-                                <p className="text-sm text-neutral-500">Account Number</p>
-                                <p className="font-medium text-neutral-900 font-mono">
+                                <p className="text-sm text-muted-foreground">Account Number</p>
+                                <p className="font-medium text-foreground font-mono">
                                     {formData.accountNumber
                                         ? `****${formData.accountNumber.slice(-4)}`
                                         : 'Not set'
@@ -111,8 +112,8 @@ export const ProfileBankInfo = () => {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3 p-4 bg-neutral-50 rounded-xl">
-                    <div className="w-12 h-12 bg-neutral-200 rounded-lg flex items-center justify-center text-neutral-500 font-bold">
+                <div className="flex items-center gap-3 p-4 bg-muted rounded-xl">
+                    <div className="w-12 h-12 bg-foreground/5 rounded-lg flex items-center justify-center text-muted-foreground font-bold">
                         AB
                     </div>
                     <div className="flex-1">
@@ -125,15 +126,15 @@ export const ProfileBankInfo = () => {
                             />
                         ) : (
                             <>
-                                <p className="text-sm text-neutral-500">Account Name</p>
-                                <p className="font-medium text-neutral-900">{formData.accountName || 'Not set'}</p>
+                                <p className="text-sm text-muted-foreground">Account Name</p>
+                                <p className="font-medium text-foreground">{formData.accountName || 'Not set'}</p>
                             </>
                         )}
                     </div>
                 </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t border-neutral-100">
+            <div className="flex justify-end gap-3 pt-4 border-t border-border">
                 {isEditing ? (
                     <>
                         <Button variant="outline" onClick={() => setIsEditing(false)}>

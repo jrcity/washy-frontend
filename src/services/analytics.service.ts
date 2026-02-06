@@ -10,30 +10,31 @@ import type {
 import type { ApiResponse } from '@/types';
 
 export const analyticsService = {
-    getDashboardStats: async () => {
-        const response = await api.get<ApiResponse<DashboardStats>>('/analytics/dashboard');
+    getDashboardStats: async (params?: any) => {
+        const response = await api.get<ApiResponse<DashboardStats>>('/analytics/dashboard', { params });
         return response.data.data;
     },
 
-    getRevenueOverview: async () => {
-        const response = await api.get<ApiResponse<RevenueStats>>('/analytics/revenue/overview');
+    getRevenueOverview: async (params?: any) => {
+        const response = await api.get<ApiResponse<RevenueStats>>('/analytics/revenue/overview', { params });
         return response.data.data;
     },
 
-    getOrderVolume: async () => {
-        const response = await api.get<ApiResponse<OrderVolumeStats>>('/analytics/orders/volume');
+    getOrderVolume: async (params?: any) => {
+        const response = await api.get<ApiResponse<OrderVolumeStats>>('/analytics/orders/volume', { params });
         return response.data.data;
     },
 
-    getCustomerAcquisition: async () => {
+    getCustomerAcquisition: async (params?: any) => {
         const response = await api.get<ApiResponse<CustomerAcquisitionStats>>(
-            '/analytics/customers/acquisition'
+            '/analytics/customers/acquisition',
+            { params }
         );
         return response.data.data;
     },
 
-    getRiderPerformance: async () => {
-        const response = await api.get<ApiResponse<RiderPerformanceStats>>('/analytics/riders/performance');
+    getRiderPerformance: async (params?: any) => {
+        const response = await api.get<ApiResponse<RiderPerformanceStats>>('/analytics/riders/performance', { params });
         return response.data.data;
     },
 };

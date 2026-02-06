@@ -8,7 +8,7 @@ export const Skeleton = ({ className }: SkeletonProps) => {
   return (
     <div
       className={cn(
-        'animate-pulse bg-neutral-200 rounded-md',
+        'animate-pulse bg-muted rounded-md',
         className
       )}
     />
@@ -28,7 +28,7 @@ export const SkeletonText = ({ lines = 3, className }: { lines?: number; classNa
 );
 
 export const SkeletonCard = ({ className }: { className?: string }) => (
-  <div className={cn('bg-white rounded-xl p-6 space-y-4', className)}>
+  <div className={cn('bg-card rounded-xl border border-border p-6 space-y-4 shadow-sm', className)}>
     <div className="flex items-center space-x-4">
       <Skeleton className="w-12 h-12 rounded-full" />
       <div className="flex-1 space-y-2">
@@ -41,16 +41,16 @@ export const SkeletonCard = ({ className }: { className?: string }) => (
 );
 
 export const SkeletonTable = ({ rows = 5, cols = 4 }: { rows?: number; cols?: number }) => (
-  <div className="space-y-3">
+  <div className="space-y-4">
     {/* Header */}
-    <div className="flex gap-4">
+    <div className="flex gap-4 p-2 bg-muted/50 rounded-lg">
       {Array.from({ length: cols }).map((_, i) => (
         <Skeleton key={i} className="h-6 flex-1" />
       ))}
     </div>
     {/* Rows */}
     {Array.from({ length: rows }).map((_, i) => (
-      <div key={i} className="flex gap-4">
+      <div key={i} className="flex gap-4 p-2">
         {Array.from({ length: cols }).map((_, j) => (
           <Skeleton key={j} className="h-10 flex-1" />
         ))}

@@ -106,8 +106,8 @@ export const ProfilePage = () => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium ${activeTab === tab.id
-                  ? 'bg-primary-50 text-primary-700'
-                  : 'text-neutral-600 hover:bg-neutral-50'
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:bg-muted'
                   }`}
               >
                 <tab.icon className="w-4 h-4" />
@@ -124,8 +124,8 @@ export const ProfilePage = () => {
             {activeTab === 'general' && (
               <form onSubmit={onUpdateProfile} className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-neutral-900 mb-1">Personal Information</h3>
-                  <p className="text-sm text-neutral-500 mb-6">Update your personal details and address.</p>
+                  <h3 className="text-lg font-semibold text-foreground mb-1">Personal Information</h3>
+                  <p className="text-sm text-muted-foreground mb-6">Update your personal details and address.</p>
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <Input
@@ -145,21 +145,21 @@ export const ProfilePage = () => {
                         label="Email Address"
                         value={formData.email}
                         disabled
-                        className="bg-neutral-50"
+                        className="bg-muted"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-neutral-100">
+                <div className="pt-6 border-t border-border">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-neutral-900">Address Details</h3>
+                    <h3 className="text-lg font-semibold text-foreground">Address Details</h3>
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
                       onClick={handleDetectLocation}
-                      className="text-primary-600 border-primary-100 hover:bg-primary-50"
+                      className="text-primary border-primary/20 hover:bg-primary/10"
                       disabled={isLoading || isLocating}
                     >
                       <MapPin className="w-4 h-4 mr-2" />
@@ -207,7 +207,7 @@ export const ProfilePage = () => {
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-neutral-100">
+                <div className="pt-6 border-t border-border">
                   <div className="flex justify-end">
                     <Button type="submit" isLoading={isLoading}>
                       Save Changes
@@ -230,8 +230,8 @@ export const ProfilePage = () => {
           {/* Role Specific Details */}
           {activeTab === 'general' && user?.role === 'rider' && (
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-neutral-900 mb-1">Rider Details</h3>
-              <p className="text-sm text-neutral-500 mb-6">Manage your vehicle and bank information.</p>
+              <h3 className="text-lg font-semibold text-foreground mb-1">Rider Details</h3>
+              <p className="text-sm text-muted-foreground mb-6">Manage your vehicle and bank information.</p>
               <RiderProfileForm />
             </Card>
           )}

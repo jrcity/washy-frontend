@@ -59,7 +59,7 @@ export const OrderDetailsPage = () => {
     return (
       <div className="h-96 flex flex-col items-center justify-center gap-4">
         <Spinner />
-        {isVerifyingPayment && <p className="text-neutral-500 font-medium animate-pulse">Verifying payment status...</p>}
+        {isVerifyingPayment && <p className="text-muted-foreground font-medium animate-pulse">Verifying payment status...</p>}
       </div>
     );
   }
@@ -127,7 +127,7 @@ export const OrderDetailsPage = () => {
             </div>
 
             {order.isPaid && (
-              <div className="mb-4 bg-success-50 border border-success-100 p-3 rounded-lg flex items-center gap-2 text-success-700">
+              <div className="mb-4 bg-success/10 border border-success/20 p-3 rounded-lg flex items-center gap-2 text-success">
                 <CheckCircle2 className="w-5 h-5" />
                 <span className="font-medium">Payment Successful</span>
               </div>
@@ -135,10 +135,10 @@ export const OrderDetailsPage = () => {
 
             {/* Simple Timeline logic could go here */}
             {['pending', 'confirmed', 'picked_up', 'in_process', 'ready', 'out_for_delivery', 'delivered', 'completed'].includes(order.status) && (
-              <div className="bg-neutral-50 p-4 rounded-xl border border-neutral-100 flex items-center justify-between gap-3">
+              <div className="bg-muted p-4 rounded-xl border border-border flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <Truck className="w-5 h-5 text-primary-600" />
-                  <p className="text-sm text-neutral-600">
+                  <Truck className="w-5 h-5 text-primary" />
+                  <p className="text-sm text-muted-foreground">
                     {order.status === 'out_for_delivery'
                       ? 'Your order is on its way to you!'
                       : 'We are processing your order with care.'}
@@ -158,12 +158,12 @@ export const OrderDetailsPage = () => {
             )}We are processing your order with care.
 
             {(order.pickupRider || order.deliveryRider) && ['picked_up', 'out_for_delivery'].includes(order.status) && (
-              <div className="mt-4 p-4 bg-primary-50 rounded-xl border border-primary-100 flex items-center justify-between">
+              <div className="mt-4 p-4 bg-primary/10 rounded-xl border border-primary/20 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-primary-600 shadow-sm font-bold">
+                  <div className="w-8 h-8 rounded-full bg-card flex items-center justify-center text-primary shadow-sm font-bold">
                     R
                   </div>
-                  <p className="text-sm font-medium text-primary-900">Contact assigned rider</p>
+                  <p className="text-sm font-medium text-primary">Contact assigned rider</p>
                 </div>
                 <Button
                   size="sm"
@@ -183,56 +183,56 @@ export const OrderDetailsPage = () => {
             <h3 className="font-semibold text-lg mb-4">Items & Services</h3>
             <div className="space-y-4">
               {order.items.map((item, idx) => (
-                <div key={idx} className="flex justify-between items-start py-3 border-b border-neutral-100 last:border-0">
+                <div key={idx} className="flex justify-between items-start py-3 border-b border-border last:border-0">
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600 font-bold text-sm shadow-sm">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold text-sm shadow-sm">
                       {item.quantity}x
                     </div>
                     <div>
-                      <p className="font-semibold text-neutral-900">
+                      <p className="font-semibold text-foreground">
                         {typeof item.service === 'string' ? 'Service' : item.service.name}
                       </p>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <p className="text-xs text-neutral-500 capitalize px-2 py-0.5 bg-neutral-100 rounded-full">{item.garmentType.replace('_', ' ')}</p>
+                        <p className="text-xs text-muted-foreground capitalize px-2 py-0.5 bg-muted rounded-full">{item.garmentType.replace('_', ' ')}</p>
                         {item.isExpress && <Badge variant="warning" size="sm" className="h-4 text-[10px]">Express</Badge>}
-                        <span className="text-[10px] text-neutral-400">@ {formatCurrency(item.unitPrice || 0)} / unit</span>
+                        <span className="text-[10px] text-muted-foreground/60">@ {formatCurrency(item.unitPrice || 0)} / unit</span>
                       </div>
                     </div>
                   </div>
-                  <p className="font-bold text-neutral-900">{formatCurrency(item.subtotal)}</p>
+                  <p className="font-bold text-foreground">{formatCurrency(item.subtotal)}</p>
                 </div>
               ))}
             </div>
-            <div className="border-t border-neutral-100 mt-6 pt-6 space-y-3">
-              <div className="flex justify-between text-sm text-neutral-500">
+            <div className="border-t border-border mt-6 pt-6 space-y-3">
+              <div className="flex justify-between text-sm text-muted-foreground">
                 <span>Subtotal</span>
-                <span className="font-medium text-neutral-900">{formatCurrency(order.subtotal)}</span>
+                <span className="font-medium text-foreground">{formatCurrency(order.subtotal)}</span>
               </div>
-              <div className="flex justify-between text-sm text-neutral-500">
+              <div className="flex justify-between text-sm text-muted-foreground">
                 <span>Delivery Fee</span>
-                <span className="font-medium text-neutral-900">{formatCurrency(order.deliveryFee)}</span>
+                <span className="font-medium text-foreground">{formatCurrency(order.deliveryFee)}</span>
               </div>
               {order.discount > 0 && (
-                <div className="flex justify-between text-sm text-success-600">
+                <div className="flex justify-between text-sm text-success">
                   <span>Discount</span>
                   <span className="font-medium">-{formatCurrency(order.discount)}</span>
                 </div>
               )}
-              <div className="flex justify-between font-bold text-xl text-neutral-900 pt-3 border-t border-dashed border-neutral-200">
+              <div className="flex justify-between font-bold text-xl text-foreground pt-3 border-t border-dashed border-border">
                 <span>Total Amount</span>
-                <span className="text-primary-600">{formatCurrency(order.total)}</span>
+                <span className="text-primary">{formatCurrency(order.total)}</span>
               </div>
             </div>
           </Card>
 
           {/* Customer Notes */}
           {order.customerNotes && (
-            <Card className="p-6 border-l-4 border-l-secondary-400 bg-secondary-50/30">
-              <h3 className="text-sm font-bold text-secondary-900 uppercase tracking-wider mb-2 flex items-center gap-2">
+            <Card className="p-6 border-l-4 border-l-secondary bg-secondary/10">
+              <h3 className="text-sm font-bold text-secondary uppercase tracking-wider mb-2 flex items-center gap-2">
                 <FileText className="w-4 h-4" />
                 Special Instructions
               </h3>
-              <p className="text-neutral-700 italic leading-relaxed">"{order.customerNotes}"</p>
+              <p className="text-foreground/80 italic leading-relaxed">"{order.customerNotes}"</p>
             </Card>
           )}
         </div>
@@ -240,60 +240,60 @@ export const OrderDetailsPage = () => {
         {/* Sidebar Info */}
         <div className="space-y-6">
           <Card className="p-6">
-            <h3 className="font-bold text-neutral-900 mb-4 flex items-center gap-2">
-              <Building2 className="w-4 h-4 text-primary-50" />
+            <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
+              <Building2 className="w-4 h-4 text-primary/20" />
               Processing Branch
             </h3>
             {typeof order.branch !== 'string' ? (
               <div className="space-y-1">
-                <p className="font-bold text-neutral-900">{order.branch.name}</p>
-                <Badge variant="info" className="text-[10px] h-4 bg-neutral-50 text-neutral-500 border-neutral-200">
+                <p className="font-bold text-foreground">{order.branch.name}</p>
+                <Badge variant="info" className="text-[10px] h-4 bg-muted text-muted-foreground border-border">
                   Code: {order.branch.code}
                 </Badge>
               </div>
             ) : (
-              <p className="text-sm text-neutral-600">Branch ID: {order.branch}</p>
+              <p className="text-sm text-muted-foreground">Branch ID: {order.branch}</p>
             )}
           </Card>
 
           <Card className="p-6">
             <h3 className="font-semibold mb-4 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-neutral-500" />
+              <Clock className="w-4 h-4 text-muted-foreground" />
               Schedule
             </h3>
             <div className="space-y-4">
               <div>
-                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-1">Pickup Window</p>
-                <p className="text-sm font-bold text-neutral-900">{formatDate(order.pickupDate, 'PPP')}</p>
-                <p className="text-sm text-neutral-600 font-medium">{order.pickupTimeSlot}</p>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">Pickup Window</p>
+                <p className="text-sm font-bold text-foreground">{formatDate(order.pickupDate, 'PPP')}</p>
+                <p className="text-sm text-muted-foreground font-medium">{order.pickupTimeSlot}</p>
               </div>
               <div>
-                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-1">Expected Delivery</p>
-                <p className="text-sm font-bold text-neutral-900">{formatDate(order.expectedDeliveryDate, 'PPP')}</p>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">Expected Delivery</p>
+                <p className="text-sm font-bold text-foreground">{formatDate(order.expectedDeliveryDate, 'PPP')}</p>
               </div>
             </div>
           </Card>
 
           <Card className="p-6">
             <h3 className="font-semibold mb-4 flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-neutral-500" />
+              <MapPin className="w-4 h-4 text-muted-foreground" />
               Pickup & Delivery
             </h3>
             <div className="space-y-6">
               <div>
-                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary-500" />
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                   Pickup Address
                 </p>
                 <div className="space-y-1">
-                  <p className="text-sm font-bold text-neutral-900 leading-tight">
+                  <p className="text-sm font-bold text-foreground leading-tight">
                     {order.pickupAddress.street}
                   </p>
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-xs text-muted-foreground">
                     {order.pickupAddress.area}, {order.pickupAddress.city}, {order.pickupAddress.state}
                   </p>
                   {order.pickupAddress.landmark && (
-                    <p className="text-[11px] font-medium text-secondary-600 flex items-center gap-1 mt-1">
+                    <p className="text-[11px] font-medium text-secondary flex items-center gap-1 mt-1">
                       <MapPin className="w-3 h-3" />
                       Near {order.pickupAddress.landmark}
                     </p>
@@ -301,20 +301,20 @@ export const OrderDetailsPage = () => {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-neutral-100">
-                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-secondary-500" />
+              <div className="pt-4 border-t border-border">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-secondary" />
                   Delivery Address
                 </p>
                 <div className="space-y-1">
-                  <p className="text-sm font-bold text-neutral-900 leading-tight">
+                  <p className="text-sm font-bold text-foreground leading-tight">
                     {order.deliveryAddress.street}
                   </p>
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-xs text-muted-foreground">
                     {order.deliveryAddress.area}, {order.deliveryAddress.city}, {order.deliveryAddress.state}
                   </p>
                   {order.deliveryAddress.landmark && (
-                    <p className="text-[11px] font-medium text-secondary-600 flex items-center gap-1 mt-1">
+                    <p className="text-[11px] font-medium text-secondary flex items-center gap-1 mt-1">
                       <MapPin className="w-3 h-3" />
                       Near {order.deliveryAddress.landmark}
                     </p>
@@ -327,21 +327,21 @@ export const OrderDetailsPage = () => {
           {order.status === 'completed' && !order.rating && (
             <Card className="p-6">
               <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <Star className="w-4 h-4 text-warning-500" />
+                <Star className="w-4 h-4 text-warning" />
                 Rate Order
               </h3>
               <div className="flex gap-2 mb-4">
                 {[1, 2, 3, 4, 5].map((s) => (
                   <button key={s} onClick={() => setRating(s)}>
-                    <Star className={`w-6 h-6 ${s <= rating ? 'fill-warning-400 text-warning-400' : 'text-neutral-300'}`} />
+                    <Star className={`w-6 h-6 ${s <= rating ? 'fill-warning text-warning' : 'text-muted-foreground/30'}`} />
                   </button>
                 ))}
               </div>
               <textarea
                 className={cn(
-                  "w-full px-4 py-3 bg-white border border-neutral-200 rounded-2xl text-base transition-all duration-300 resize-none mb-3",
-                  "focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:outline-none",
-                  "hover:border-neutral-300 hover:shadow-sm"
+                  "w-full px-4 py-3 bg-card border border-border rounded-2xl text-base transition-all duration-300 resize-none mb-3",
+                  "focus:ring-4 focus:ring-primary/10 focus:border-primary focus:outline-none",
+                  "hover:border-primary/30 hover:shadow-sm"
                 )}
                 rows={2}
                 placeholder="How was your experience?"

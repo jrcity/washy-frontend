@@ -97,7 +97,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
         {label && (
           <label
             htmlFor={selectId}
-            className="block text-sm font-semibold text-neutral-700 ml-1"
+            className="block text-sm font-semibold text-foreground ml-1"
           >
             {label}
           </label>
@@ -110,29 +110,29 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
             disabled={disabled}
             onClick={handleToggle}
             className={cn(
-              'flex items-center justify-between w-full px-4 py-3.5 bg-white border rounded-2xl transition-all duration-300',
+              'flex items-center justify-between w-full px-4 py-3.5 bg-background border rounded-2xl transition-all duration-300',
               'text-base text-left min-h-[52px]',
               isOpen
-                ? 'ring-4 ring-primary-500/10 border-primary-500 shadow-sm'
-                : 'hover:border-neutral-300 hover:shadow-sm shadow-sm shadow-neutral-100/50',
+                ? 'ring-4 ring-primary/10 border-primary shadow-sm'
+                : 'hover:border-border/80 hover:shadow-sm shadow-sm shadow-muted/50',
               error
-                ? 'border-error-300 focus:ring-error-500/10'
-                : 'border-neutral-200',
-              disabled && 'bg-neutral-50/50 cursor-not-allowed opacity-60 text-neutral-400',
+                ? 'border-destructive/30 focus:ring-destructive/10'
+                : 'border-border',
+              disabled && 'bg-muted/50 cursor-not-allowed opacity-60 text-muted-foreground',
               className
             )}
           >
             <span className={cn(
               'truncate',
-              !selectedOption && 'text-neutral-400'
+              !selectedOption && 'text-muted-foreground'
             )}>
               {selectedOption ? selectedOption.label : placeholder}
             </span>
             <ChevronDown
               className={cn(
-                'w-5 h-5 text-neutral-400 transition-transform duration-300 flex-shrink-0',
-                isOpen && 'rotate-180 text-primary-500',
-                error && 'text-error-400'
+                'w-5 h-5 text-muted-foreground transition-transform duration-300 flex-shrink-0',
+                isOpen && 'rotate-180 text-primary',
+                error && 'text-destructive'
               )}
             />
           </button>
@@ -146,7 +146,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
                   animate={{ opacity: 1, y: 4, scale: 1 }}
                   exit={{ opacity: 0, y: -10, scale: 0.98 }}
                   transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-                  className="absolute z-[100] w-full mt-1 bg-white border border-neutral-100 rounded-2xl shadow-2xl overflow-hidden max-h-64 overflow-y-auto"
+                  className="absolute z-[100] w-full mt-1 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden max-h-64 overflow-y-auto"
                 >
                   <div className="p-1.5">
                     {options.map((option) => (
@@ -157,21 +157,21 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
                         onClick={() => handleSelect(option)}
                         className={cn(
                           'flex items-center justify-between w-full px-4 py-3 text-sm rounded-xl transition-all duration-200',
-                          'hover:bg-primary-50 hover:text-primary-700',
+                          'hover:bg-primary/10 hover:text-primary',
                           value === option.value
-                            ? 'bg-primary-50 text-primary-700 font-semibold'
-                            : 'text-neutral-700',
+                            ? 'bg-primary/10 text-primary font-semibold'
+                            : 'text-foreground',
                           option.disabled && 'opacity-40 cursor-not-allowed grayscale'
                         )}
                       >
                         <span className="truncate">{option.label}</span>
                         {value === option.value && (
-                          <Check className="w-4 h-4 text-primary-600 animate-in zoom-in-50" />
+                          <Check className="w-4 h-4 text-primary animate-in zoom-in-50" />
                         )}
                       </button>
                     ))}
                     {options.length === 0 && (
-                      <div className="px-4 py-3 text-sm text-neutral-400 text-center italic">
+                      <div className="px-4 py-3 text-sm text-muted-foreground text-center italic">
                         No options available
                       </div>
                     )}
@@ -184,13 +184,13 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
         </div>
 
         {error && (
-          <p className="text-xs text-error-600 font-medium ml-1 animate-in fade-in slide-in-from-top-1">
+          <p className="text-xs text-destructive font-medium ml-1 animate-in fade-in slide-in-from-top-1">
             {error}
           </p>
         )}
 
         {helperText && !error && (
-          <p className="text-xs text-neutral-500 ml-1">
+          <p className="text-xs text-muted-foreground ml-1">
             {helperText}
           </p>
         )}

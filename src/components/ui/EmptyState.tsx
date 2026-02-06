@@ -23,12 +23,12 @@ export const EmptyState = ({
 }: EmptyStateProps) => {
   return (
     <div className={cn('text-center py-12 px-4', className)}>
-      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-neutral-100 text-neutral-400 mb-4">
+      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted text-muted-foreground mb-4">
         {icon || <Inbox className="w-8 h-8" />}
       </div>
-      <h3 className="text-lg font-semibold text-neutral-900 mb-2">{title}</h3>
+      <h3 className="text-lg font-semibold text-foreground mb-2">{title}</h3>
       {description && (
-        <p className="text-neutral-500 max-w-md mx-auto mb-6">{description}</p>
+        <p className="text-muted-foreground max-w-md mx-auto mb-6">{description}</p>
       )}
       {action && (
         <Button onClick={action.onClick}>{action.label}</Button>
@@ -53,10 +53,10 @@ const alertIcons = {
 };
 
 const alertClasses = {
-  info: 'bg-info-50/80 backdrop-blur-sm text-info-700 border-info-200/50 shadow-sm',
-  success: 'bg-success-50/80 backdrop-blur-sm text-success-700 border-success-200/50 shadow-sm',
-  warning: 'bg-warning-50/80 backdrop-blur-sm text-warning-700 border-warning-200/50 shadow-sm',
-  error: 'bg-error-50/80 backdrop-blur-sm text-error-700 border-error-200/50 shadow-sm',
+  info: 'bg-info/10 backdrop-blur-sm text-info border-info/20 shadow-sm',
+  success: 'bg-success/10 backdrop-blur-sm text-success border-success/20 shadow-sm',
+  warning: 'bg-warning/10 backdrop-blur-sm text-warning border-warning/20 shadow-sm',
+  error: 'bg-destructive/10 backdrop-blur-sm text-destructive border-destructive/20 shadow-sm',
 };
 
 export const Alert = ({ variant = 'info', title, children, className }: AlertProps) => {

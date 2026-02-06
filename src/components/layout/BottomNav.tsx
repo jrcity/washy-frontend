@@ -71,7 +71,7 @@ export const BottomNav = ({ variant }: BottomNavProps) => {
     );
 
     return (
-        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-neutral-200/60 pb-safe z-50">
+        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-xl border-t border-border/60 pb-safe z-50">
             <div className="flex items-center justify-around h-16 px-2">
                 {filteredItems.map((item) => {
                     const Icon = item.icon;
@@ -84,19 +84,19 @@ export const BottomNav = ({ variant }: BottomNavProps) => {
                             className={cn(
                                 'flex flex-col items-center justify-center flex-1 min-w-0 py-1 transition-all duration-300',
                                 isActive
-                                    ? 'text-primary-600'
-                                    : 'text-neutral-400 hover:text-neutral-600'
+                                    ? 'text-primary'
+                                    : 'text-muted-foreground hover:text-foreground'
                             )}
                         >
                             <div className={cn(
                                 'p-1.5 rounded-xl transition-all duration-300',
-                                isActive && 'bg-primary-50'
+                                isActive && 'bg-primary/10'
                             )}>
                                 <Icon className={cn('w-5 h-5', isActive && 'animate-in zoom-in-75 duration-300')} />
                             </div>
                             <span className={cn(
                                 'text-[10px] font-medium mt-0.5 truncate w-full text-center px-1',
-                                isActive ? 'text-primary-700' : 'text-neutral-500'
+                                isActive ? 'text-primary' : 'text-muted-foreground'
                             )}>
                                 {item.label}
                             </span>

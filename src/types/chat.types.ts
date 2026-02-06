@@ -20,7 +20,7 @@ export interface ChatAttachment {
 export interface Message {
     _id: string;
     conversation: string;
-    sender: User;
+    sender: User | null;
     content: string;
     type: EMESSAGE_TYPE;
     attachments?: ChatAttachment[];

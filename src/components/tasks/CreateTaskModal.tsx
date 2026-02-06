@@ -51,16 +51,16 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClos
             <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                className="bg-white rounded-[40px] shadow-2xl w-full max-w-xl overflow-hidden"
+                className="bg-card rounded-[40px] shadow-2xl w-full max-w-xl overflow-hidden border border-border"
             >
-                <div className="flex items-center justify-between p-8 border-b border-neutral-50 bg-neutral-50/50">
+                <div className="flex items-center justify-between p-8 border-b border-border bg-muted/30">
                     <div>
-                        <h2 className="text-2xl font-black text-neutral-900 tracking-tight">Dispatch Task</h2>
-                        <p className="text-sm font-medium text-neutral-500">Assign a new journey to a rider</p>
+                        <h2 className="text-2xl font-black text-foreground tracking-tight">Dispatch Task</h2>
+                        <p className="text-sm font-medium text-muted-foreground">Assign a new journey to a rider</p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="w-12 h-12 rounded-2xl bg-white border border-neutral-100 flex items-center justify-center text-neutral-400 hover:text-neutral-600 transition-all hover:rotate-90"
+                        className="w-12 h-12 rounded-2xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-all hover:rotate-90"
                     >
                         <X className="w-6 h-6" />
                     </button>
@@ -69,7 +69,7 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClos
                 <form onSubmit={handleSubmit((data) => mutate(data))} className="p-8 space-y-8">
                     {/* Order Selection */}
                     <div className="space-y-4">
-                        <div className="flex items-center gap-2 text-primary-600 mb-1">
+                        <div className="flex items-center gap-2 text-primary mb-1">
                             <ShoppingBag className="w-5 h-5" />
                             <span className="text-sm font-black uppercase tracking-widest">Order Reference</span>
                         </div>
@@ -96,7 +96,7 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClos
                     <div className="grid md:grid-cols-2 gap-8">
                         {/* Task Type */}
                         <div className="space-y-4">
-                            <div className="flex items-center gap-2 text-primary-600 mb-1">
+                            <div className="flex items-center gap-2 text-primary mb-1">
                                 <Navigation className="w-5 h-5" />
                                 <span className="text-sm font-black uppercase tracking-widest">Mission Type</span>
                             </div>
@@ -104,7 +104,7 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClos
                                 name="type"
                                 control={control}
                                 render={({ field }) => (
-                                    <div className="grid grid-cols-2 gap-2 p-1.5 bg-neutral-100 rounded-2xl">
+                                    <div className="grid grid-cols-2 gap-2 p-1.5 bg-muted rounded-2xl">
                                         {['pickup', 'delivery'].map((type) => (
                                             <button
                                                 key={type}
@@ -113,8 +113,8 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClos
                                                 className={cn(
                                                     "py-3 rounded-xl text-xs font-black uppercase transition-all",
                                                     field.value === type
-                                                        ? "bg-white text-primary-600 shadow-sm ring-1 ring-neutral-200"
-                                                        : "text-neutral-400 hover:text-neutral-600"
+                                                        ? "bg-card text-primary shadow-sm ring-1 ring-border"
+                                                        : "text-muted-foreground hover:text-foreground"
                                                 )}
                                             >
                                                 {type}
@@ -127,7 +127,7 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClos
 
                         {/* Priority */}
                         <div className="space-y-4">
-                            <div className="flex items-center gap-2 text-primary-600 mb-1">
+                            <div className="flex items-center gap-2 text-primary mb-1">
                                 <Flag className="w-5 h-5" />
                                 <span className="text-sm font-black uppercase tracking-widest">Urgency</span>
                             </div>
@@ -153,7 +153,7 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClos
                     <div className="grid md:grid-cols-2 gap-8">
                         {/* Rider Assignment */}
                         <div className="space-y-4">
-                            <div className="flex items-center gap-2 text-primary-600 mb-1">
+                            <div className="flex items-center gap-2 text-primary mb-1">
                                 <User className="w-5 h-5" />
                                 <span className="text-sm font-black uppercase tracking-widest">Assign Rider</span>
                             </div>
@@ -177,31 +177,30 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClos
 
                         {/* Schedule */}
                         <div className="space-y-4">
-                            <div className="flex items-center gap-2 text-primary-600 mb-1">
+                            <div className="flex items-center gap-2 text-primary mb-1">
                                 <Calendar className="w-5 h-5" />
                                 <span className="text-sm font-black uppercase tracking-widest">Scheduled For</span>
                             </div>
                             <Input
                                 type="date"
                                 {...register('scheduledFor', { required: 'Date is required' })}
-                                className="h-12 rounded-2xl bg-neutral-50 border-neutral-100 focus:bg-white"
-                                error={errors.scheduledFor?.message}
+                                className="h-12 rounded-2xl bg-muted border-border focus:bg-card"
                             />
                         </div>
                     </div>
 
-                    <div className="pt-4 border-t border-neutral-50 flex gap-4">
+                    <div className="pt-4 border-t border-border flex gap-4">
                         <Button
                             type="button"
                             variant="outline"
-                            className="flex-1 h-14 rounded-2xl font-bold border-neutral-200"
+                            className="flex-1 h-14 rounded-2xl font-bold border-border bg-card shadow-sm"
                             onClick={onClose}
                         >
                             Back
                         </Button>
                         <Button
                             type="submit"
-                            className="flex-[2] h-14 rounded-2xl shadow-xl shadow-primary-200 font-black text-lg"
+                            className="flex-[2] h-14 rounded-2xl shadow-xl shadow-primary/20 font-black text-lg"
                             isLoading={isPending}
                         >
                             Dispatch Now

@@ -9,9 +9,9 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const variantClasses = {
-  default: 'bg-white border border-neutral-100/80 shadow-sm hover:shadow-md transition-shadow',
-  bordered: 'bg-white border border-neutral-200 shadow-none',
-  elevated: 'bg-white border border-neutral-100/50 shadow-xl',
+  default: 'bg-card text-card-foreground border border-border shadow-sm hover:shadow-md transition-shadow',
+  bordered: 'bg-card text-card-foreground border border-border shadow-none',
+  elevated: 'bg-card text-card-foreground border border-border/50 shadow-xl',
 };
 
 const paddingClasses = {
@@ -53,13 +53,13 @@ export const CardHeader = ({ children, className, ...props }: HTMLAttributes<HTM
 );
 
 export const CardTitle = ({ children, className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
-  <h3 className={cn('text-lg font-semibold text-neutral-900', className)} {...props}>
+  <h3 className={cn('text-lg font-semibold text-foreground', className)} {...props}>
     {children}
   </h3>
 );
 
 export const CardDescription = ({ children, className, ...props }: HTMLAttributes<HTMLParagraphElement>) => (
-  <p className={cn('text-sm text-neutral-500 mt-1', className)} {...props}>
+  <p className={cn('text-sm text-muted-foreground mt-1', className)} {...props}>
     {children}
   </p>
 );
@@ -71,7 +71,7 @@ export const CardContent = ({ children, className, ...props }: HTMLAttributes<HT
 );
 
 export const CardFooter = ({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('mt-4 pt-4 border-t border-neutral-100', className)} {...props}>
+  <div className={cn('mt-4 pt-4 border-t border-border', className)} {...props}>
     {children}
   </div>
 );

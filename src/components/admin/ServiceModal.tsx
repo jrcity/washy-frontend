@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FileText, Plus, Trash2 } from 'lucide-react';
-import { Button, Input, Modal, Select, Switch } from '@/components/ui';
+import { Button, Input, Modal, Select, Switch, Textarea } from '@/components/ui';
 import { useActiveCategories } from '@/hooks/useCategories';
 import { servicesService } from '@/services/services.service';
 import { cn } from '@/lib/utils';
@@ -174,21 +174,15 @@ export const ServiceModal = ({ isOpen, onClose, service, onSuccess }: ServiceMod
                     </div>
                 </div>
 
-                <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-neutral-700 ml-1">Description</label>
-                    <textarea
-                        name="description"
-                        value={formData.description}
-                        onChange={handleInputChange}
-                        placeholder="Describe this service..."
-                        rows={2}
-                        className={cn(
-                            "w-full px-4 py-3 bg-white border border-neutral-200 rounded-2xl text-base transition-all duration-300 resize-none",
-                            "focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:outline-none",
-                            "hover:border-neutral-300 hover:shadow-sm"
-                        )}
-                    />
-                </div>
+                <Textarea
+                    name="description"
+                    label="Description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    placeholder="Describe this service..."
+                    rows={2}
+                    className="bg-white border-border rounded-2xl"
+                />
 
                 <div className="grid md:grid-cols-2 gap-4">
                     <div>

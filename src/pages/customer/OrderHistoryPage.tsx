@@ -41,7 +41,7 @@ export const OrderHistoryPage = () => {
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
         {/* Filters */}
         <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
-          <Filter className="w-4 h-4 text-neutral-500 hidden sm:block" />
+          <Filter className="w-4 h-4 text-muted-foreground hidden sm:block" />
           {statuses.map((status) => (
             <button
               key={status.value}
@@ -50,8 +50,8 @@ export const OrderHistoryPage = () => {
                 setPage(1);
               }}
               className={`px-3 py-1.5 text-sm font-medium rounded-full whitespace-nowrap transition-colors ${statusFilter === status.value
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50'
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-card border border-border text-foreground hover:bg-muted'
                 }`}
             >
               {status.label}
@@ -83,26 +83,26 @@ export const OrderHistoryPage = () => {
               <Card variant="bordered" hover className="flex flex-col md:flex-row md:items-center gap-4 p-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="font-bold text-neutral-900">{order.orderNumber}</span>
+                    <span className="font-bold text-foreground">{order.orderNumber}</span>
                     <Badge className={getStatusColor(order.status)}>
                       {getStatusText(order.status)}
                     </Badge>
                   </div>
-                  <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-neutral-500">
+                  <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">
                     <span>{formatDate(order.createdAt, 'PPP')}</span>
                     <span>{order.items?.length || 0} items</span>
                     <span>{order.payment?.method || 'Pay on Delivery'}</span>
                   </div>
                 </div>
 
-                <div className="text-right flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 pt-4 md:pt-0 mt-4 md:mt-0">
+                <div className="text-right flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 pt-4 md:pt-0 mt-4 md:mt-0 border-border">
                   <div className="text-right">
-                    <p className="font-bold text-neutral-900 text-lg">{formatCurrency(order.total)}</p>
-                    <p className={`text-xs font-medium ${order.isPaid ? 'text-success-600' : 'text-warning-600'}`}>
+                    <p className="font-bold text-foreground text-lg">{formatCurrency(order.total)}</p>
+                    <p className={`text-xs font-medium ${order.isPaid ? 'text-success' : 'text-warning'}`}>
                       {order.isPaid ? 'Paid' : 'Unpaid'}
                     </p>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-neutral-400" />
+                  <ChevronRight className="w-5 h-5 text-muted-foreground/60" />
                 </div>
               </Card>
             </Link>

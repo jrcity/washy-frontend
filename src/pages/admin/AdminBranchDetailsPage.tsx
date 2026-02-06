@@ -56,9 +56,9 @@ export const AdminBranchDetailsPage = () => {
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-4">
                     <div className="flex gap-3">
                         <Link to={`/admin/branches/edit/${branch._id}`} className="flex-1 sm:flex-none">
-                            <Button className="w-full rounded-2xl h-12 px-6 font-black shadow-xl shadow-primary-500/10">
-                                <Edit className="w-4 h-4 mr-2" />
-                                Reconfigure
+                            <Button className="w-full rounded-2xl h-12 px-8 font-black shadow-xl shadow-primary/20 bg-primary hover:bg-primary/90 transition-all text-xs uppercase tracking-widest">
+                                <Edit className="w-4 h-4 mr-3" />
+                                Reconfigure Hub
                             </Button>
                         </Link>
                     </div>
@@ -73,15 +73,15 @@ export const AdminBranchDetailsPage = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.1 }}
                         >
-                            <Card className="p-4 md:p-6 rounded-[24px] md:rounded-[32px] border-neutral-100 shadow-sm relative overflow-hidden group h-full">
-                                <div className="absolute top-0 right-0 w-12 h-12 md:w-16 md:h-16 bg-neutral-50 rounded-full -mr-6 -mt-6 md:-mr-8 md:-mt-8 transition-transform group-hover:scale-150" />
-                                <div className="relative z-10 space-y-4">
-                                    <div className={cn("p-2.5 rounded-xl w-fit", stat.bg)}>
-                                        <stat.icon className={cn("w-5 h-5", stat.color)} />
+                            <Card className="p-8 rounded-[40px] border-border bg-card shadow-xl relative overflow-hidden group hover:border-primary/30 transition-all h-full">
+                                <div className={cn("absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl -mr-12 -mt-12 transition-colors", stat.bg)} />
+                                <div className="relative z-10 flex flex-col gap-6">
+                                    <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform", stat.bg)}>
+                                        <stat.icon className={cn("w-7 h-7", stat.color)} />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-1">{stat.label}</p>
-                                        <h3 className="text-2xl font-black text-neutral-900 tracking-tight">{stat.value}</h3>
+                                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">{stat.label}</p>
+                                        <h4 className="text-3xl font-black text-foreground tracking-tighter italic leading-none">{stat.value}</h4>
                                     </div>
                                 </div>
                             </Card>
@@ -92,28 +92,28 @@ export const AdminBranchDetailsPage = () => {
                 <div className="grid lg:grid-cols-3 gap-8">
                     {/* Location & Contact */}
                     <div className="lg:col-span-2 space-y-8">
-                        <Card className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] border-neutral-100 shadow-xl overflow-hidden relative">
-                            <div className="absolute top-0 right-0 w-48 h-48 md:w-64 md:h-64 bg-primary-100/20 blur-[60px] md:blur-[80px] rounded-full -mr-24 -mt-24 md:-mr-32 md:-mt-32" />
-                            <div className="relative z-10 space-y-6 md:space-y-8">
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <Card className="p-8 md:p-10 rounded-[48px] border-border bg-card shadow-2xl overflow-hidden relative">
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[80px] rounded-full -mr-32 -mt-32" />
+                            <div className="relative z-10 space-y-10">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                                     <div>
-                                        <h3 className="text-xl md:text-2xl font-black text-neutral-900 tracking-tight">Deployment Zone</h3>
-                                        <p className="text-xs md:text-sm font-medium text-neutral-400">Headquarters & Service Area</p>
+                                        <h3 className="text-2xl md:text-3xl font-black text-foreground tracking-tighter uppercase italic">Deployment Zone</h3>
+                                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-1">Strategic Operations Base</p>
                                     </div>
-                                    <Badge variant={branch.isActive ? 'success' : 'error'} className="w-fit rounded-full px-4 py-1.5 font-black italic">
-                                        {branch.isActive ? 'OPERATIONAL' : 'DECOMMISSIONED'}
+                                    <Badge variant={branch.isActive ? 'success' : 'error'} className="w-fit rounded-full px-6 py-2 font-black italic shadow-lg border-none tracking-widest text-xs">
+                                        {branch.isActive ? '/// OPERATIONAL' : '/// DECOMMISSIONED'}
                                     </Badge>
                                 </div>
 
-                                <div className="grid sm:grid-cols-2 gap-8 md:gap-12">
-                                    <div className="space-y-6">
-                                        <div className="flex gap-3 md:gap-4">
-                                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-neutral-50 flex items-center justify-center shrink-0">
-                                                <MapPin className="w-5 h-5 md:w-6 md:h-6 text-neutral-400" />
+                                <div className="grid sm:grid-cols-2 gap-12 md:gap-16">
+                                    <div className="space-y-8">
+                                        <div className="flex gap-4">
+                                            <div className="w-14 h-14 rounded-2xl bg-muted border border-border flex items-center justify-center shrink-0 shadow-inner">
+                                                <MapPin className="w-7 h-7 text-primary" />
                                             </div>
                                             <div>
-                                                <p className="text-[9px] md:text-[10px] font-black text-neutral-500 uppercase tracking-widest mb-1">Base Address</p>
-                                                <p className="text-base md:text-lg font-bold text-neutral-900 leading-tight">
+                                                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Base Address</p>
+                                                <p className="text-lg md:text-xl font-black text-foreground italic leading-tight tracking-tight">
                                                     {branch.address.street},<br />
                                                     {branch.address.area && `${branch.address.area}, `}{branch.address.city}, {branch.address.state}
                                                 </p>
@@ -121,14 +121,14 @@ export const AdminBranchDetailsPage = () => {
                                         </div>
 
                                         <div className="flex gap-4">
-                                            <div className="w-12 h-12 rounded-2xl bg-neutral-50 flex items-center justify-center shrink-0">
-                                                <ShieldCheck className="w-6 h-6 text-neutral-400" />
+                                            <div className="w-14 h-14 rounded-2xl bg-muted border border-border flex items-center justify-center shrink-0 shadow-inner">
+                                                <ShieldCheck className="w-7 h-7 text-accent" />
                                             </div>
                                             <div>
-                                                <p className="text-[10px] font-black text-neutral-500 uppercase tracking-widest mb-1">Coverage Strength</p>
-                                                <div className="flex flex-wrap gap-2 mt-2">
+                                                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-3">Coverage Strength</p>
+                                                <div className="flex flex-wrap gap-2">
                                                     {branch.coverageZones.map(zone => (
-                                                        <Badge key={zone.name} variant="info" className="rounded-lg border-neutral-200 text-neutral-600 font-bold">
+                                                        <Badge key={zone.name} className="rounded-xl border-none bg-accent/10 text-accent font-black text-[10px] px-4 py-1.5 uppercase tracking-widest">
                                                             {zone.name}
                                                         </Badge>
                                                     ))}
@@ -137,24 +137,24 @@ export const AdminBranchDetailsPage = () => {
                                         </div>
                                     </div>
 
-                                    <div className="space-y-6">
-                                        <div className="flex gap-3 md:gap-4">
-                                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-neutral-50 flex items-center justify-center shrink-0">
-                                                <Phone className="w-5 h-5 md:w-6 md:h-6 text-neutral-400" />
+                                    <div className="space-y-8">
+                                        <div className="flex gap-4">
+                                            <div className="w-14 h-14 rounded-2xl bg-muted border border-border flex items-center justify-center shrink-0 shadow-inner">
+                                                <Phone className="w-7 h-7 text-success" />
                                             </div>
                                             <div>
-                                                <p className="text-[9px] md:text-[10px] font-black text-neutral-500 uppercase tracking-widest mb-1">Direct Hotline</p>
-                                                <p className="text-base md:text-lg font-bold text-neutral-900">{branch.contactPhone}</p>
+                                                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Direct Hotline</p>
+                                                <p className="text-lg md:text-xl font-black text-foreground italic tracking-tight">{branch.contactPhone}</p>
                                             </div>
                                         </div>
 
-                                        <div className="flex gap-3 md:gap-4">
-                                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-neutral-50 flex items-center justify-center shrink-0">
-                                                <Mail className="w-5 h-5 md:w-6 md:h-6 text-neutral-400" />
+                                        <div className="flex gap-4">
+                                            <div className="w-14 h-14 rounded-2xl bg-muted border border-border flex items-center justify-center shrink-0 shadow-inner">
+                                                <Mail className="w-7 h-7 text-info" />
                                             </div>
                                             <div>
-                                                <p className="text-[9px] md:text-[10px] font-black text-neutral-500 uppercase tracking-widest mb-1">Command Email</p>
-                                                <p className="text-base md:text-lg font-bold text-neutral-900 break-all">{branch.contactEmail}</p>
+                                                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Command Email</p>
+                                                <p className="text-lg md:text-xl font-black text-foreground italic tracking-tight break-all">{branch.contactEmail}</p>
                                             </div>
                                         </div>
                                     </div>

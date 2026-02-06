@@ -303,7 +303,7 @@ function App() {
       />
 
       {/* React Query Devtools (only in development) */}
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </PersistQueryClientProvider>
   );
 }

@@ -16,7 +16,7 @@ export const RegisterPage = () => {
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  
+
   const navigate = useNavigate();
   const { login: contextLogin } = useAuthContext();
   const registerMutation = useRegister();
@@ -30,26 +30,26 @@ export const RegisterPage = () => {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.name) newErrors.name = 'Full name is required';
     else if (formData.name.length < 2) newErrors.name = 'Name must be at least 2 characters';
-    
+
     if (!formData.email) newErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email address';
-    
+
     if (!formData.phone) newErrors.phone = 'Phone number is required';
-    
+
     if (!formData.password) newErrors.password = 'Password is required';
     else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
-    
+
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
-    
+
     if (!acceptTerms) {
       newErrors.terms = 'You must accept the terms and conditions';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -59,11 +59,11 @@ export const RegisterPage = () => {
     if (!validate()) return;
 
     registerMutation.mutate(
-      { 
-        name: formData.name, 
-        email: formData.email, 
+      {
+        name: formData.name,
+        email: formData.email,
         phone: formData.phone,
-        password: formData.password 
+        password: formData.password
       },
       {
         onSuccess: (response) => {
@@ -81,17 +81,17 @@ export const RegisterPage = () => {
       {/* Logo */}
       <div className="text-center mb-8">
         <Link to="/" className="inline-flex items-center justify-center space-x-3 mb-6">
-          <div className="w-14 h-14 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl flex items-center justify-center shadow-lg">
-            <span className="text-white font-bold text-2xl">W</span>
+          <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg">
+            <span className="text-primary-foreground font-bold text-2xl">W</span>
           </div>
-          <span className="font-bold text-2xl text-neutral-900">Washy</span>
+          <span className="font-bold text-2xl text-foreground">Washy</span>
         </Link>
-        <h1 className="text-3xl font-bold text-neutral-900 mb-2">Create your account</h1>
-        <p className="text-neutral-600">Get started with Washy today</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Create your account</h1>
+        <p className="text-muted-foreground">Get started with Washy today</p>
       </div>
 
       {/* Form Card */}
-      <div className="bg-white rounded-2xl shadow-xl border border-neutral-100 p-8">
+      <div className="bg-card rounded-2xl shadow-xl border border-border p-8">
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             label="Full Name"
@@ -139,7 +139,7 @@ export const RegisterPage = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="hover:text-neutral-600 transition-colors"
+                className="hover:text-foreground transition-colors"
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
@@ -158,15 +158,15 @@ export const RegisterPage = () => {
           />
 
           <div>
-            <Checkbox 
+            <Checkbox
               label={
                 <span className="text-sm">
                   I agree to the{' '}
-                  <Link to="/terms" className="text-primary-600 hover:text-primary-700 font-medium">
+                  <Link to="/terms" className="text-primary hover:text-primary/80 font-medium">
                     Terms of Service
                   </Link>
                   {' '}and{' '}
-                  <Link to="/privacy" className="text-primary-600 hover:text-primary-700 font-medium">
+                  <Link to="/privacy" className="text-primary hover:text-primary/80 font-medium">
                     Privacy Policy
                   </Link>
                 </span>
@@ -175,7 +175,7 @@ export const RegisterPage = () => {
               onChange={(e) => setAcceptTerms(e.target.checked)}
             />
             {errors.terms && (
-              <p className="mt-2 text-sm text-error-600 font-medium">{errors.terms}</p>
+              <p className="mt-2 text-sm text-destructive font-medium">{errors.terms}</p>
             )}
           </div>
 
@@ -190,10 +190,10 @@ export const RegisterPage = () => {
         </form>
 
         <div className="mt-6 text-center">
-          <span className="text-sm text-neutral-600">Already have an account? </span>
-          <Link 
-            to="/login" 
-            className="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+          <span className="text-sm text-muted-foreground">Already have an account? </span>
+          <Link
+            to="/login"
+            className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
           >
             Sign in
           </Link>
@@ -202,7 +202,7 @@ export const RegisterPage = () => {
 
       {/* Trust Badge */}
       <div className="mt-6 text-center">
-        <p className="text-xs text-neutral-500">
+        <p className="text-xs text-muted-foreground">
           🔒 Your information is secure and encrypted
         </p>
       </div>

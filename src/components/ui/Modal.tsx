@@ -31,20 +31,20 @@ export const Modal = ({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
             <div className={cn(
-                'bg-white rounded-xl shadow-xl w-full overflow-hidden flex flex-col max-h-[90vh]',
+                'bg-card text-card-foreground rounded-xl shadow-xl w-full overflow-hidden flex flex-col max-h-[90vh] border border-border',
                 sizeClasses[size]
             )}>
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b border-neutral-100">
-                    <h3 className="font-semibold text-lg flex items-center gap-2">
+                <div className="flex items-center justify-between p-4 border-b border-border">
+                    <h3 className="font-semibold text-lg flex items-center gap-2 text-foreground">
                         {icon}
                         {title}
                     </h3>
                     <button
                         onClick={onClose}
-                        className="text-neutral-400 hover:text-neutral-600 transition-colors"
+                        className="text-muted-foreground hover:text-foreground transition-colors"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -57,7 +57,7 @@ export const Modal = ({
 
                 {/* Footer */}
                 {footer && (
-                    <div className="p-4 border-t border-neutral-100 flex gap-3">
+                    <div className="p-4 border-t border-border flex gap-3">
                         {footer}
                     </div>
                 )}

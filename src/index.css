@@ -2,30 +2,101 @@
 @config "../tailwind.config.js";
 
 /* ============================================
-   WASHY DESIGN SYSTEM
+   WASHY DESIGN SYSTEM - SEMANTIC THEMING
    ============================================ */
 
-/* Custom CSS Variables for Theming (matching tailwind.config.js) */
 :root {
+  /* Color Palette - Light Mode */
+  --background: 0 0% 100%;
+  /* White */
+  --foreground: 222.2 84% 4.9%;
+  /* Neutral 950 */
+
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+
+  --primary: 172 66% 40%;
+  /* Teal 600 - Washy Brand Color */
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 24 95% 53%;
+  /* Orange 500 */
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+
+  --accent: 172 66% 96%;
+  --accent-foreground: 172 66% 20%;
+
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+
+  --success: 142 71% 45%;
+  --success-foreground: 210 40% 98%;
+
+  --warning: 38 92% 50%;
+  --warning-foreground: 210 40% 98%;
+
+  --info: 199 89% 48%;
+  --info-foreground: 210 40% 98%;
+
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 172 66% 40%;
+
+  --radius: 0.75rem;
+
   /* Animation Timings */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-spring: 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-  /* Touch Sizing */
-  --touch-target: 44px;
-  --touch-target-large: 48px;
 }
 
-/* Dark Mode Variables */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-primary: var(--color-neutral-900);
-    --bg-secondary: var(--color-neutral-800);
-    --text-primary: var(--color-neutral-50);
-    --text-secondary: var(--color-neutral-300);
-  }
+.dark {
+  --background: 222.2 84% 4.9%;
+  /* Neutral 950 */
+  --foreground: 210 40% 98%;
+  /* Neutral 50 */
+
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+
+  --popover: 222.2 84% 5.9%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 172 66% 40%;
+  /* Keep corporate color consistent or brighten slightly if needed */
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 24 95% 53%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+
+  --accent: 172 66% 10%;
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+
+  --success: 142 71% 25%;
+  --success-foreground: 210 40% 98%;
+
+  --warning: 38 92% 25%;
+  --warning-foreground: 210 40% 98%;
+
+  --info: 199 89% 25%;
+  --info-foreground: 210 40% 98%;
+
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 172 66% 40%;
 }
 
 /* ============================================
@@ -45,8 +116,8 @@ body {
   line-height: 1.6;
   /* Tighter line height for mobile */
   font-weight: 400;
-  color: var(--color-neutral-800);
-  background-color: var(--color-neutral-50);
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--background));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   letter-spacing: -0.011em;
@@ -57,7 +128,7 @@ body {
 
 /* Focus States for Accessibility */
 :focus-visible {
-  outline: 2px solid var(--color-primary-500);
+  outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
 }
 
@@ -73,7 +144,7 @@ h5,
 h6 {
   font-weight: 700;
   line-height: 1.2;
-  color: var(--color-neutral-900);
+  color: hsl(var(--foreground));
 }
 
 h1 {
@@ -104,17 +175,17 @@ h6 {
 }
 
 p {
-  color: var(--color-neutral-600);
+  color: hsl(var(--muted-foreground));
 }
 
 a {
-  color: var(--color-primary-600);
+  color: hsl(var(--primary));
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--color-primary-700);
+  color: hsl(var(--primary) / 0.8);
 }
 
 /* ============================================

@@ -28,7 +28,7 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout = ({ variant, children }: DashboardLayoutProps) => {
   return (
-    <div className="min-h-screen bg-neutral-50 flex flex-col lg:block">
+    <div className="min-h-screen bg-background flex flex-col lg:block">
       <Sidebar variant={variant} />
       <main className={cn(
         'lg:ml-64 min-h-screen transition-all duration-300',
@@ -46,7 +46,7 @@ export const DashboardLayout = ({ variant, children }: DashboardLayoutProps) => 
 // Auth layout (login, register)
 export const AuthLayout = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-secondary/5 p-4">
       <Outlet />
     </div>
   );
@@ -87,14 +87,14 @@ export const PageWrapper = ({ title, description, action, children, className, s
             {showBack && (
               <button
                 onClick={() => navigate(-1)}
-                className="flex items-center text-sm text-neutral-500 hover:text-neutral-800 mb-2 transition-colors"
+                className="flex items-center text-sm text-muted-foreground hover:text-foreground mb-2 transition-colors"
               >
                 <ChevronLeft className="w-4 h-4 mr-1" />
                 Back
               </button>
             )}
-            {title && <h1 className="text-2xl font-bold text-neutral-900">{title}</h1>}
-            {description && <p className="mt-1 text-neutral-500">{description}</p>}
+            {title && <h1 className="text-2xl font-bold text-foreground">{title}</h1>}
+            {description && <p className="mt-1 text-muted-foreground">{description}</p>}
           </div>
           {action}
         </div>

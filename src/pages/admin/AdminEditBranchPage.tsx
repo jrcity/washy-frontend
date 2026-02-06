@@ -125,12 +125,13 @@ export const AdminEditBranchPage = () => {
                     <div className="grid lg:grid-cols-3 gap-6">
                         {/* Main Info */}
                         <div className="lg:col-span-2 space-y-6">
-                            <Card className="p-6 md:p-8 rounded-[24px] md:rounded-[32px] border-neutral-100 shadow-sm space-y-6">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div className="p-2 bg-primary-100 text-primary-600 rounded-xl">
-                                        <MapPin className="w-5 h-5" />
+                            <Card className="p-8 md:p-10 rounded-[40px] border-border bg-card shadow-xl space-y-10 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-[60px] -mr-16 -mt-16" />
+                                <div className="flex items-center gap-4 mb-2 relative z-10">
+                                    <div className="p-3 bg-primary/10 text-primary rounded-2xl shadow-inner">
+                                        <MapPin className="w-6 h-6" />
                                     </div>
-                                    <h3 className="text-xl font-black text-neutral-900 tracking-tight">Core Information</h3>
+                                    <h3 className="text-2xl font-black text-foreground tracking-tighter uppercase italic">Core Intel</h3>
                                 </div>
 
                                 <div className="grid md:grid-cols-2 gap-4">
@@ -176,12 +177,13 @@ export const AdminEditBranchPage = () => {
                                 </div>
                             </Card>
 
-                            <Card className="p-6 md:p-8 rounded-[24px] md:rounded-[32px] border-neutral-100 shadow-sm space-y-6">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div className="p-2 bg-secondary-100 text-secondary-600 rounded-xl">
-                                        <MapPin className="w-5 h-5" />
+                            <Card className="p-8 md:p-10 rounded-[40px] border-border bg-card shadow-xl space-y-10 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-full blur-[60px] -mr-16 -mt-16" />
+                                <div className="flex items-center gap-4 mb-2 relative z-10">
+                                    <div className="p-3 bg-secondary/10 text-secondary rounded-2xl shadow-inner">
+                                        <MapPin className="w-6 h-6" />
                                     </div>
-                                    <h3 className="text-xl font-black text-neutral-900 tracking-tight">Location Details</h3>
+                                    <h3 className="text-2xl font-black text-foreground tracking-tighter uppercase italic">Location Details</h3>
                                 </div>
 
                                 <div className="space-y-4">
@@ -228,12 +230,13 @@ export const AdminEditBranchPage = () => {
 
                         {/* Sidebar Config */}
                         <div className="space-y-6">
-                            <Card className="p-6 md:p-8 rounded-[24px] md:rounded-[32px] border-neutral-100 shadow-sm space-y-6">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div className="p-2 bg-info-100 text-info-600 rounded-xl">
-                                        <UserPlus className="w-5 h-5" />
+                            <Card className="p-8 rounded-[40px] border-border bg-card shadow-xl space-y-8 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-info/5 rounded-full blur-[50px] -mr-12 -mt-12" />
+                                <div className="flex items-center gap-4 mb-2 relative z-10">
+                                    <div className="p-3 bg-info/10 text-info rounded-2xl shadow-inner">
+                                        <UserPlus className="w-6 h-6" />
                                     </div>
-                                    <h3 className="text-xl font-black text-neutral-900 tracking-tight">Management</h3>
+                                    <h3 className="text-xl font-black text-foreground tracking-tighter uppercase italic">Management</h3>
                                 </div>
 
                                 <div className="space-y-4">
@@ -244,7 +247,7 @@ export const AdminEditBranchPage = () => {
                                         name="managerId"
                                         value={formData.managerId}
                                         onChange={handleInputChange}
-                                        className="w-full h-12 px-4 rounded-2xl border border-neutral-100 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/5 transition-all outline-none font-bold text-neutral-900 appearance-none bg-neutral-50"
+                                        className="w-full h-12 px-4 rounded-2xl border border-border focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none font-black text-xs uppercase tracking-widest text-foreground appearance-none bg-muted shadow-inner"
                                     >
                                         <option value="">Select Manager</option>
                                         {managers.map((m: any) => (
@@ -257,33 +260,34 @@ export const AdminEditBranchPage = () => {
                                 </div>
                             </Card>
 
-                            <Card className="p-6 md:p-8 rounded-[24px] md:rounded-[32px] border-neutral-100 shadow-sm bg-neutral-900 text-white space-y-6">
-                                <h3 className="text-xl font-black tracking-tight">Operational Status</h3>
-                                <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
-                                    <span className="text-sm font-bold text-neutral-400">Online & Active</span>
+                            <Card className="p-8 rounded-[40px] border-border bg-foreground shadow-2xl text-background space-y-8 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-[60px] -mr-16 -mt-16" />
+                                <h3 className="text-xl font-black tracking-tighter uppercase italic relative z-10">Operational Status</h3>
+                                <div className="flex items-center justify-between p-5 bg-background/5 rounded-[24px] border border-background/10 relative z-10 shadow-inner">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-background/60">Online & Active</span>
                                     <Switch
                                         checked={formData.isActive}
                                         onChange={(e) => setFormData(prev => ({ ...prev, isActive: (e.target as HTMLInputElement).checked }))}
                                     />
                                 </div>
-                                <p className="text-xs text-neutral-500 font-medium leading-relaxed">
+                                <p className="text-[10px] text-background/40 font-black uppercase tracking-widest leading-relaxed italic relative z-10">
                                     Deactivating this branch will prevent customers from placing new orders for this location immediately.
                                 </p>
                             </Card>
 
-                            <div className="flex flex-col gap-3">
+                            <div className="flex flex-col gap-4">
                                 <Button
                                     type="submit"
                                     isLoading={isLoading}
-                                    className="w-full h-14 rounded-2xl font-black shadow-xl shadow-primary-500/20"
+                                    className="w-full h-16 rounded-[24px] font-black shadow-2xl shadow-primary/20 bg-primary hover:bg-primary/90 transition-all text-sm uppercase tracking-[0.2em] italic"
                                 >
-                                    <Save className="w-5 h-5 mr-2" />
+                                    <Save className="w-6 h-6 mr-3" />
                                     {isEditMode ? 'Update Operational Center' : 'Establish Branch'}
                                 </Button>
                                 {isEditMode && (
                                     <Button
-                                        variant="outline"
-                                        className="w-full h-14 rounded-2xl font-black text-error-600 border-error-100 hover:bg-error-50"
+                                        variant="ghost"
+                                        className="w-full h-16 rounded-[24px] font-black text-destructive hover:bg-destructive/5 transition-all text-[10px] uppercase tracking-widest"
                                         onClick={async () => {
                                             if (window.confirm('Are you sure? This action is irreversible.')) {
                                                 await branchesService.delete(id!);
@@ -292,8 +296,8 @@ export const AdminEditBranchPage = () => {
                                             }
                                         }}
                                     >
-                                        <Trash2 className="w-5 h-5 mr-2" />
-                                        Decommission Branch
+                                        <Trash2 className="w-5 h-5 mr-3" />
+                                        Decommission Hub
                                     </Button>
                                 )}
                             </div>

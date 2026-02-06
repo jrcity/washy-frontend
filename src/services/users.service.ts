@@ -2,10 +2,10 @@ import { api } from '@/lib/axios';
 import type { ApiResponse, User, Pagination, PaginatedMetaResponse } from '@/types';
 
 export const usersService = {
-  getAll: async (params?: { 
-    page?: number; 
-    limit?: number; 
-    role?: string; 
+  getAll: async (params?: {
+    page?: number;
+    limit?: number;
+    role?: string;
     branchId?: string;
     search?: string;
   }): Promise<{ users: User[]; pagination: Pagination }> => {
@@ -27,9 +27,14 @@ export const usersService = {
     const response = await api.post<ApiResponse<User>>('/users', data);
     return response.data.data!;
   },
-  
+
   update: async (id: string, data: Partial<User>): Promise<User> => {
     const response = await api.patch<ApiResponse<User>>(`/users/${id}`, data);
+    return response.data.data!;
+  },
+
+  createInternal: async (data: any): Promise<User> => {
+    const response = await api.post<ApiResponse<User>>('/users/internal', data);
     return response.data.data!;
   }
 };

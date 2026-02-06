@@ -40,7 +40,7 @@ export const StepAddress = ({ data, setData }: StepAddressProps) => {
       <div className="grid md:grid-cols-2 gap-6">
         {/* Pickup Date & Time */}
         <div className="space-y-4">
-          <h3 className="font-semibold text-neutral-900">Pickup Schedule</h3>
+          <h3 className="font-semibold text-foreground">Pickup Schedule</h3>
           <div>
             <Input
               type="date"
@@ -51,15 +51,15 @@ export const StepAddress = ({ data, setData }: StepAddressProps) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-1">Time Slot</label>
+            <label className="block text-sm font-medium text-foreground/80 mb-1">Time Slot</label>
             <div className="grid grid-cols-2 gap-2">
               {timeSlots.map(slot => (
                 <button
                   key={slot}
                   onClick={() => setData({ ...data, pickupTimeSlot: slot })}
                   className={`px-3 py-2 text-sm rounded-lg border transition-colors ${data.pickupTimeSlot === slot
-                    ? 'bg-primary-50 border-primary-500 text-primary-700'
-                    : 'border-neutral-200 hover:border-primary-300'
+                    ? 'bg-primary/10 border-primary text-primary'
+                    : 'border-border bg-card text-foreground hover:border-primary/30'
                     }`}
                 >
                   {slot}
@@ -72,15 +72,15 @@ export const StepAddress = ({ data, setData }: StepAddressProps) => {
         {/* Addresses */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-neutral-900">Address</h3>
-            <Button size="sm" variant="ghost" className="text-primary-600" onClick={() => navigate('/dashboard/profile')}>
+            <h3 className="font-semibold text-foreground">Address</h3>
+            <Button size="sm" variant="ghost" className="text-primary hover:bg-primary/5" onClick={() => navigate('/dashboard/profile')}>
               Manage
             </Button>
           </div>
 
           {!user?.address ? (
-            <div className="p-4 rounded-xl border border-dashed border-neutral-300 bg-neutral-50 text-center">
-              <p className="text-neutral-500 text-sm mb-3">No address found on profile.</p>
+            <div className="p-4 rounded-xl border border-dashed border-border bg-muted text-center">
+              <p className="text-muted-foreground text-sm mb-3">No address found on profile.</p>
               <Button onClick={() => navigate('/profile')} size="sm">
                 <Plus className="w-4 h-4 mr-2" />
                 Add Address
@@ -91,29 +91,29 @@ export const StepAddress = ({ data, setData }: StepAddressProps) => {
               onClick={handleAddressSelect}
               className={`p-4 rounded-xl border text-left flex items-start gap-3 transition-colors cursor-pointer ${
                 // Auto-select logic if not selecting explicitly, or check if selected
-                (data.pickupAddressId || user.address) ? 'bg-primary-50 border-primary-500 ring-1 ring-primary-500' : 'bg-white border-neutral-200'
+                (data.pickupAddressId || user.address) ? 'bg-primary/10 border-primary ring-1 ring-primary' : 'bg-card border-border'
                 }`}
             >
               <div className="mt-1 text-xl">🏠</div>
               <div>
-                <p className="font-medium text-neutral-900">{user.name}'s Address</p>
-                <p className="text-sm text-neutral-600">
+                <p className="font-medium text-foreground">{user.name}'s Address</p>
+                <p className="text-sm text-muted-foreground">
                   {user.address.street}, {user.address.area}{user.address.landmark ? ` (Near ${user.address.landmark})` : ''}, {user.address.city}
                 </p>
               </div>
 
               <div className="ml-auto">
-                <div className="w-5 h-5 rounded-full border-2 border-primary-600 flex items-center justify-center">
-                  <div className="w-2.5 h-2.5 rounded-full bg-primary-600" />
+                <div className="w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center">
+                  <div className="w-2.5 h-2.5 rounded-full bg-primary" />
                 </div>
               </div>
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-1">Instructions / Notes</label>
+            <label className="block text-sm font-medium text-foreground/80 mb-1">Instructions / Notes</label>
             <textarea
-              className="w-full rounded-lg border-neutral-300 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full rounded-lg border-border bg-card text-foreground focus:ring-primary focus:border-primary transition-all duration-300"
               rows={3}
               placeholder="Gate code, landmark, etc."
               value={data.notes}

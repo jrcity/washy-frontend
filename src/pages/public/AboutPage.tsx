@@ -54,9 +54,9 @@ export const AboutPage = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-primary-50 to-white py-24 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-100/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary-100/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
+      <section className="bg-gradient-to-br from-primary/10 to-background py-24 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
         <Container>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -64,10 +64,10 @@ export const AboutPage = () => {
             className="max-w-3xl mx-auto text-center relative z-10"
           >
             <Badge variant="primary" className="mb-4">Our Journey</Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-neutral-900 mb-6 tracking-tight">
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 tracking-tight">
               Our Story
             </h1>
-            <p className="text-lg md:text-xl text-neutral-600 leading-relaxed font-light">
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed font-light">
               Born from a simple idea: laundry shouldn't steal your precious time.
               We're on a mission to give Nigerians back their weekends.
             </p>
@@ -76,14 +76,14 @@ export const AboutPage = () => {
       </section>
 
       {/* Story */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <Container>
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-neutral-900 mb-6">
+              <h2 className="text-3xl font-bold text-foreground mb-6">
                 Making Laundry Stress-Free Since 2022
               </h2>
-              <div className="space-y-4 text-neutral-600">
+              <div className="space-y-4 text-muted-foreground">
                 <p>
                   Washy started when our founder, Amina, found herself spending every weekend
                   doing laundry instead of spending time with her family. She knew there had to
@@ -100,12 +100,12 @@ export const AboutPage = () => {
                 </p>
               </div>
             </div>
-            <div className="bg-neutral-900 rounded-3xl p-12 text-center shadow-2xl relative overflow-hidden group border border-neutral-800">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary-600/20 to-secondary-600/20 opacity-50" />
+            <div className="bg-card rounded-3xl p-12 text-center shadow-2xl relative overflow-hidden group border border-border">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 opacity-50" />
               <div className="relative z-10">
                 <div className="text-6xl mb-4 transform group-hover:scale-110 transition-transform">🧺</div>
-                <h3 className="text-6xl font-extrabold text-white mb-2 tracking-tighter">50,000+</h3>
-                <p className="text-primary-100 text-lg font-semibold uppercase tracking-widest">Orders delivered with love</p>
+                <h3 className="text-6xl font-extrabold text-foreground mb-2 tracking-tighter">50,000+</h3>
+                <p className="text-primary text-lg font-semibold uppercase tracking-widest">Orders delivered with love</p>
               </div>
             </div>
           </div>
@@ -113,23 +113,23 @@ export const AboutPage = () => {
       </section>
 
       {/* Values */}
-      <section className="py-20 bg-neutral-50">
+      <section className="py-20 bg-muted/30">
         <Container>
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-neutral-900 mb-4">Our Values</h2>
-            <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold text-foreground mb-4">Our Values</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               The principles that guide everything we do
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map((value) => (
-              <Card key={value.title} variant="default" className="bg-white">
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-primary-100 text-primary-600 rounded-xl mb-4">
+              <Card key={value.title} variant="default" className="bg-card">
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 text-primary rounded-xl mb-4">
                   <value.icon className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-semibold text-neutral-900 mb-2">{value.title}</h3>
-                <p className="text-neutral-600 text-sm">{value.description}</p>
+                <h3 className="text-lg font-semibold text-foreground mb-2">{value.title}</h3>
+                <p className="text-muted-foreground text-sm">{value.description}</p>
               </Card>
             ))}
           </div>
@@ -137,11 +137,11 @@ export const AboutPage = () => {
       </section>
 
       {/* Team */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <Container>
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-neutral-900 mb-4">Meet Our Team</h2>
-            <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold text-foreground mb-4">Meet Our Team</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               The passionate people behind Washy
             </p>
           </div>
@@ -157,8 +157,8 @@ export const AboutPage = () => {
                 transition={{ delay: idx * 0.1 }}
               >
                 <div className="text-7xl mb-6 transform group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500 filter drop-shadow-xl">{member.image}</div>
-                <h3 className="text-xl font-bold text-neutral-900 mb-1">{member.name}</h3>
-                <p className="text-neutral-500 font-medium">{member.role}</p>
+                <h3 className="text-xl font-bold text-foreground mb-1">{member.name}</h3>
+                <p className="text-muted-foreground font-medium">{member.role}</p>
               </motion.div>
             ))}
           </div>
@@ -166,13 +166,13 @@ export const AboutPage = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-24 bg-white relative overflow-hidden">
+      <section className="py-24 bg-background relative overflow-hidden">
         <Container>
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="bg-secondary-600 rounded-[40px] md:rounded-[60px] p-10 md:p-20 text-center text-white shadow-2xl relative overflow-hidden"
+            className="bg-secondary rounded-[40px] md:rounded-[60px] p-10 md:p-20 text-center text-secondary-foreground shadow-2xl relative overflow-hidden"
           >
             {/* Background Texture */}
             <div
@@ -185,17 +185,17 @@ export const AboutPage = () => {
                 initial={{ opacity: 0, rotate: -10 }}
                 whileInView={{ opacity: 1, rotate: 0 }}
                 viewport={{ once: true }}
-                className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-8 mx-auto backdrop-blur-md border border-white/20"
+                className="w-16 h-16 bg-secondary-foreground/20 rounded-2xl flex items-center justify-center mb-8 mx-auto backdrop-blur-md border border-secondary-foreground/20"
               >
-                <Heart className="w-8 h-8 text-white fill-current" />
+                <Heart className="w-8 h-8 text-secondary-foreground fill-current" />
               </motion.div>
 
-              <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
+              <h2 className="text-4xl md:text-5xl font-black text-secondary-foreground mb-6 tracking-tight">
                 Ready to Experience <br className="hidden sm:block" />
-                <span className="text-secondary-100">Washy</span> Excellence?
+                <span className="text-secondary-foreground/80">Washy</span> Excellence?
               </h2>
 
-              <p className="text-xl text-secondary-50 mb-12 font-medium leading-relaxed opacity-90">
+              <p className="text-xl text-secondary-foreground/90 mb-12 font-medium leading-relaxed opacity-90">
                 Join our growing community of happy customers and reclaim your weekends today.
                 We handle the dirty work, you enjoy your life.
               </p>
@@ -204,7 +204,7 @@ export const AboutPage = () => {
                 <Link to="/register" className="w-full sm:w-auto">
                   <Button
                     size="xl"
-                    className="w-full sm:w-auto h-18 px-12 text-xl font-extrabold bg-white text-secondary-600 hover:bg-secondary-50 border-none shadow-2xl transition-all hover:scale-105 active:scale-95"
+                    className="w-full sm:w-auto h-18 px-12 text-xl font-extrabold bg-secondary-foreground text-secondary hover:bg-secondary-foreground/90 border-none shadow-2xl transition-all hover:scale-105 active:scale-95"
                   >
                     Get Started Today
                   </Button>
@@ -213,7 +213,7 @@ export const AboutPage = () => {
                   <Button
                     variant="glass"
                     size="xl"
-                    className="w-full sm:w-auto h-18 px-12 text-xl border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold transition-all hover:scale-105 active:scale-95"
+                    className="w-full sm:w-auto h-18 px-12 text-xl border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10 backdrop-blur-sm font-bold transition-all hover:scale-105 active:scale-95"
                   >
                     Find Out More
                   </Button>

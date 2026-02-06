@@ -23,13 +23,13 @@ const getNotificationIcon = (type: string) => {
 const getNotificationColor = (type: string) => {
     switch (type) {
         case 'order_status':
-            return 'bg-primary-100 text-primary-600';
+            return 'bg-primary/10 text-primary';
         case 'payment':
-            return 'bg-success-50 text-success-600';
+            return 'bg-success/10 text-success';
         case 'delivery':
-            return 'bg-warning-50 text-warning-600';
+            return 'bg-warning/10 text-warning';
         default:
-            return 'bg-neutral-100 text-neutral-600';
+            return 'bg-muted text-muted-foreground';
     }
 };
 
@@ -95,12 +95,12 @@ export const CustomerNotificationsPage = () => {
             }
         >
             {/* Filter Tabs */}
-            <div className="flex border-b border-neutral-200 mb-6">
+            <div className="flex border-b border-border mb-6 overflow-x-auto">
                 <button
                     onClick={() => setFilter('all')}
-                    className={`flex items-center gap-2 px-6 py-3 font-medium border-b-2 transition-colors ${filter === 'all'
-                        ? 'border-primary-600 text-primary-600'
-                        : 'border-transparent text-neutral-500 hover:text-neutral-700'
+                    className={`flex items-center gap-2 px-6 py-3 font-medium border-b-2 transition-colors whitespace-nowrap ${filter === 'all'
+                        ? 'border-primary text-primary'
+                        : 'border-transparent text-muted-foreground hover:text-foreground'
                         }`}
                 >
                     All
@@ -108,9 +108,9 @@ export const CustomerNotificationsPage = () => {
                 </button>
                 <button
                     onClick={() => setFilter('unread')}
-                    className={`flex items-center gap-2 px-6 py-3 font-medium border-b-2 transition-colors ${filter === 'unread'
-                        ? 'border-primary-600 text-primary-600'
-                        : 'border-transparent text-neutral-500 hover:text-neutral-700'
+                    className={`flex items-center gap-2 px-6 py-3 font-medium border-b-2 transition-colors whitespace-nowrap ${filter === 'unread'
+                        ? 'border-primary text-primary'
+                        : 'border-transparent text-muted-foreground hover:text-foreground'
                         }`}
                 >
                     Unread
@@ -142,7 +142,7 @@ export const CustomerNotificationsPage = () => {
                             <Card
                                 key={notification._id}
                                 variant="bordered"
-                                className={`flex items-start gap-4 p-4 transition-colors ${!notification.isRead ? 'bg-primary-50/30 border-primary-100' : ''
+                                className={`flex items-start gap-4 p-4 transition-colors ${!notification.isRead ? 'bg-primary/5 border-primary/20' : 'bg-card'
                                     }`}
                             >
                                 <div className={`p-3 rounded-xl flex-shrink-0 ${colorClass}`}>
@@ -152,13 +152,13 @@ export const CustomerNotificationsPage = () => {
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex-1">
-                                            <h3 className={`font-medium ${!notification.isRead ? 'text-neutral-900' : 'text-neutral-700'}`}>
+                                            <h3 className={`font-medium ${!notification.isRead ? 'text-foreground' : 'text-foreground/80'}`}>
                                                 {notification.title}
                                             </h3>
-                                            <p className="text-sm text-neutral-500 mt-1 line-clamp-2">
+                                            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                                                 {notification.message}
                                             </p>
-                                            <p className="text-xs text-neutral-400 mt-2">
+                                            <p className="text-xs text-muted-foreground/60 mt-2">
                                                 {formatDate(notification.createdAt, 'PPp')}
                                             </p>
                                         </div>
@@ -166,7 +166,7 @@ export const CustomerNotificationsPage = () => {
                                         <div className="flex items-center gap-2 flex-shrink-0">
                                             {!notification.isRead && (
                                                 <>
-                                                    <div className="w-2 h-2 rounded-full bg-primary-500" />
+                                                    <div className="w-2 h-2 rounded-full bg-primary" />
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"

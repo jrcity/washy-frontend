@@ -163,8 +163,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
             });
 
             // Show toast if not active
-            if (conversationId !== activeConvRef.current && message.sender._id !== user?._id) {
-                toast(`New message from ${message.sender.name}`, { icon: '💬' });
+            if (conversationId !== activeConvRef.current && message.sender?._id !== user?._id) {
+                toast(`New message from ${message.sender?.name || 'Washy System'}`, { icon: '💬' });
             }
         });
 

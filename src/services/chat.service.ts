@@ -28,8 +28,8 @@ export const chatService = {
         return response.data;
     },
 
-    updateConversationStatus: async (id: string, action: 'close' | 'reopen') => {
-        const response = await api.patch<ApiResponse<Conversation>>(`/chat/conversations/${id}/${action}`);
+    updateConversationStatus: async (id: string, action: 'close' | 'reopen', reason?: string) => {
+        const response = await api.patch<ApiResponse<Conversation>>(`/chat/conversations/${id}/${action}`, { reason });
         return response.data;
     },
 

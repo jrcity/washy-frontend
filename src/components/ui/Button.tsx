@@ -13,13 +13,13 @@ interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
 }
 
 const variantClasses = {
-  primary: 'bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 shadow-md hover:shadow-lg border border-transparent',
-  secondary: 'bg-white text-primary-700 border border-primary-200 hover:bg-primary-50 hover:border-primary-300 shadow-sm hover:shadow-md',
-  outline: 'bg-transparent text-primary-600 border-2 border-primary-600 hover:bg-primary-50 hover:border-primary-700 hover:text-primary-700 shadow-none',
-  ghost: 'bg-transparent text-primary-600 hover:bg-primary-50 hover:text-primary-700',
-  danger: 'bg-error-50 text-error-700 border border-error-100 hover:bg-error-100/50 hover:border-error-200 hover:text-error-800 shadow-sm',
-  glass: 'bg-white/10 backdrop-blur-md text-white border border-white/20 hover:bg-white/20 shadow-lg',
-  link: 'text-primary-600 underline-offset-4 hover:underline hover:text-primary-700 p-0 h-auto font-normal shadow-none hover:shadow-none bg-transparent',
+  primary: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg border border-transparent',
+  secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm hover:shadow-md border border-transparent',
+  outline: 'bg-transparent text-primary border-2 border-primary hover:bg-primary/10 shadow-none',
+  ghost: 'bg-transparent text-primary hover:bg-primary/10',
+  danger: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm',
+  glass: 'bg-background/10 backdrop-blur-md text-foreground border border-border shadow-lg',
+  link: 'text-primary underline-offset-4 hover:underline p-0 h-auto font-normal shadow-none hover:shadow-none bg-transparent',
 };
 
 const sizeClasses = {
@@ -45,7 +45,7 @@ export const Button = ({
       whileHover={{ scale: disabled || isLoading ? 1 : 1.02 }}
       whileTap={{ scale: disabled || isLoading ? 1 : 0.98 }}
       className={cn(
-        'inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-primary-500/30 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+        'inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-primary/30 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
         variantClasses[variant],
         sizeClasses[size],
         className

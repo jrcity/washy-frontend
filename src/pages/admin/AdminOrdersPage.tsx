@@ -65,7 +65,7 @@ export const AdminOrdersPage = () => {
             options={tabs.map(tab => ({ value: tab.value, label: tab.label }))}
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-40"
+            className="w-[200px]"
           />
         </div>
       </div>

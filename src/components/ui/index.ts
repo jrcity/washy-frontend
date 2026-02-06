@@ -1,5 +1,5 @@
 export { Button } from './Button';
-export { Input, Checkbox, Radio, RadioGroup } from './Input';
+export { Input, Textarea, Checkbox, Radio, RadioGroup } from './Input';
 export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './Card';
 export { Badge } from './Badge';
 export { Avatar } from './Avatar';

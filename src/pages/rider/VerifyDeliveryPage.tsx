@@ -71,13 +71,13 @@ export const VerifyDeliveryPage = () => {
   return (
     <PageWrapper title="Verify Completion" showBack>
       <div className="max-w-md mx-auto">
-        <Card className="p-8 text-center">
-          <div className="w-16 h-16 bg-success-50 text-success-600 rounded-full flex items-center justify-center mx-auto mb-6">
+        <Card className="p-8 text-center bg-card">
+          <div className="w-16 h-16 bg-success/10 text-success-foreground rounded-full flex items-center justify-center mx-auto mb-6">
             <ShieldCheck className="w-8 h-8" />
           </div>
 
-          <h2 className="text-xl font-bold text-neutral-900 mb-2">Customer Confirmation</h2>
-          <p className="text-neutral-500 mb-8">
+          <h2 className="text-xl font-bold text-foreground mb-2">Customer Confirmation</h2>
+          <p className="text-muted-foreground mb-8">
             Ask the customer for the 4-digit OTP sent to their phone to verify this {isPickup ? 'pickup' : 'delivery'}.
           </p>
 
@@ -93,22 +93,22 @@ export const VerifyDeliveryPage = () => {
               />
               <Button
                 variant={photoUrl ? "outline" : "secondary"}
-                className={`w-full ${photoUrl ? 'border-primary-500 text-primary-600 bg-primary-50' : ''}`}
+                className={`w-full ${photoUrl ? 'border-primary text-primary bg-primary/10' : ''}`}
                 onClick={() => fileInputRef.current?.click()}
                 isLoading={isUploading}
               >
                 {photoUrl ? <Check className="w-4 h-4 mr-2" /> : <Camera className="w-4 h-4 mr-2" />}
                 {photoUrl ? 'Photo Uploaded' : 'Upload Proof of Items'}
               </Button>
-              {photoUrl && <p className="text-xs text-primary-600 mt-1">Image attached</p>}
+              {photoUrl && <p className="text-xs text-primary mt-1">Image attached</p>}
             </div>
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-neutral-200" />
+                <span className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-neutral-500">AND</span>
+                <span className="bg-card px-2 text-muted-foreground">AND</span>
               </div>
             </div>
 

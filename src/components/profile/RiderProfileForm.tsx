@@ -47,10 +47,10 @@ export const RiderProfileForm = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
-        <h3 className="text-lg font-medium text-neutral-900">Vehicle Information</h3>
+        <h3 className="text-lg font-medium text-foreground">Vehicle Information</h3>
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-1">
+            <label className="block text-sm font-medium text-foreground/80 mb-1">
               Vehicle Type
             </label>
             <Select
@@ -75,8 +75,8 @@ export const RiderProfileForm = () => {
         </div>
       </div>
 
-      <div className="space-y-4 pt-4 border-t border-neutral-100">
-        <h3 className="text-lg font-medium text-neutral-900">Bank Details</h3>
+      <div className="space-y-4 pt-4 border-t border-border">
+        <h3 className="text-lg font-medium text-foreground">Bank Details</h3>
         <div className="grid md:grid-cols-2 gap-4">
           <Input
             label="Bank Name"

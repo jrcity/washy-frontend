@@ -7,7 +7,14 @@ export default {
     theme: {
         extend: {
             colors: {
+                border: "hsl(var(--border))",
+                input: "hsl(var(--input))",
+                ring: "hsl(var(--ring))",
+                background: "hsl(var(--background))",
+                foreground: "hsl(var(--foreground))",
                 primary: {
+                    DEFAULT: "hsl(var(--primary))",
+                    foreground: "hsl(var(--primary-foreground))",
                     50: '#f0fdfa',
                     100: '#ccfbf1',
                     200: '#99f6e4',
@@ -21,6 +28,8 @@ export default {
                     950: '#042f2e',
                 },
                 secondary: {
+                    DEFAULT: "hsl(var(--secondary))",
+                    foreground: "hsl(var(--secondary-foreground))",
                     50: '#fff7ed',
                     100: '#ffedd5',
                     200: '#fed7aa',
@@ -33,7 +42,17 @@ export default {
                     900: '#7c2d12',
                     950: '#431407',
                 },
+                destructive: {
+                    DEFAULT: "hsl(var(--destructive))",
+                    foreground: "hsl(var(--destructive-foreground))",
+                },
+                muted: {
+                    DEFAULT: "hsl(var(--muted))",
+                    foreground: "hsl(var(--muted-foreground))",
+                },
                 accent: {
+                    DEFAULT: "hsl(var(--accent))",
+                    foreground: "hsl(var(--accent-foreground))",
                     50: '#eef2ff',
                     100: '#e0e7ff',
                     200: '#c7d2fe',
@@ -46,42 +65,43 @@ export default {
                     900: '#312e81',
                     950: '#1e1b4b',
                 },
-                neutral: {
-                    50: '#f8fafc',
-                    100: '#f1f5f9',
-                    200: '#e2e8f0',
-                    300: '#cbd5e1',
-                    400: '#94a3b8',
-                    500: '#64748b',
-                    600: '#475569',
-                    700: '#334155',
-                    800: '#1e293b',
-                    900: '#0f172a',
-                    950: '#020617',
+                popover: {
+                    DEFAULT: "hsl(var(--popover))",
+                    foreground: "hsl(var(--popover-foreground))",
+                },
+                card: {
+                    DEFAULT: "hsl(var(--card))",
+                    foreground: "hsl(var(--card-foreground))",
                 },
                 success: {
+                    DEFAULT: "hsl(var(--success))",
+                    foreground: "hsl(var(--success-foreground))",
                     50: '#ecfdf5',
                     500: '#10b981',
                     600: '#059669',
                     700: '#047857',
                 },
                 warning: {
+                    DEFAULT: "hsl(var(--warning))",
+                    foreground: "hsl(var(--warning-foreground))",
                     50: '#fffbeb',
                     500: '#f59e0b',
                     600: '#d97706',
                     700: '#b45309',
+                },
+                info: {
+                    DEFAULT: "hsl(var(--info))",
+                    foreground: "hsl(var(--info-foreground))",
+                    50: '#f0f9ff',
+                    500: '#0ea5e9',
+                    600: '#0284c7',
+                    700: '#0369a1',
                 },
                 error: {
                     50: '#fff1f2',
                     500: '#f43f5e',
                     600: '#e11d48',
                     700: '#be123c',
-                },
-                info: {
-                    50: '#f0f9ff',
-                    500: '#0ea5e9',
-                    600: '#0284c7',
-                    700: '#0369a1',
                 },
             },
             borderRadius: {

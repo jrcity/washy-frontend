@@ -149,8 +149,8 @@ export const ServicesPage = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-primary-50 to-white py-20 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-100/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+      <section className="bg-gradient-to-br from-primary/10 to-background py-20 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
         <Container>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -158,10 +158,10 @@ export const ServicesPage = () => {
             className="max-w-3xl mx-auto text-center relative z-10"
           >
             <Badge variant="primary" className="mb-4">Professional Care</Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-neutral-900 mb-6 tracking-tight">
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 tracking-tight">
               Our Services
             </h1>
-            <p className="text-xl text-neutral-600 leading-relaxed">
+            <p className="text-xl text-muted-foreground leading-relaxed">
               Premium laundry and cleaning services tailored to your needs.
               Transparent pricing, clear timelines, and exceptional quality.
             </p>
@@ -170,7 +170,7 @@ export const ServicesPage = () => {
       </section>
 
       {/* Services List */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <Container>
           <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
             {SERVICES_DATA.map((service, idx) => (
@@ -182,20 +182,20 @@ export const ServicesPage = () => {
                 transition={{ delay: idx * 0.1 }}
               >
                 <Card
-                  className="flex flex-col h-full border border-neutral-100 hover:border-primary-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                  className="flex flex-col h-full border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
                   padding="lg"
                 >
                   {/* Header */}
                   <div className="flex items-start justify-between mb-6">
                     <div>
-                      <h3 className="text-2xl font-bold text-neutral-900 mb-2">{service.name}</h3>
-                      <div className="flex items-center gap-3 text-sm text-neutral-500">
-                        <div className="flex items-center gap-1.5 bg-neutral-50 px-2 py-1 rounded-lg">
-                          <Clock className="w-4 h-4 text-primary-500" />
+                      <h3 className="text-2xl font-bold text-foreground mb-2">{service.name}</h3>
+                      <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-1.5 bg-muted px-2 py-1 rounded-lg">
+                          <Clock className="w-4 h-4 text-primary" />
                           <span>{service.estimatedDuration.standard}h</span>
                         </div>
                         {service.isExpressAvailable && (
-                          <Badge variant="warning" size="sm" className="bg-warning-50 text-warning-700 border-none">
+                          <Badge variant="warning" size="sm" className="bg-warning/10 text-warning border-none">
                             Express: {service.estimatedDuration.express}h
                           </Badge>
                         )}
@@ -204,10 +204,10 @@ export const ServicesPage = () => {
                   </div>
 
                   {/* Pricing Table */}
-                  <div className="flex-1 bg-neutral-50/50 rounded-xl p-4 border border-neutral-100/50">
+                  <div className="flex-1 bg-muted/50 rounded-xl p-4 border border-border/50">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="text-left text-neutral-400 border-b border-neutral-200/50">
+                        <tr className="text-left text-muted-foreground border-b border-border/50">
                           <th className="pb-2 font-medium">Item</th>
                           <th className="pb-2 font-medium text-right">Standard</th>
                           {service.isExpressAvailable && (
@@ -215,17 +215,17 @@ export const ServicesPage = () => {
                           )}
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-neutral-100">
+                      <tbody className="divide-y divide-border">
                         {service.pricing.map((price) => (
-                          <tr key={price.garmentType} className="group hover:bg-white transition-colors">
-                            <td className="py-2.5 font-medium text-neutral-700 capitalize group-hover:text-primary-700 transition-colors">
+                          <tr key={price.garmentType} className="group hover:bg-background transition-colors">
+                            <td className="py-2.5 font-medium text-foreground capitalize group-hover:text-primary transition-colors">
                               {price.garmentType.replace('_', ' ')}
                             </td>
-                            <td className="py-2.5 text-right text-neutral-600">
+                            <td className="py-2.5 text-right text-muted-foreground">
                               {formatCurrency(price.basePrice)}
                             </td>
                             {service.isExpressAvailable && (
-                              <td className="py-2.5 text-right font-medium text-warning-600">
+                              <td className="py-2.5 text-right font-medium text-warning">
                                 {formatCurrency(price.basePrice * price.expressMultiplier)}
                               </td>
                             )}
@@ -236,11 +236,11 @@ export const ServicesPage = () => {
                   </div>
 
                   {/* Footer Action */}
-                  <div className="mt-6 pt-6 border-t border-neutral-100">
+                  <div className="mt-6 pt-6 border-t border-border">
                     <Link to="/login" className="block">
                       <Button variant="outline" className="w-full justify-between group">
                         Book {service.name}
-                        <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:text-primary-600 transition-colors" />
+                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                       </Button>
                     </Link>
                   </div>
@@ -252,13 +252,13 @@ export const ServicesPage = () => {
       </section>
 
       {/* Benefits */}
-      <section className="py-20 bg-neutral-50 border-t border-neutral-200">
+      <section className="py-20 bg-muted/30 border-t border-border">
         <Container>
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-3xl font-bold text-neutral-900 mb-4">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
               Premium Standard
             </h2>
-            <p className="text-neutral-500">Every service includes our signature care package</p>
+            <p className="text-muted-foreground">Every service includes our signature care package</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
             {[
@@ -271,11 +271,11 @@ export const ServicesPage = () => {
               'Stain Treatment',
               'Packaging',
             ].map((benefit) => (
-              <div key={benefit} className="flex items-center gap-3 bg-white p-4 rounded-xl border border-neutral-100 shadow-sm">
-                <div className="w-8 h-8 rounded-full bg-success-50 flex items-center justify-center flex-shrink-0">
-                  <CheckCircle className="w-4 h-4 text-success-600" />
+              <div key={benefit} className="flex items-center gap-3 bg-card p-4 rounded-xl border border-border shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0">
+                  <CheckCircle className="w-4 h-4 text-success" />
                 </div>
-                <span className="text-neutral-700 font-medium">{benefit}</span>
+                <span className="text-foreground font-medium">{benefit}</span>
               </div>
             ))}
           </div>
@@ -283,18 +283,18 @@ export const ServicesPage = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-24 bg-white relative overflow-hidden">
+      <section className="py-24 bg-background relative overflow-hidden">
         <Container>
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="bg-primary-600 rounded-[40px] md:rounded-[60px] p-10 md:p-20 text-center text-white shadow-2xl relative overflow-hidden"
+            className="bg-primary rounded-[40px] md:rounded-[60px] p-10 md:p-20 text-center text-primary-foreground shadow-2xl relative overflow-hidden"
           >
             {/* Background Effects */}
             <div className="absolute top-0 right-0 w-full h-full">
-              <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary-600/20 rounded-full blur-[100px] animate-pulse" />
-              <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-secondary-600/10 rounded-full blur-[100px] animate-pulse delay-1000" />
+              <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary-foreground/10 rounded-full blur-[100px] animate-pulse" />
+              <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-secondary/10 rounded-full blur-[100px] animate-pulse delay-1000" />
             </div>
 
             <div className="relative z-10 max-w-3xl mx-auto">
@@ -302,16 +302,16 @@ export const ServicesPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-8 mx-auto backdrop-blur-md border border-white/10"
+                className="w-16 h-16 bg-primary-foreground/10 rounded-2xl flex items-center justify-center mb-8 mx-auto backdrop-blur-md border border-primary-foreground/10"
               >
-                <CheckCircle className="w-8 h-8 text-primary-400" />
+                <CheckCircle className="w-8 h-8 text-primary-foreground" />
               </motion.div>
 
-              <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
-                Experience the <span className="text-primary-400 italic">Washy</span> Difference
+              <h2 className="text-4xl md:text-6xl font-black text-primary-foreground mb-6 tracking-tight">
+                Experience the <span className="text-primary-foreground/80 italic">Washy</span> Difference
               </h2>
 
-              <p className="text-xl md:text-2xl text-neutral-300 mb-12 font-medium leading-relaxed">
+              <p className="text-xl md:text-2xl text-primary-foreground/80 mb-12 font-medium leading-relaxed">
                 Join thousands of satisfied customers who trust Washy with their entire wardrobe.
                 Premium care is just a tap away.
               </p>
@@ -320,7 +320,7 @@ export const ServicesPage = () => {
                 <Link to="/register" className="w-full sm:w-auto">
                   <Button
                     size="xl"
-                    className="w-full sm:w-auto h-18 px-12 text-xl font-extrabold bg-primary-600 hover:bg-primary-700 border-none shadow-xl shadow-primary-900/40 text-white transition-all hover:scale-105 active:scale-95"
+                    className="w-full sm:w-auto h-18 px-12 text-xl font-extrabold bg-primary-foreground text-primary hover:bg-primary-foreground/90 border-none shadow-xl shadow-primary/40 transition-all hover:scale-105 active:scale-95"
                   >
                     Get Started Now
                   </Button>
@@ -329,7 +329,7 @@ export const ServicesPage = () => {
                   <Button
                     variant="glass"
                     size="xl"
-                    className="w-full sm:w-auto h-18 px-12 text-xl border-white/20 text-white hover:bg-white/10 backdrop-blur-sm font-bold transition-all hover:scale-105 active:scale-95"
+                    className="w-full sm:w-auto h-18 px-12 text-xl border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 backdrop-blur-sm font-bold transition-all hover:scale-105 active:scale-95"
                   >
                     Contact Support
                   </Button>
@@ -338,13 +338,13 @@ export const ServicesPage = () => {
 
               <div className="mt-12 flex flex-wrap items-center justify-center gap-6">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-success-500 animate-pulse" />
-                  <span className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Available in 12 Cities</span>
+                  <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
+                  <span className="text-xs font-bold text-primary-foreground/60 uppercase tracking-widest">Available in 12 Cities</span>
                 </div>
-                <div className="hidden sm:block w-1.5 h-1.5 rounded-full bg-neutral-700" />
+                <div className="hidden sm:block w-1.5 h-1.5 rounded-full bg-primary-foreground/20" />
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-primary-500" />
-                  <span className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Satisfaction Guaranteed</span>
+                  <div className="w-2 h-2 rounded-full bg-primary-foreground/40" />
+                  <span className="text-xs font-bold text-primary-foreground/60 uppercase tracking-widest">Satisfaction Guaranteed</span>
                 </div>
               </div>
             </div>

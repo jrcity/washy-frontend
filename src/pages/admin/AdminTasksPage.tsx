@@ -4,6 +4,7 @@ import { TaskStatus, TaskPriority } from '@/types/task.types';
 import type { Task } from '@/types/task.types';
 import { ClipboardList, Plus, Clock, AlertCircle, Filter, Search, User as UserIcon, MapPin, ArrowRight, Navigation, CheckCircle2 } from 'lucide-react';
 import { Button, Badge, Spinner, Input, Card } from '@/components/ui';
+import { PageWrapper } from '@/components/layout';
 import { format } from 'date-fns';
 import { CreateTaskModal } from '@/components/tasks/CreateTaskModal';
 import { TaskDetailsModal } from '@/components/tasks/TaskDetailsModal';
@@ -66,210 +67,207 @@ export const AdminTasksPage: React.FC = () => {
     };
 
     return (
-        <div className="space-y-8 pb-12">
-            {/* Header section */}
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 md:gap-4">
-                <div>
-                    <h1 className="text-3xl font-black text-neutral-900 tracking-tight mb-1">Task Control</h1>
-                    <p className="text-neutral-500 font-medium text-sm">Assign, track and manage frontline operations</p>
-                </div>
-                <div className="flex gap-2 w-full sm:w-auto">
-                    <Button variant="outline" className="flex-1 sm:flex-none rounded-2xl h-12 px-6 font-bold border-neutral-200">
-                        <Filter className="w-4 h-4 mr-2" />
-                        Filters
-                    </Button>
-                    <Button onClick={() => setIsCreateModalOpen(true)} className="flex-1 sm:flex-none rounded-2xl h-12 px-6 shadow-lg shadow-primary-200 font-extrabold group">
-                        <Plus className="w-5 h-5 mr-2 transition-transform group-hover:rotate-90" />
-                        New Task
-                    </Button>
-                </div>
-            </div>
-
-            <CreateTaskModal
-                isOpen={isCreateModalOpen}
-                onClose={() => {
-                    setIsCreateModalOpen(false);
-                    fetchTasks();
-                }}
-            />
-
-            <TaskDetailsModal
-                isOpen={isDetailsModalOpen}
-                onClose={() => {
-                    setIsDetailsModalOpen(false);
-                    setSelectedTask(null);
-                }}
-                task={selectedTask}
-            />
-
-            {/* Quick Stats Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                {[
-                    { label: 'Pending', count: stats.pending, color: 'text-warning-600', bg: 'bg-warning-50', icon: Clock },
-                    { label: 'Active', count: stats.in_progress, color: 'text-info-600', bg: 'bg-info-50', icon: Navigation },
-                    { label: 'Critical', count: stats.critical, color: 'text-error-600', bg: 'bg-error-50', icon: AlertCircle },
-                    { label: 'Finished', count: stats.completed, color: 'text-success-600', bg: 'bg-success-50', icon: CheckCircle2 }
-                ].map((stat, i) => (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        key={stat.label}
-                        className="bg-white p-6 rounded-[32px] border border-neutral-100 shadow-sm hover:shadow-md transition-all"
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <div className={cn("p-2 rounded-xl", stat.bg)}>
-                                <stat.icon className={cn("w-5 h-5", stat.color)} />
-                            </div>
-                            <span className="text-3xl font-black text-neutral-900">{stat.count}</span>
-                        </div>
-                        <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest">{stat.label}</p>
-                    </motion.div>
-                ))}
-            </div>
-
-            {/* Filter & Search Bar */}
-            <div className="flex flex-col lg:flex-row gap-4">
-                <div className="relative flex-1">
-                    <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" />
-                    <Input
-                        placeholder="Search mission or rider..."
-                        className="pl-12 h-14 bg-white border-neutral-100 rounded-2xl focus:ring-primary-500/10 transition-all font-medium"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                </div>
-                <div className="flex p-1 bg-white border border-neutral-100 rounded-2xl md:w-fit overflow-x-auto no-scrollbar">
-                    {['all', 'pending', 'assigned', 'in_progress', 'completed'].map((f) => (
-                        <button
-                            key={f}
-                            onClick={() => setStatusFilter(f as any)}
-                            className={cn(
-                                "px-5 py-2.5 rounded-xl text-xs font-black tracking-tight uppercase transition-all whitespace-nowrap",
-                                statusFilter === f
-                                    ? "bg-neutral-900 text-white shadow-md shadow-neutral-200"
-                                    : "text-neutral-400 hover:text-neutral-600"
-                            )}
+        <PageWrapper
+            title="Operational Matrix"
+            description="Strategic overwatch of all field missions"
+            action={
+                <Button onClick={() => setIsCreateModalOpen(true)} className="rounded-2xl h-12 px-8 font-black shadow-xl shadow-primary/20 bg-primary hover:bg-primary/90 transition-all text-xs uppercase tracking-widest">
+                    <Plus className="w-4 h-4 mr-3" />
+                    Initiate Mission
+                </Button>
+            }
+        >
+            <div className="space-y-10">
+                {/* Command Dashboard */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                    {[
+                        { label: 'Pending Dispatch', count: stats.pending, color: 'text-warning', bg: 'bg-warning/5', icon: Clock, trend: 'QUEUE' },
+                        { label: 'Live Missions', count: stats.in_progress, color: 'text-primary', bg: 'bg-primary/5', icon: Navigation, trend: 'ACTIVE' },
+                        { label: 'Critical Alert', count: stats.critical, color: 'text-destructive', bg: 'bg-destructive/5', icon: AlertCircle, trend: 'HIGHEST' },
+                        { label: 'Mission Success', count: stats.completed, color: 'text-success', bg: 'bg-success/5', icon: CheckCircle2, trend: 'VERIFIED' }
+                    ].map((stat, i) => (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.1 }}
+                            key={stat.label}
                         >
-                            {f}
-                        </button>
+                            <Card className="p-8 rounded-[40px] border-border bg-card shadow-xl relative overflow-hidden group hover:border-primary/30 transition-all">
+                                <div className={cn("absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl -mr-12 -mt-12 transition-colors", stat.bg)} />
+                                <div className="relative z-10 flex flex-col gap-6">
+                                    <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform", stat.bg)}>
+                                        <stat.icon className={cn("w-7 h-7", stat.color)} />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">{stat.label}</p>
+                                        <div className="flex items-end justify-between">
+                                            <h4 className="text-3xl font-black text-foreground tracking-tighter italic leading-none">{stat.count}</h4>
+                                            <Badge className="bg-muted text-muted-foreground/60 border-none font-black text-[8px] tracking-tighter uppercase rounded-full px-2 py-0.5">{stat.trend}</Badge>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Card>
+                        </motion.div>
                     ))}
                 </div>
-            </div>
 
-            {/* Tasks Table / Cards */}
-            <div className="bg-white rounded-[40px] border border-neutral-100 shadow-xl overflow-hidden">
-                {loading ? (
-                    <div className="p-20 flex flex-col items-center justify-center gap-4">
-                        <Spinner size="lg" className="text-primary-600" />
-                        <p className="text-sm font-bold text-neutral-400 uppercase tracking-widest">Optimizing Board...</p>
+                {/* Tactical Overlays */}
+                <div className="flex flex-col lg:flex-row gap-6">
+                    <div className="relative flex-1">
+                        <Input
+                            placeholder="Search mission or rider..."
+                            leftIcon={<Search className="w-5 h-5 text-muted-foreground" />}
+                            className="bg-card border-border rounded-2xl shadow-sm"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
                     </div>
-                ) : filteredTasks.length === 0 ? (
-                    <div className="p-20 text-center">
-                        <div className="w-24 h-24 bg-neutral-50 rounded-[40px] flex items-center justify-center mx-auto mb-6">
-                            <ClipboardList className="w-10 h-10 text-neutral-200" />
-                        </div>
-                        <h3 className="text-xl font-bold text-neutral-900 mb-1">No tasks in sight</h3>
-                        <p className="text-neutral-500 font-medium">Try adjusting your filters or create a new assignment.</p>
+                    <div className="flex p-2 bg-muted rounded-[28px] border border-border shadow-inner overflow-x-auto no-scrollbar scroll-smooth">
+                        {['all', 'pending', 'assigned', 'in_progress', 'completed'].map((f) => (
+                            <button
+                                key={f}
+                                onClick={() => setStatusFilter(f as any)}
+                                className={cn(
+                                    "px-6 py-3 rounded-2xl text-[10px] font-black tracking-widest uppercase transition-all whitespace-nowrap",
+                                    statusFilter === f
+                                        ? "bg-card text-primary shadow-md"
+                                        : "text-muted-foreground hover:text-foreground"
+                                )}
+                            >
+                                {f}
+                            </button>
+                        ))}
                     </div>
-                ) : (
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="bg-neutral-50/50">
-                                    <th className="px-6 md:px-8 py-5 text-[10px] font-black text-neutral-400 uppercase tracking-widest">Type & Order</th>
-                                    <th className="hidden lg:table-cell px-6 md:px-8 py-5 text-[10px] font-black text-neutral-400 uppercase tracking-widest">Location</th>
-                                    <th className="hidden sm:table-cell px-6 md:px-8 py-5 text-[10px] font-black text-neutral-400 uppercase tracking-widest">Rider</th>
-                                    <th className="hidden md:table-cell px-6 md:px-8 py-5 text-[10px] font-black text-neutral-400 uppercase tracking-widest">Priority</th>
-                                    <th className="px-6 md:px-8 py-5 text-[10px] font-black text-neutral-400 uppercase tracking-widest">Status</th>
-                                    <th className="px-6 md:px-8 py-5 text-[10px] font-black text-neutral-400 uppercase tracking-widest">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-neutral-50">
+                </div>
+
+                {/* Mission Feed */}
+                <div className="space-y-6">
+                    <AnimatePresence mode="popLayout">
+                        {loading ? (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="flex flex-col items-center justify-center py-32 gap-6"
+                            >
+                                <Spinner size="lg" className="text-primary" />
+                                <p className="text-sm font-black text-muted-foreground uppercase tracking-[0.2em] animate-pulse">Syncing Tactical Grid...</p>
+                            </motion.div>
+                        ) : filteredTasks.length === 0 ? (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                            >
+                                <Card className="py-24 rounded-[48px] border-border border-dashed border-2 text-center shadow-inner bg-muted/20">
+                                    <div className="w-24 h-24 bg-card rounded-[40px] shadow-sm flex items-center justify-center mx-auto mb-8 border border-border">
+                                        <ClipboardList className="w-12 h-12 text-muted-foreground/20" />
+                                    </div>
+                                    <h3 className="text-2xl font-black text-foreground uppercase italic tracking-tighter">Grid Clear</h3>
+                                    <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest mt-2">No missions detected in the sector</p>
+                                </Card>
+                            </motion.div>
+                        ) : (
+                            <div className="grid gap-6">
                                 {filteredTasks.map((task, i) => (
-                                    <motion.tr
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: i * 0.03 }}
+                                    <motion.div
+                                        layout
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: i * 0.05 }}
                                         key={task._id}
-                                        className="group hover:bg-neutral-50/50 transition-colors"
                                     >
-                                        <td className="px-6 md:px-8 py-6">
-                                            <div className="flex items-center gap-3 md:gap-4">
-                                                <div className={cn(
-                                                    "w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center shadow-sm shrink-0",
-                                                    task.type === 'pickup' ? "bg-info-50 text-info-600" : "bg-success-50 text-success-600"
-                                                )}>
-                                                    <Navigation className="w-5 h-5 md:w-6 md:h-6" />
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <div className="text-sm font-black text-neutral-900 truncate">
-                                                        {task.order?.orderNumber}
-                                                    </div>
-                                                    <div className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">{task.type}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="hidden lg:table-cell px-6 md:px-8 py-6">
-                                            <div className="flex items-start gap-2 max-w-[200px]">
-                                                <MapPin className="w-4 h-4 text-neutral-300 mt-0.5 flex-shrink-0" />
-                                                <div>
-                                                    <div className="text-sm font-bold text-neutral-700 truncate">{task.address.street}</div>
-                                                    <div className="text-xs text-neutral-400">{task.address.area}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="hidden sm:table-cell px-6 md:px-8 py-6">
-                                            {task.assignedTo && typeof task.assignedTo !== 'string' ? (
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-8 h-8 md:w-9 md:h-9 rounded-lg md:rounded-xl bg-neutral-100 flex items-center justify-center font-bold text-neutral-500 text-[10px] md:text-xs shadow-inner shrink-0">
-                                                        {(task.assignedTo as any).name?.charAt(0)}
-                                                    </div>
-                                                    <div className="text-sm font-bold text-neutral-700 truncate">{(task.assignedTo as any).name}</div>
-                                                </div>
-                                            ) : (
-                                                <Badge size="sm" className="bg-neutral-100 text-neutral-400 text-[8px] md:text-[9px]">UNASSIGNED</Badge>
-                                            )}
-                                        </td>
-                                        <td className="hidden md:table-cell px-6 md:px-8 py-6">
-                                            <Badge variant={getPriorityVariant(task.priority)} size="sm" className="rounded-lg font-black px-3 text-[9px]">
-                                                {task.priority.toUpperCase()}
-                                            </Badge>
-                                        </td>
-                                        <td className="px-6 md:px-8 py-6">
-                                            <div className="flex flex-col gap-1 min-w-[80px]">
-                                                <div className="text-[9px] font-black text-neutral-900 uppercase tracking-tighter">
-                                                    {task.status.replace('_', ' ')}
-                                                </div>
-                                                <div className="w-full h-1 md:h-1.5 bg-neutral-100 rounded-full overflow-hidden">
+                                        <Card className="p-8 rounded-[40px] border-border bg-card hover:border-primary/50 hover:shadow-2xl transition-all group overflow-hidden relative">
+                                            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-[60px] -mr-16 -mt-16" />
+                                            <div className="relative z-10 flex flex-col xl:flex-row xl:items-center justify-between gap-8">
+
+                                                <div className="flex items-center gap-8">
+                                                    {/* Mission Type Icon */}
                                                     <div className={cn(
-                                                        "h-full rounded-full transition-all duration-500",
-                                                        task.status === 'completed' ? "bg-success-500 w-full" :
-                                                            task.status === 'in_progress' ? "bg-primary-500 w-2/3" :
-                                                                task.status === 'assigned' ? "bg-info-500 w-1/3" : "bg-neutral-300 w-2"
-                                                    )} />
+                                                        "w-16 h-16 md:w-20 md:h-20 rounded-[28px] flex items-center justify-center shadow-lg transition-all group-hover:scale-110 shrink-0",
+                                                        task.type === 'pickup'
+                                                            ? "bg-info/20 text-info shadow-info/10"
+                                                            : "bg-success/20 text-success shadow-success/10"
+                                                    )}>
+                                                        <Navigation className="w-8 h-8 md:w-10 md:h-10" />
+                                                    </div>
+
+                                                    {/* Mission Intel */}
+                                                    <div className="space-y-3 min-w-0">
+                                                        <div className="flex flex-wrap items-center gap-4">
+                                                            <h3 className="text-xl md:text-2xl font-black italic tracking-tighter leading-none group-hover:text-primary transition-colors">#{task.order?.orderNumber}</h3>
+                                                            <Badge className={cn("rounded-full px-4 py-1.5 font-black uppercase text-[10px] tracking-widest border-none italic",
+                                                                task.type === 'pickup' ? "bg-info/10 text-info" : "bg-success/10 text-success"
+                                                            )}>
+                                                                {task.type}
+                                                            </Badge>
+                                                            <Badge variant={getPriorityVariant(task.priority)} className="rounded-full px-4 py-1.5 font-black uppercase text-[10px] tracking-widest border-none shadow-sm">
+                                                                {task.priority || 'standard'}
+                                                            </Badge>
+                                                        </div>
+                                                        <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+                                                            <div className="flex items-center gap-2">
+                                                                <MapPin className="w-4 h-4 text-muted-foreground/30" />
+                                                                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-tight truncate max-w-[200px]">{task.address.street}, {task.address.city}</span>
+                                                            </div>
+                                                            <div className="flex items-center gap-2 sm:border-l sm:border-border sm:pl-6">
+                                                                <Clock className="w-4 h-4 text-primary/40" />
+                                                                <span className="text-[10px] font-black text-primary italic uppercase tracking-wider">EST. {format(new Date(task.scheduledFor), 'HH:mm')}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Operative & Phase */}
+                                                <div className="flex items-center justify-between xl:justify-end gap-10 xl:border-l xl:border-border xl:pl-10">
+                                                    <div className="flex flex-col items-start xl:items-end min-w-[140px]">
+                                                        <p className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-widest mb-2 italic">Assigned Unit</p>
+                                                        {task.assignedTo && typeof task.assignedTo !== 'string' ? (
+                                                            <div className="flex items-center gap-4">
+                                                                <div className="text-right hidden sm:block">
+                                                                    <p className="text-xs font-black italic leading-none text-foreground uppercase truncate max-w-[120px]">{(task.assignedTo as any).name}</p>
+                                                                    <p className="text-[8px] font-black text-primary uppercase mt-1 tracking-[0.2em]">Live Tracking</p>
+                                                                </div>
+                                                                <div className="w-12 h-12 rounded-2xl bg-muted border border-border flex items-center justify-center font-black text-primary text-xs shadow-inner">
+                                                                    {(task.assignedTo as any).name?.charAt(0)}
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <Badge variant="secondary" className="rounded-xl border-dashed border-2 border-warning/30 bg-warning/5 text-warning font-black text-[10px] px-4 py-1.5">UNASSIGNED</Badge>
+                                                        )}
+                                                    </div>
+
+                                                    <div className="flex flex-col items-center px-8 border-x border-border min-w-[140px]">
+                                                        <p className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-widest mb-2 italic">Phase</p>
+                                                        <Badge
+                                                            className={cn("rounded-full px-6 py-2 font-black italic shadow-sm text-[10px] uppercase tracking-widest border-none",
+                                                                task.status === 'completed' ? "bg-success/10 text-success" :
+                                                                    task.status === 'in_progress' ? "bg-primary/20 text-primary" :
+                                                                        task.status === 'pending' ? "bg-warning/10 text-warning" : "bg-muted text-muted-foreground/60"
+                                                            )}
+                                                        >
+                                                            {task.status.replace('_', ' ')}
+                                                        </Badge>
+                                                    </div>
+
+                                                    <Button
+                                                        className="w-14 h-14 rounded-2xl p-0 font-black shadow-xl shadow-primary/20 hover:scale-110 transition-transform shrink-0"
+                                                        onClick={() => {
+                                                            setSelectedTask(task);
+                                                            setIsDetailsModalOpen(true);
+                                                        }}
+                                                    >
+                                                        <ArrowRight className="w-6 h-6" />
+                                                    </Button>
                                                 </div>
                                             </div>
-                                        </td>
-                                        <td className="px-6 md:px-8 py-6">
-                                            <button
-                                                onClick={() => {
-                                                    setSelectedTask(task);
-                                                    setIsDetailsModalOpen(true);
-                                                }}
-                                                className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white border border-neutral-100 flex items-center justify-center text-neutral-400 hover:text-primary-600 hover:border-primary-100 hover:shadow-lg transition-all"
-                                            >
-                                                <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-                                            </button>
-                                        </td>
-                                    </motion.tr>
+                                        </Card>
+                                    </motion.div>
                                 ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
+                            </div>
+                        )}
+                    </AnimatePresence>
+                </div>
             </div>
-        </div>
+        </PageWrapper>
     );
 };
 
